@@ -1,0 +1,117 @@
+{% load i18n staticfiles account bootstrap3 %}
+{% block content %}{% endblock %}
+
+{% block full_content %}
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">findings</h2>
+            </div>
+
+            <div class="modal-body" style="height:100%;" >
+
+
+
+                <h3 id="myChart_title" class="text-center"></h3>
+                <div id="myChart"  class="col-md-12"/>
+
+
+            </div>
+
+<p>The above graph shows the average scores people rated each of your images, according to the question you set.
+    The red lines at the top of each bar show the range at which about 95% of people rated your images. If the red
+lines for two images do not overlap, this shows that there is statistical evidence for one image being given a greater
+average rating than the other.</p>
+             {% comment %}   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>{% endcomment %}
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block extra_css %}
+
+    <link type="text/css" rel="stylesheet" href="{% static "css/font-awesome.min.css" %}" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{% static "css/questionator/questionator_feedback.css" %}" media="screen" />
+     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+    <script>window.jQuery || document.write('<script src="{% static 'js/jquery-1.11.1.min.js' %}"><\/script>')</script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'js/d3.min.js' %}"></script>
+    <script src="{% static 'js/questionator/feedback.js' %}"></script>
+    <script type="text/javascript" src="{% static "js/handlebars-1.0.rc.1.min.js" %}"></script>
+
+
+    <script>
+
+        window.onload = function() {
+            barchart.init('#myChart');
+        };
+
+        var data = communicate('get_data',{}, function(success, message){
+            if(success=='success'){
+                var quantified = {};
+                var callback_per_question = function(question, processed_data){
+                    $("#myChart_title").text(question);
+                    console.log(question)
+                    for(var key in processed_data){
+                        quantified[key] = stats.calc(['mean', 'two_stderr'], processed_data[key])
+                    }
+                    barchart.populate(question, quantified)
+                }
+                var json = JSON.parse(message).data;
+                processdata.DO(json, callback_per_question)
+
+            }
+        });
+
+
+        function communicate(what, info, callback){
+
+            var data = {
+                acl: 'private',
+                what: what,
+            }
+
+            if(info!=undefined) {
+                for (var key in info) {
+                    data[key] = info[key];
+                }
+            }
+
+            window.setTimeout(function() {
+
+                $.ajax({
+                    url: '{{ command_url }}',
+                    type: 'post',
+                    async: true,
+                    data: data,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        if (callback)    callback('success', data);
+
+                    },
+                    error: function (jqXHR, error, errorThrown) {
+                        console.log(jqXHR, error, errorThrown)
+                        if (callback)    callback('fail');
+                    }
+                });
+            },0);
+        }
+
+    </script>
+
+
+
+{% endblock %}
+

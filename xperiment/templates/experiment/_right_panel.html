@@ -1,0 +1,29 @@
+{% load i18n staticfiles bootstrap3 %}
+
+<div id="right_splitter" class="no-border">
+    <div id="right_top_splitter" class="no-border">
+        <!-- right top splitter -->
+        <div id="myRibbon" class="navbar-collapse"></div>
+    </div>
+    <div>
+        <div id="right_bottom_splitter" class="no-border">
+            <div>
+                <div id="right_bottom_left_splitter" class="no-border">
+                    <!-- right bottom left splitter -->
+                    <div id="right_bottom_left_top_splitter" class="no-border" style="background-color: beige;">
+                        <!-- right bottom left top splitter -->
+                        {% include "experiment/_right_bottom_left_top_panel.html" %}
+                    </div>
+                    <div id="right_bottom_left_bottom_splitter" class="no-border">
+                        <!-- right bottom left bottom splitter -->
+                        <div id="mytimeline"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="right_bottom_right_splitter" class="no-border">
+                <!-- right bottom right splitter -->
+                {% include "experiment/_right_bottom_right_panel.html" %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+{% load i18n util_tags %}
+
+<div id="upload_logo_container" data-lab-id="{{ lab.id }}">
+    <div class="lab-logo">
+        <a class="change-logo" href="#">
+            {% if lab.logo %}
+                <img src="{{ lab.logo }}" class="img-thumbnail user-avatar" alt="{{ lab.name }}">
+            {% else %}
+                <img data-src="holder.js/200x200/{{ 'sky,vine,lava,gray,industrial,social'|split:","|random }}/text:{{ lab.name }}"
+                     class="img-thumbnail" alt="{{ lab.name }}">
+            {% endif %}
+            {% if user == lab.creator %}
+                <span id="upload_logo" class="change-logo-text">{% trans "Change Logo" %}</span>
+            {% endif %}
+        </a>
+    </div>
+</div>

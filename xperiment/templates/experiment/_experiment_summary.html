@@ -1,0 +1,46 @@
+{% load i18n %}
+
+<div class="media">
+    <a class="pull-left" href="{% url "experiment_detail" expt_info.expt_id expt_info.slug %}">
+        <img class="media-object img-thumbnail" data-src="holder.js/200x200" alt="Experiment Title">
+    </a>
+
+    <div class="media-body">
+        <h4 class="media-heading">
+            <a href="{% url "experiment_detail" expt_info.expt_id expt_info.slug %}">
+                {{ expt_info.name }}
+            </a>
+        </h4>
+
+        <div class="experiment-meta">
+            <i class="glyphicon glyphicon-leaf"></i>
+            <a href="#">Lab_name</a>
+
+            <i class="glyphicon glyphicon-user"></i>
+            <a href="#">{{ expt_info.creator.profile.get_full_name }}</a>
+
+            <i class="glyphicon glyphicon-tags"></i>
+            <a href="#">tag1</a>
+            <a href="#">tag2</a>
+
+            <i class="glyphicon glyphicon-time"></i>
+            {{ expt_info.created|date:"Y-m-d" }}
+
+            <i class="glyphicon glyphicon-th"></i>
+            1031
+        </div>
+        <div class="experiment-description-summary">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor
+            facilisis.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor
+            facilisis.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor
+            facilisis.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque commodo massa sed ipsum porttitor
+            facilisis.
+        </div>
+        <div class="experiment-summary-action pull-right">
+            <a class="btn btn-default" href="{% url "experiment_detail" expt_info.expt_id expt_info.slug %}">More</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% load i18n staticfiles bootstrap3 %}
+{% block content %}{% endblock %}
+
+{% block full_content %}
+
+        <div class="cover-container">
+
+
+          <div class="inner cover">
+            <h1 class="cover-heading"><strong>The QUESTIONATOR</strong></h1>
+            <p class="lead">Where the masses answer your media based questions.</p>
+              <a href="#" class="btn btn-lg btn-default" data-toggle="modal" data-target="#myModal" data-remote="design/">New question</a>
+            </p>
+          </div>
+
+            <div id="table_container"></div>
+
+        </div>
+
+	<div class="modal fullscreen-modal fade" id="myModal" tabindex="-1" role="dialog" />
+
+
+
+{% endblock %}
+
+{% block extra_css %}
+    <link type="text/css" rel="stylesheet" href="{% static "css/questionator/questionator_home.css" %}" media="screen" />>
+    <link type="text/css" rel="stylesheet" href="{% static "css/font-awesome.min.css" %}" media="screen" />>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "js/handlebars-1.0.rc.1.min.js" %}"></script>
+
+    <script>
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
+         $(this).empty(); //<---- empty() to clear the modal
+        $(this).removeData('bs.modal');
+        commands.refresh_table();
+
+    });
+    </script>
+
+    <script>
+
+    var commands = function(){
+        var api = {};
+
+         function communicate(url, what, info, callback){
+
+            var data = {
+                acl: 'private',
+                what: what
+            }
+
+            if(info!=undefined) {
+                for (var key in info) {
+                    data[key] = info[key];
+                }
+            }
+
+            window.setTimeout(function() {
+
+                $.ajax({
+                    url: '{% url 'questionator_home_command' %}',
+                    type: 'post',
+                    async: true,
+                    data: data,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        if (callback)    callback('success', data);
+
+                    },
+                    error: function (jqXHR, error, errorThrown) {
+                        console.log(jqXHR, error, errorThrown)
+                        if (callback)    callback('fail');
+                    }
+                });
+            },0);
+        }
+
+        api.refresh_table = function(){
+            communicate('command/', 'refresh_table', {}, function(success, info){
+                if(success == 'success'){
+                    var json = JSON.parse(info);
+                    live_table.update(json.data);
+                }
+            });
+        }
+
+        api.delete_question = function(question_name){
+            communicate('command/', 'delete', {question_name: question_name}, function(success, info){
+                if(success == 'success'){
+                    var json = JSON.parse(info);
+                    live_table.update(json.data);
+                }
+            });
+        }
+
+        return api;
+    }()
+
+    </script>
+
+
+
+
+    {% verbatim %}
+    <script id="question_row" type="text/x-handlebars-template">
+
+        <h2 class="cover-heading">My questions</h2>
+        <div class="table-responsive" style="padding-top:20px;">
+            <table class="table" id="question_table">
+                <colgroup></colgroup>
+                <colgroup></colgroup>
+                <colgroup style="background-color: #fcf8e3;"></colgroup>
+                <colgroup></colgroup>
+                <thead>
+                <tr>
+                    <th>Questions</th>
+                    <th></th>
+                    <th class="text-center">Action stations</th>
+                    <th class="text-right">Answers</th>
+                </tr>
+                </thead>
+                 {{#data}}
+                <tr>
+                    <td>
+                        <div class="text-left inline"> {{ title }}</div>
+                    </td>
+                    <td >
+                        <button type="button" url="#"
+                                onclick="commands.delete_question('{{ id }}')"
+                                class="btn btn-default btn-xs"
+                                data-toggle="tooltip" title="delete this question">
+                            <span class="glyphicon glyphicon-trash" style="color:red" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" data-toggle="modal" data-target="#myModal"
+                                data-remote="design/{{ id }}"
+                                class="btn btn-default btn-xs"
+                                data-toggle="tooltip" title="edit your question">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+                        </button>
+                        <button type="button" onClick="window.open('play/{{ id }}/')"
+                                class="btn btn-default btn-xs"
+                                data-toggle="tooltip" title="see what people will see when they answer your question">
+                            <span class="glyphicon glyphicon-play" style="color:green" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                    <td>
+                        <div class="form-inline">
+                            <input type="number" style="width:50px;" min="0" max="1000"
+                                   class="form-control text-center" placeholder="#" id="people_change"
+                                   data-toggle="tooltip" title="how many people do you want answers from?">
+                            <p class="bg-success" id="cost">$0</p>
+
+                            <button type="button"  onClick="window.open('startcollect/{{ id }}/')"
+                                class="btn btn-default"
+                                    data-toggle="tooltip" title="begin collecting answers!">
+                                <span class="glyphicon glyphicon-flash" style="color:red" aria-hidden="true"></span>
+                            </button>
+                            <button type="button"  onClick="window.open('stopcollect/{{ id }}/')"
+                                class="btn btn-default"
+                                    data-toggle="tooltip" title="stop people anwsering your question">
+                                <span class="glyphicon glyphicon-stop" style="color:black" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </td>
+                    <td class="inline">
+                        {{#ifNotZero count}}
+                            <a type="button" target="_blank"
+                                href="feedback/{{ id }}" style="margin-left:10px;"
+                                class="btn btn-default btn-xs pull-right "
+                                    data-toggle="tooltip" title="explore the answers to your question">
+                                <span class="glyphicon glyphicon-fire" style="color:blue" aria-hidden="true"></span>
+                                Feedback from {{ count }} people
+                            </a>
+                        {{/ifNotZero}}
+                    </td>
+                </tr>
+                {{/data}}
+            </table>
+        </div>
+    </script>
+    {% endverbatim %}
+
+
+
+    <script>
+
+    var live_table = function(){
+        //http://stackoverflow.com/questions/8853396/logical-operator-in-a-handlebars-js-if-conditional
+        var api = {};
+
+        var context = $('#question_row').html();
+
+        api.update = function(json){
+            if(json.length == 0){
+                $("#table_container").html('');
+                return;
+            }
+
+            Handlebars.registerHelper('ifNotZero', function(v1, options) {
+              if(v1 != '0') {
+                return options.fn(this);
+              }
+              return options.inverse(this);
+            });
+
+
+            var json_row_data = {'data': json}
+
+            var template = Handlebars.compile(context);
+            var row_html = template(json_row_data);
+
+            $("#table_container").html(row_html);
+
+            $(":input").bind('keyup mouseup mousewheel', function () {
+                var callee= this;
+                setTimeout(
+                        function(){
+                            var val = parseFloat(callee.value);
+                            if( !isNaN(val) && isFinite(val)){
+                            $(callee).siblings("#cost").text("$" + (val * .50).toString());
+                        }} ,50);
+
+
+            });
+
+        }
+        return api;
+    }();
+    var json = JSON.parse('{{ questions|safe }}');
+    live_table.update(json);
+
+    </script>
+
+
+{% endblock %}
+

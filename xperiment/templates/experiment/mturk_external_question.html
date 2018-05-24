@@ -1,0 +1,127 @@
+{% load i18n staticfiles account bootstrap3 %}
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>{% trans "Mechanical Turk Question" %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="shortcut icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+
+    <!-- Le styles -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="{% static 'css/jquery.pnotify.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- This file store project specific CSS -->
+    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#task" data-toggle="tab" title="{% trans "Task" %}">{% bootstrap_icon "cog" %} {% trans "Task" %}</a>
+        </li>
+        <li>
+            <a href="#contact" data-toggle="tab" title="{% trans "Contact" %}">{% bootstrap_icon "envelope" %} {% trans "Contact" %}</a>
+        </li>
+        <li>
+            <img src="{{ STATIC_URL }}img/logo.png" class="mt-question-logo">
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade wrapper active in" id="task">
+            <p>
+                {{ mturk_info.description }}
+            </p>
+
+            <p>
+                Click the link below and the study will begin in a new web-browser window. Do not close this current
+                window (but if the window is accidentally closed, just re-open it). After finishing, you will be given
+                a password. Please enter this password in the box below and click submit. Thank you for your interest
+                in this study.
+            </p>
+
+            <p>
+                Please contact us if you have any difficulties (contact information can be found in the contact menu).
+            </p>
+
+            <p>
+                You will need Adobe Flash player installed to do this study.
+                You must have a screen with a resolution greater than 1024 x 768.
+            </p>
+            <div class="row-fluid">
+                {% if platform == "sandbox" %}
+                    <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit">
+                        <input type="hidden" id="assignmentId" name="assignmentId" value="{{ assignment_id }}">
+                        <input type="hidden" id="xperiment_answer" name="xperiment_answer" value="xperiment_answer">
+                    </form>
+                {% else %}
+                    <form id="mturk_form" method="POST" action="https://www.mturk.com/mturk/externalSubmit">
+                        <input type="hidden" id="assignmentId" name="assignmentId" value="{{ assignment_id }}">
+                        <input type="hidden" id="xperiment_answer" name="xperiment_answer" value="xperiment_answer">
+                    </form>
+                {% endif %}
+
+                <div id="study_url_content" class="mt-question-link">
+                    {% if is_show %}
+                        <a href="{{ study_url }}" target="_blank" title="{{ study_url }}">{{ study_url|truncatechars:30 }}</a>
+                    {% endif %}
+                </div>
+
+                {% if is_show %}
+                    <button id="btn_copy" type="button" class="btn btn-primary mturk-copy-link">{% trans "Copy Link" %}</button>
+                {% else %}
+                    <button type="button" class="btn btn-primary mturk-copy-link" disabled="disabled">{% trans "Copy Link" %}</button>
+                {% endif %}
+
+                {% if is_show %}
+                    <input id="id_password" name="password" type="text" class="form-control mturk-password-input">
+                    <button id="btn_submit_mturk" type="button" class="btn btn-primary mturk-password-button">{% trans "Submit Password" %}</button>
+                {% else %}
+                    <input id="id_password" name="password" type="text" class="form-control mturk-password-input" disabled="disabled">
+                    <button id="btn_submit_mturk" type="button" class="btn btn-primary mturk-password-button" disabled="disabled">{% trans "Submit Password" %}</button>
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="tab-pane fade wrapper text-center" id="contact">
+            <p>Have you encountered a problem, or you have a question? Please send email.</p>
+            <p id="message" class="fade">message</p>
+            <div class="row-fluid">
+                <a href="mailto:{{ email|default:"support@xperiment.mobi"|default_if_none:"support@xperiment.mobi" }}" class="btn btn-info">{% trans "Send Email" %}</a>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.pnotify.js' %}"></script>
+
+    <script src="{% static "js/zeroclipboard/ZeroClipboard.js" %}"></script>
+
+    <script src="{% static 'js/mturk.js' %}"></script>
+
+    <!-- place project specific Javascript in this file -->
+    <script src="{% static 'js/project.js' %}"></script>
+</body>
+</html>

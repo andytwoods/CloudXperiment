@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 experiment_tags static %}
+
+{% block content %}
+
+{% endblock %}
+{% block full_content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <input class="btn btn-default" type="button" value="Back" onclick="window.history.back()" />
+                <h1>Retrieving file urls, downloading them, and then crunching into a zip...</h1>
+
+                <div class="progress hide" id="progress_bar">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    </div>
+                </div>
+                 <p id="files"></p>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+{% block extra_js %}
+    <script src="{% static 'js/jszip.min.js' %}"></script>
+    <script src="{% static 'js/jszip-utils.min.js' %}"></script>
+    <script src="{% static 'js/FileSaver.min.js' %}"></script>
+
+    <script>
+        $(document).ready(
+            function(event) {
+            var files = {{ files|safe }}
+            $('#files').text(files.join("\n"))
+
+            add(files)
+
+    })
+
+
+    </script>
+
+    <script>
+  var Promise = window.Promise;
+    if (!Promise) {
+        Promise = JSZip.external.Promise;
+    }
+
+    /**
+     * Fetch the content and return the associated promise.
+     * @param {String} url the url of the content to fetch.
+     * @return {Promise} the promise containing the data.
+     */
+    function urlToPromise(url) {
+        return new Promise(function(resolve, reject) {
+            JSZipUtils.getBinaryContent(url, function (err, data) {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+    function add(files) {
+
+        var zip = new JSZip();
+
+
+        files.forEach(function (url) {
+            zip.file(url, urlToPromise('{{ dir|safe }}' + url), {binary: true});
+        })
+
+
+        // when everything has been downloaded, we can trigger the dl
+        zip.generateAsync({type: "blob"}, function updateCallback(metadata) {
+            var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+            if (metadata.currentFile) {
+                msg += ", current file = " + metadata.currentFile;
+            }
+            showMessage(msg)
+            updatePercent(metadata.percent|0)
+
+        })
+            .then(function callback(blob) {
+                saveAs(blob, "my_study.zip");
+
+                showMessage("done !");
+            }, function (e) {
+                showError(e);
+            })
+    }
+
+    function showMessage(str){
+        console.log(str)
+    }
+
+       function showError(str){
+        console.log(str)
+    }
+
+    function updatePercent(percent) {
+    $("#progress_bar").removeClass("hide")
+    .find(".progress-bar")
+    .attr("aria-valuenow", percent)
+    .css({
+        width : percent + "%"
+    });
+}
+
+
+
+
+    </script>
+{% endblock extra_js %}

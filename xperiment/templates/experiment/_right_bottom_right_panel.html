@@ -1,0 +1,34 @@
+{% load i18n staticfiles bootstrap3 %}
+
+<div id="side" class="panel panel-primary" style="width:100%;">
+    <div class="panel-heading">
+        <div class="btn-group toggle-btn-group">
+            <a href="#trials" role="tab" data-toggle="tab" type="radio" id="cardsSelected" data-toggle="tooltip" data-placement="right" title="see the trial position editor" class="btn btn-default btn-small active selected">Trials</a>
+            <a href="#script" role="tab" data-toggle="tab" type="radio" id="codeEditorSelected" data-toggle="tooltip" data-placement="right" title="see the code editor" class="btn btn-default btn-small">Script</a>
+        </div>
+
+        <div class="btn-group navbar-right" id="trials_menu">
+            <div class="trial-menu-title">trial(s):</div>
+            <button name="left" type="button" class="btn btn-default btn-small" tabindex="-1"><img name="left" src="/static/css/AcidJs.Ribbon/icons/16/_left.png" ></button>
+            <button name="right" type="button" class="btn btn-default btn-small" tabindex="-1"><img name="right" src="/static/css/AcidJs.Ribbon/icons/16/_right.png" ></button>
+            <button name="up" type="button" class="btn btn-default btn-small" tabindex="-1"><img name="up" src="/static/css/AcidJs.Ribbon/icons/16/_up.png" ></button>
+            <button name="down" type="button" class="btn btn-default btn-small" tabindex="-1"><img name="down" src="/static/css/AcidJs.Ribbon/icons/16/_down.png" ></button>
+        </div>
+
+        <div id="trials_control" class="btn-group navbar-right m-r-xs">
+            <span>add:</span>
+            <input type="text" class="form-control insert-trial-control" id="insertTrialCount">
+        </div>
+    </div>
+
+    <div class="row" style="width:100%;margin-right: 0px;  margin-left: 0px;">
+        <div class="tab-content">
+            <div class="tab-pane active" id="trials" style="display: block;">
+                {% include "experiment/_create_swf.html" with swf_name="swf/MultiTrialApp.swf" swf_id="multi_trial" container_name="cardsDiv" %}
+            </div>
+            <div class="tab-pane" id="script">
+                <textarea id="mirrorEditor">loading...</textarea>
+            </div>
+        </div>
+    </div>
+</div>

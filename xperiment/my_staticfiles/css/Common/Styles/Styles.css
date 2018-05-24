@@ -1,0 +1,178 @@
+html, body, form,
+h1, h2, h3, h4, h5, h6,
+ul, ol, li
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.demo-controls input,
+.demo-controls button,
+.demo-controls select
+{
+    vertical-align: middle;
+}
+
+html, body
+{
+    height: 100%;
+    width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6
+code
+{
+    float: none;
+    clear: both;
+}
+
+.demo-header,
+.demo-content
+{
+    padding: 16px 0 0 16px;
+}
+
+a:hover
+.demo-header h1 a   
+{
+    text-decoration: none;
+}
+
+a
+{
+    color: #000;
+}
+
+h3
+{
+    padding: 8px 0;
+    border-bottom: solid 1px #666;
+}
+
+h4
+{
+    padding: 12px 0;
+}
+
+body
+{
+    color: #3b3b3b;
+    font-family: "Trebuchet MS", Verdana, Arial;
+    font-size: 12px;
+}
+
+.demo-content
+{
+    width: 1200px;
+}
+
+.demo-header
+{
+    background: #3b3b3b;
+    padding: 16px;
+}
+
+.demo-header h1
+{
+    border-bottom: solid 1px white;
+    margin: 0 0 8px;
+}
+
+.demo-header h1 a
+{
+   font-size: 22px;
+   text-decoration: none;
+}
+
+h2
+{
+    margin: 16px;
+    margin-left: 0;
+}
+
+.demo-header a
+{
+    color: #829360;
+    font-size: 12px;
+    color: white;
+}
+
+.demo-header ul
+{
+    padding-bottom: 24px;
+}
+
+.demo-header ul li
+{
+    float: left;
+    margin-right: 8px;
+}
+
+.list-floated li
+{
+    display: inline-block;
+    margin: 0 12px 0 0;
+}
+
+.demo-controls button,
+.demo-controls label *
+{
+    cursor: hand;
+    cursor: pointer;
+}
+
+.demo-controls
+{
+    margin: 12px 0;
+    padding: 12px 0;
+    border-bottom: solid 1px #3b3b3b;
+}
+
+.demo-controls label span
+{
+    margin: 0 8px 0 0;
+}
+
+input[type="text"]
+{
+    width: 200px;
+}
+
+.info-box
+{
+    border: solid 1px #e6db55;
+    padding: 8px;
+    background: #ffffe0;
+    margin: 20px 0;
+}
+
+.bullet-list li
+{
+    list-style: disc inside;
+    padding: 2px 0;
+}
+
+.bullet-list li ul
+{
+    margin: 0 0 0 16px;
+}
+
+h4 code,
+p code
+{
+    font-family: Consolas, "Courier New", Courier;
+    font-size: 12px;
+    font-weight: normal;
+    color: #00f;
+}
+
+h4
+{
+    border-bottom: dotted 1px #ccc;
+}
+
+.trial-notice
+{
+    color: #f00;
+}

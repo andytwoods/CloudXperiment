@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load i18n staticfiles %}
+
+{% block content %}
+    <div class="page-header">
+        <h3>
+            {{ expt_info.name }}
+        </h3>
+    </div>
+
+    <div class="experiment-meta">
+        <i class="glyphicon glyphicon-leaf"></i>
+        <a href="#">Lab_name</a>
+
+        <i class="glyphicon glyphicon-user"></i>
+        <a href="#">{{ expt_info.creator.profile.get_full_name }}</a>
+
+        <i class="glyphicon glyphicon-tags"></i>
+        <a href="#">tag1</a>
+        <a href="#">tag2</a>
+
+        <i class="glyphicon glyphicon-time"></i>
+        {{ expt_info.created|date:"Y-m-d" }}
+
+        <i class="glyphicon glyphicon-th"></i>
+        1031
+    </div>
+
+    <hr/>
+
+    <div class="well well-lg">
+        <object type="application/x-shockwave-flash" id="XPT" name="XPT" align="middle"
+                data="{% static 'swf/xperiment.swf' %}" width="100%"
+                height="600">
+            <param name="quality" value="high">
+            <param name="bgcolor" value="black">
+            <param name="allowscriptaccess" value="sameDomain">
+            <param name="allowfullscreenInteractive" value="true">
+            <!--<param name="flashvars" value="=undefined&amp;ip=108.166.200.79">-->
+        </object>
+    </div>
+{% endblock %}

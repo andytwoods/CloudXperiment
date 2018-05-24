@@ -1,0 +1,194 @@
+{% extends "experiment/base.html" %}
+
+{% load i18n bootstrap3 static %}
+
+{% block title %}{% trans "Create Experiment" %}{% endblock %}
+
+{% block inner_content %}
+    <div class="row">
+        <ol class="breadcrumb">
+            <li>
+                {% trans "Lab" %} :
+                <a href="{% url "lab_detail" lab.id lab.slug %}">
+                    {{ lab.name }}
+                </a>
+            </li>
+            <li>
+                <a href="{% url "experiment_manage" lab.id %}">
+                    {% trans "Manage Experiments" %}
+                </a>
+            </li>
+            <li class="active">
+                {% trans "Create Experiments" %}
+            </li>
+        </ol>
+        <div class="well well-lg">
+            <form id="create_experiment_form" class="form-horizontal" method="POST" action="" role="form">
+                {% csrf_token %}
+
+                {% bootstrap_field form.name %}
+                {% bootstrap_field form.participant_count %}
+                <div class="form-group"><label>Laboratory</label>
+                    <select class="form-control" id="id_lab_id" name="lab_id" placeholder="Laboratory">
+                        {% for item in ls_list %}
+                            <option {% if item.lab.id == lab.id %}selected="selected"{% endif %} value="{{ item.lab.id }}">{{ item.lab.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% bootstrap_field form.is_password %}
+                {% bootstrap_field form.is_encrypt %}
+                {% bootstrap_field form.swf_version %}
+
+                <div class="form-group">
+                    <button id="upload_new_swf" type="button" class="btn btn-success btn-small" data-url="{% url "upload_swf" lab.id %}">
+                        Upload a new swf?
+                    </button>
+                </div>
+
+                <div class="form-group"><label>Question Order</label>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input id="order_text" class="form-control" type="text">
+                        </div>
+                        <div class="col-md-2">
+                            <button id="btn_add_order" type="button" class="btn btn-success">Add Order</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <table id="order_table" class="table table-hover text-center">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="text-center" width="5%">#</th>
+                                <th class="text-center" width="90%">Order Text</th>
+                                <th class="text-center" width="5%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary pull-right">
+                        {% bootstrap_icon "arrow-right" %} {% trans "Next" %}
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css" %}"type="text/css"/>
+{% endblock %}
+
+{% block extra_js %}
+    <script id="tpl_order_table" type="text/template">
+        <tr>
+            <td><%= sequence %></td>
+            <td><%= order %></td>
+            <td><a name="btn_remove_order" class="no-underline-link"><i class="icon-remove-circle"></i></a></td>
+        </tr>
+    </script>
+    <script id="tpl_order_form" type="text/template">
+        <input type="hidden" name="order" value="<%= order %>">
+    </script>
+    <script src="{% static 'js/question-order.js' %}"></script>
+
+    <script type="text/javascript" src="{% static "js/plupload/plupload.full.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/plupload/jquery.ui.plupload/jquery.ui.plupload.js" %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#upload_new_swf").on("click", function () {
+                var url = $(this).data("url");
+                $.colorbox({
+                    href: url,
+                    fastIframe: false,
+                    overlayClose: false,
+                    closeButton: true,
+                    opacity: 0.7,
+                    width: 700,
+                    height: 580,
+                    title: function () {
+                        return "<img src='/static/img/logo.png' style='width:100px;'>"
+                    },
+                    onComplete: function () {
+                        $("#btn_upload_swf_submit").on("click", function (e) {
+                            var $form = $(".upload_swf_form").find("form");
+                            $.ajax({
+                                url: $form.attr("action"),
+                                data: $form.serialize(),
+                                dataType: "json",
+                                type: "POST",
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                                },
+                                success: function (data) {
+                                    if (data.status == "success") {
+                                        $("#id_swf_version").append('<option selected="selected" value="' + data.swf_id + '">' + data.swf_title + '</option>');
+                                        $.colorbox.close();
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(xhr.responseText);
+                                }
+                            });
+                            e.preventDefault();
+                        });
+
+                        var uploader = new plupload.Uploader({
+                            runtimes: 'html5,flash,silverlight,html4',
+                            drop_element: 'drop-target',
+                            browse_button: 'choose_swf',
+                            url: "{% url "upload_swf_post" lab.id %}",
+                            flash_swf_url: "{{ STATIC_URL }}js/plupload/Moxie.swf",
+                            silverlight_xap_url: '{{ STATIC_URL }}js/plupload/Moxie.xap',
+                            filters: {
+                                max_file_size: '30mb',
+                                mime_types: [
+                                    {title: "Files", extensions: "swf"}
+                                ]
+                            },
+                            headers: {
+                                "ACCEPT": "application/json",
+                                "X-CSRFToken": $.cookie("csrftoken")
+                            },
+                            init: {
+                                FilesAdded: function (up, files) {
+                                    up.start();
+                                    up.refresh(); // Reposition Flash/Silverlight
+                                },
+                                FileUploaded: function (up, file, info) {
+                                    var obj = $.parseJSON(info.response);
+                                    if (obj.status == "success") {
+                                        $("#id_swf_id").val(obj.swf_id);
+                                        $("#upload_swf_message").html("Upload swf file [" + obj.swf_name + "] successfully!");
+                                        $("#upload_swf_message").show();
+                                    } else {
+                                        alert(obj.message);
+                                    }
+                                },
+                                Error: function (up, err) {
+                                    alert(err.message);
+                                    up.refresh(); // Reposition Flash/Silverlight
+                                }
+                            }
+                        });
+
+                        uploader.init();
+
+                        $("#btn_upload_swf_close").on("click", function (e) {
+                            $.colorbox.close();
+                            e.preventDefault();
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

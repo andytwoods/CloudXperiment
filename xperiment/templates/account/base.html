@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="well">
+                <ul id="profile_panel" class="nav nav-pills nav-stacked"
+                    data-active_menu="{% block active_menu %}account_change_password{% endblock %}">
+                    <li class="nav-header">{% trans "Settings" %}</li>
+                    <li id="account_change_password">
+                        <a href="{% url "account_change_password" %}">{% trans "Change Password" %}</a>
+                    </li>
+                    <li id="account_email">
+                        <a href="{% url "account_email" %}">{% trans "Account Email" %}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% block main %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(function () {
+            var active_menu = $("#profile_panel").data("active_menu");
+            $("#profile_panel").find("#" + active_menu).addClass("active");
+        });
+    </script>
+{% endblock %}

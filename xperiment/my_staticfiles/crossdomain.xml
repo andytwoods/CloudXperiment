@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<!DOCTYPE cross-domain-policy
+  SYSTEM 'http://www.adobe.com/xml/dtds/cross-domain-policy.dtd'>
+<cross-domain-policy>
+	<allow-access-from domain="*.xperimentstimuli.s3.amazonaws.com"/>
+	<allow-access-from domain="*.xpt.mobi"/>
+	<allow-access-from domain="*.opensourcesci.com"/>
+	<allow-access-from domain="*.xperiment.mobi"/>
+</cross-domain-policy>

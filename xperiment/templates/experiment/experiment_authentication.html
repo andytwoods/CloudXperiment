@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 %}
+
+{% block content %}
+    {% if expt_info %}
+        <a id="redirect" href="{% url "experiment_run" expt_info.expt_id %}"></a>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="page-header">
+                <h3>{% trans "You need a password to do this experiment" %}</h3>
+            </div>
+            <div class="well well-lg">
+                <form class="form-horizontal" method="POST" action="">
+                    {% csrf_token %}
+                    <input name="expt_id" type="hidden" value="{{ expt_id }}">
+
+                    <div class="form-group">
+                        <label>{% trans "Your Password" %}</label>
+                        <input class="form-control" maxlength="50" name="password" placeholder="Password" type="text">
+                    </div>
+
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary pull-right">
+                            {% bootstrap_icon "ok" %} {% trans "Continue" %}
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($("#redirect")[0]) {
+                $("#redirect")[0].click();
+            }
+        });
+    </script>
+{% endblock %}

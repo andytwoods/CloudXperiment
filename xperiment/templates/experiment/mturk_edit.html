@@ -1,0 +1,60 @@
+{% load i18n staticfiles account bootstrap3 lab_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% trans "Create Mechanical Turk" %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="shortcut icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container mechanical_turk_form">
+    <form class="form-horizontal" method="POST" action="{% url "mturk_edit" expt_info.pk access_key %}" role="form">
+        {% csrf_token %}
+        {% if access_key == "true" %}
+            {% bootstrap_field form.access_id %}
+            {% bootstrap_field form.secret_key %}
+        {% endif %}
+        {% bootstrap_field form.title %}
+        {% bootstrap_field form.description %}
+        {% bootstrap_field form.keyword %}
+
+        <div class="form-group">
+            <label>{% trans "Country" %}</label>
+            <input id="id_country" type="text" name="country" style="width: 100%;" value="{{ mt_info.country|default_if_none:'' }}"/>
+            <span class="help-block"><a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">country codes</a></span>
+        </div>
+
+        {% bootstrap_field form.reward %}
+        {% bootstrap_field form.participant_count %}
+        {% bootstrap_field form.duration %}
+        {% bootstrap_field form.lifetime %}
+        {% bootstrap_field form.email %}
+        {% bootstrap_field form.platform %}
+
+        <input type="hidden" id="mt_id" name="mt_id" value="{{ mt_info.pk|default_if_none:'' }}">
+
+        <div class="form-group pull-right">
+            <button id="btn_mturk_submit" type="button" class="btn btn-primary">
+                {% bootstrap_icon "ok" %} {% trans "Submit" %}
+            </button>
+
+            <button id="btn_mturk_close" type="button" class="btn btn-danger">
+                {% bootstrap_icon "remove" %} {% trans "Close" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

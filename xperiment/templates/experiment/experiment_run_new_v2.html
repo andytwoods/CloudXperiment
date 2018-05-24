@@ -1,0 +1,63 @@
+{% load staticfiles %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title></title>
+    <meta name="google" value="notranslate"/>
+    <meta http-equiv="PRAGMA" content="NO-CACHE"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+    <style type="text/css">
+        body, html
+        {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+        }
+
+        #content
+        {
+            position:absolute; left: 0; right: 0; bottom: 0; top: 0px;
+        }
+
+    </style>
+
+
+
+
+</head>
+
+<body>
+
+    <div id="content"></div>
+
+
+    <script type="application/javascript">
+
+        var my_url = '{{ url|safe }}'
+
+        var extra_params = window.location.href.split("?")
+        if(extra_params.length===2){
+            if(my_url.indexOf("?")===-1){
+                my_url = my_url+'?'
+            }
+            my_url = my_url + "&" + extra_params[1]
+        }
+
+        var iframe = document.createElement('iframe')
+        iframe.width = '100%'
+        iframe.height = '100%'
+        iframe.frameBorder = '0'
+        iframe.scrolling = 'no'
+        iframe.id = 'iframe'
+        iframe.src = my_url
+        var content = document.getElementById('content')
+        content.appendChild(iframe)
+    </script>
+
+
+</body>
+</html>
+

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 %}
+
+{% block title %}{% trans "Payment" %}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="page-header">
+                <h3>{% trans "Payment" %}</h3>
+            </div>
+            <div class="well well-lg">
+                <form class="form-horizontal" method="POST" action="{% url "payment_complete" lab.id %}" role="form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input class="form-control" name="amount" type="text" placeholder="Amount" value="0.0">
+                    </div>
+
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            {% bootstrap_icon "ok" %} Submit
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

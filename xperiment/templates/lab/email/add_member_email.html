@@ -1,0 +1,28 @@
+<p>
+    Hi there,
+</p>
+<p>
+    {{ lab.creator.profile.get_full_name }} just added you to lab <a href="{{ site_url }}{{ lab.get_absolute_url }}">{{ lab.name }}</a> as a member.
+</p>
+
+{% if new_user %}
+    <p>
+        Since you didn't have an account in our site so the lab creator has created one for you. Here is your login
+        info:
+    </p>
+    <p>
+        Email: {{ new_user.email }}<br/>
+        Password: {{ temp_password }}<br/>
+
+    </p>
+    <p>
+        You should received another email to let you confirm your email, you must confirm your email then you can login.
+        You can change your password in your settings after you login.
+    </p>
+
+{% endif %}
+
+<p>
+    Best regards,<br/>
+    https://www.xpt.cloud
+</p>

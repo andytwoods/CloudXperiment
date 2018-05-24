@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% load i18n util_tags %}
+
+{% block title %}{% trans "Profile" %}{% endblock %}
+
+{% block content %}
+    <div class="row profile">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="row">
+                <div class="col-md-8 profile-main">
+
+                    <!-- User Bio -->
+                    <div class="profile-bio">
+                        <div class="page-header">
+                            <h3>
+                                <i class="glyphicon glyphicon-user"></i>
+                                {{ scientist.profile.title|default_if_none:"" }}
+                                {{ scientist.profile.fullname|default_if_none:scientist.email }}
+                            </h3>
+                        </div>
+
+                        <div>
+                            <p>
+                                <i class="glyphicon glyphicon-envelope"></i>
+                                {{ scientist.email }}
+                                {% if user == scientist %}
+                                    (<a href="#">{% trans "Change" %}</a>)
+                                {% endif %}
+                            </p>
+                            {% if scientist.profile.phone %}
+                                <p>
+                                    <i class="glyphicon glyphicon-phone"></i>
+                                    {{ scientist.profile.phone }}
+                                </p>
+                            {% endif %}
+
+                            {% if scientist.profile.website %}
+                                <p>
+                                    <i class="glyphicon glyphicon-globe"></i>
+                                    {{ scientist.profile.website }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        {% if scientist.profile.description %}
+                            <div>
+                                <blockquote>
+                                    {{ scientist.profile.description|capfirst }}
+                                </blockquote>
+                            </div>
+                        {% endif %}
+
+                        {% if user == scientist %}
+                            <div class="profile-actions">
+                                <a href="{% url "update_profile" %}" class="btn btn-default btn-block">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                    {% trans "Edit name, description or bio" %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- End of user bio -->
+
+                    <!-- Labs -->
+                    <div class="profile-labs">
+                        <div class="page-header">
+                            <h4>
+                                <i class="glyphicon glyphicon-home"></i>
+                                Labs
+                            </h4>
+                        </div>
+
+                        <!-- Labs list -->
+                        {% for ls in scientist.labscientist_set.all %}
+                            <div class="media">
+                                <a class="pull-left" href="{% url "lab_detail" ls.lab.id ls.lab.slug %}">
+                                    {% if ls.lab.logo %}
+                                        <img src="{{ ls.lab.logo.url }}" class="img-thumbnail lab-logo-small"
+                                             alt="{{ ls.lab.name }}">
+                                    {% else %}
+                                        <img data-src="holder.js/50x50/{{ 'sky,vine,lava,gray,industrial,social'|split:","|random }}/text:{{ ls.lab.name }}"
+                                             class="img-thumbnail" alt="{{ ls.lab.name }}">
+                                    {% endif %}
+                                </a>
+
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        <a href="{% url "lab_detail" ls.lab.id ls.lab.slug %}">{{ ls.lab.name }}</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <!-- end of labs list -->
+
+
+                    </div>
+                    <!-- End of labs -->
+
+                    <div class="profile-main-footer"></div>
+
+                </div>
+
+                <div class="col-md-4 profile-sidebar">
+                    {% include "avatar/_upload_avatar.html" %}
+
+
+                    <div class="profile-user-commands">
+                        <ul class="nav nav-pills nav-stacked">
+                            {% if user == scientist %}
+                                <li><a href="{% url "account_change_password" %}">{% trans "Account Settings" %}</a>
+                                </li>
+                                {% comment %}<li><a href="#">{% trans "Delete Account" %}</a></li>{% endcomment %}
+                            {% endif %}
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {% include "avatar/_upload_avatar_js.html" %}
+{% endblock %}

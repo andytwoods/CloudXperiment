@@ -1,0 +1,33 @@
+{% load i18n %}
+
+<div class="page-header">
+    <h3>
+        {{ expt_info.name }}
+    </h3>
+</div>
+
+<div class="experiment-meta">
+    <i class="glyphicon glyphicon-leaf"></i>
+    <a href="#">Lab_name</a>
+
+    <i class="glyphicon glyphicon-user"></i>
+    <a href="#">{{ expt_info.creator.profile.get_full_name }}</a>
+
+    <i class="glyphicon glyphicon-tags"></i>
+    <a href="#">tag1</a>
+    <a href="#">tag2</a>
+
+    <i class="glyphicon glyphicon-time"></i>
+    {{ expt_info.created|date:"Y-m-d" }}
+
+    <i class="glyphicon glyphicon-th"></i>
+    1031
+</div>
+
+<hr/>
+
+<img class="img-thumbnail" data-src="holder.js/800x200" alt="Experiment Title">
+
+<div class="experiment-description">
+
+</div>

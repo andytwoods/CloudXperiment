@@ -1,0 +1,107 @@
+{% load i18n staticfiles account bootstrap3 lab_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% trans "Create Mechanical Turk" %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="shortcut icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="container change-order-modal">
+        <div class="form-group">
+
+            <a id="btn_batch_add_order_toggle" href="#" class="btn btn-success">
+                <i class="glyphicon glyphicon-plus"></i>
+                Add
+            </a>
+
+            <a id="btn_modify_counts" href="#" class="btn btn-danger">
+                <i class="glyphicon glyphicon-minus"></i>
+                Modify counts
+            </a>
+
+        </div>
+
+
+        <div id="batch_add_order_content" class="form-group hide"><label>Conditions</label>
+            <div class="row">
+                <div class="col-md-10">
+                    <textarea id="batch_order_text" class="form-control" rows="5"
+                              placeholder="Add one condition per line, no spaces."
+                    ></textarea>
+                </div>
+                <div class="col-md-2">
+                    <button id="btn_batch_add_order" type="button" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="form-group">
+            <label>Number of people who started the study, per condition</label>
+            <table id="order_table" class="table table-hover text-center">
+                <thead>
+                <tr class="text-center">
+
+                    <th class="text-center" width="5%">#</th>
+                    <th class="text-center" width="5%">start count</th>
+                    <th class="text-center" width="55%">Condition</th>
+                    <th class="text-center" width="5%">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in order_list %}
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+                        <td><div class="form-group"><input id='new_count' type="number" class="form-countrol" value="{{ item.number }}" ></div></td>
+                        <td data-id="{{ item.pk }}">{{ item.order }}</td>
+                        <td>
+                            <a name="btn_remove_order" data-order-id="{{ item.pk }}" class="no-underline-link"><i class="icon-remove-circle"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if item.length > 0 %}
+        <br/>
+        <br/>
+        <div class="form-group">
+            <label>Number of people who finished the study, per condition</label>
+            <table id="finished_table" class="table table-hover text-center">
+                <thead>
+                <tr class="text-center">
+                    <th class="text-center" width="5%">#</th>
+                    <th class="text-center" width="5%">finished count</th>
+                    <th class="text-center" width="55%">Condition</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in finished_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.count }}</td>
+                        <td data-id="{{ item.pk }}">{{ item.finished }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% endif %}
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+
+
+.errbar {
+       opacity:0.5;
+        fill: #6e0011;
+}
+
+.x.axis line,
+.x.axis path {
+    visibility: hidden;
+}
+
+
+
+.y.axis line,
+.y.axis path {
+  fill: none;
+  stroke: #6e6e6e;
+    opacity:.5;
+}

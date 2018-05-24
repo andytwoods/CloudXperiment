@@ -1,0 +1,90 @@
+{% load i18n staticfiles bootstrap3 %}
+
+<div class="tabbable tabs-left">
+    <ul class="nav nav-tabs">
+
+        <li class="active">
+            <a href="#static_files" data-toggle="tab" title="{% trans "Images" %}">{% bootstrap_icon "upload" %}</a>
+        </li>
+        <li>
+            <a id="snippets" href="#" data-toggle="tab" title="{% trans "Snippets" %}">{% bootstrap_icon "leaf" %}</a>
+        </li>
+        {% comment %}<li><a href="#upload_image" data-toggle="tab"
+               title="{% trans "Upload Image" %}">{% bootstrap_icon "upload" %}</a></li>{% endcomment %}
+        <li>
+            <a id="propertygrid" href="#propertygrid_container" data-toggle="tab" title="{% trans "Property Grid" %}">
+                {% bootstrap_icon "list-alt" %}
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="static_files">
+            <div id="drop-target">Drop your stimuli here</div>
+            <div class="attachment-manager-bar">
+                <div class="btn-group">
+                    <button id="upload_attachments" type="button" class="btn btn-success btn-small">
+                        Upload
+                    </button>
+
+                    <div class="btn-group">
+                      <button id="attachment_delete_select" type="button" class="btn btn-default btn-small">{% trans "delete" %}</button>
+                      <button type="button" class="btn btn-default dropdown-toggle btn-small" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" id="attachment_delete_selectONE" data-toggle="tooltip" data-placement="right" title="delete single stimulus. [DEFAULT]">delete stimulus</a></li>
+                        <li><a href="#" id="attachment_delete_all" data-expt_id="{{ expt_info.expt_id }}" data-toggle="tooltip" data-placement="right" title="delete ALL stimuli.">delete all</a></li>
+                      </ul>
+                    </div>
+                    <div class="btn-group">
+                      <button id="attachment_add_swf_select" type="button" class="btn btn-default btn-small">{% trans "add to trial" %}</button>
+                      <button type="button" class="btn btn-default dropdown-toggle btn-small" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" id="attachment_add_swf_selectACROSS" data-toggle="tooltip" data-placement="right" title="one image will be placed in each trial. [DEFAULT]">over trials</a></li>
+                        <li><a href="#" id="attachment_add_swf_selectMANY" data-toggle="tooltip" data-placement="right" title="all the images will be placed in the same trial.">in a trial</a></li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+            <ul class="media-list" id="upload_file">
+                {% for item in attachment_list %}
+                    <li class="media">
+                        <a class="pull-left attachment_thumb" href="#" data-id="{{ item.id }}">
+                            <span class="select_status"></span>
+                            {% if item.file_type == "jpg" or item.file_type == "jpeg" or item.file_type == "png" %}
+                                <img class="media-object experiment-attachment" src="{{ item.get_absolute_url }}"
+                                     alt="{{ item.name }}">
+                            {% else %}
+                                <img class="media-object experiment-attachment"
+                                     data-src="holder.js/55x55/gray/text:{{ item.file_type }}" alt="{{ item.name }}">
+                            {% endif %}
+                        </a>
+
+                        <div class="media-body">
+                            <h4 class="media-heading">{{ item.name|truncatechars:20 }}</h4>
+                            {{ item.file.size|filesizeformat }}
+                        </div>
+                        <a class="pull-right attachment_delete" name="attachment_delete" href="#"
+                           data-id="{{ item.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane" id="propertygrid_container">
+            <table id="pg" class="easyui-propertygrid" style="width:300px"></table>
+
+              <div class="alert alert-info" role="alert" id="propertygrid_info"  style="width:100%;" >
+                Properties
+              </div>
+
+        </div>
+    </div>
+</div>
+<div id="messenger" title="info panel"></div>
+<div class="whiteBackground" ></div>
+

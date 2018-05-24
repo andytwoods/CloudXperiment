@@ -1,0 +1,451 @@
+{% extends "experiment/base.html" %}
+
+{% load i18n staticfiles bootstrap3 experiment_tags %}
+
+{% block inner_content %}
+    <ol class="breadcrumb">
+        <li>
+            {% trans "Lab" %} :
+            <a href="{% url "lab_detail" lab.id lab.slug %}">
+                {{ lab.name }}
+            </a>
+        </li>
+        <li class="active">
+            Experiments
+        </li>
+    </ol>
+
+    <div class="experiment_list">
+        <div class="page-header">
+
+
+            <a href="{% url "lab_detail" lab.id lab.slug %}" class="btn btn-primary btn-xs">
+                <i class="glyphicon glyphicon-pencil"></i>
+                {% trans "Manage lab" %}
+            </a>
+
+            <a href="{% url "experiment_create_v2" lab.id %}" class="btn btn-success btn-xs">
+                <i class="glyphicon glyphicon-plus"></i>
+                {% trans "Create experiment" %}
+            </a>
+
+            <a href="{% url "lab_balancer" lab.id %}" class="btn btn-primary btn-xs">
+                <i class="glyphicon glyphicon-pencil"></i>
+                {% trans "Manage 'over study' balancers" %}
+            </a>
+
+            <a id="delete_experiment" href="#" class="btn btn-danger btn-xs">
+                <i class="glyphicon glyphicon-minus"></i>
+                {% trans "Delete study" %}
+            </a>
+
+            <a href="{% url "add_data" %}" class="btn btn-success btn-xs">
+                <i class="glyphicon glyphicon-minus"></i>
+                {% trans "Upload backup data" %}
+            </a>
+
+             <div class="dropdown pull-right">
+              <button class="btn btn-default dropdown-toggle  btn-xs" id='filter' type="button" data-toggle="dropdown">Active studies
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu my-dropdown">
+                <li><a href="{% url 'experiment_manage' lab.id %}">Active studies</a></li>
+                <li><a href="archived">Archived studies</a></li>
+              </ul>
+            </div>
+
+        </div>
+
+        <table class="table table-striped table-hover table-experiment">
+            <thead>
+            <tr>
+                <th><input id="select_all" type="checkbox"></th>
+                <th></th>
+                <th>{% trans "Experiments" %}</th>
+                <th>{% trans "Results (n)" %}</th>
+                <th width="200">{% trans "Actions" %}</th>
+                <th>id</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for expt_info in paginator.object_list %}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="row-select" data-id="{{ expt_info.expt_id }}">
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <a class="btn btn-xs btn-default lockable"  href="#" data-id="{{ expt_info.expt_id }}" title="Lock/make the study editable">
+                                {% if expt_info.locked %}
+                                    <i class="icon-lock"> locked</i>
+                                {%  else %}
+                                    <i class="icon-unlock"> unlocked</i>
+                                {% endif %}
+                            </a>
+
+
+                            <a class="btn btn-xs btn-default achievable"  data-id="{{ expt_info.expt_id }}" href="#"  title="Archived/active study">
+                                {% if expt_info.archived %}
+                                    <i class="icon-archive"> archived</i>
+                                {%  else %}
+                                    <i class="icon-bolt"> active</i>
+                                {% endif %}
+                            </a>
+
+
+                        <a class="btn btn-xs btn-default live" data-id="{{ expt_info.expt_id }}" href="#"  title="live/hidden study">
+                                {% if expt_info.live %}
+                                    <i class="icon-bolt"> live</i>
+                                {%  else %}
+                                    <i class="icon-archive"> hidden</i>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{{ expt_info.get_absolute_url }}" target="_blank">
+                            {{ expt_info.name }} {% if expt_info.alias is not None %}(alias of {{  expt_info.alias.name }}){% endif %}
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                    <div class="btn-group text-left">
+                        <a href="{% url "experiment_answer" expt_info.expt_id %}"
+                           class="btn btn-default">
+                            {% get_answer_count expt_info.expt_id %}
+                        </a>
+
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            {% if expt_info.alias is not None %}
+                                <li>
+                                    <a href="{% url "experiment_answer_alias_family" expt_info.expt_id %}">combined results for alias family</a>
+                                </li>
+                            {% endif %}
+                            <li><a href="{% url "export_answer" expt_info.expt_id 'csv' %}">csv</a></li>
+                            <li><a href="{% url "export_answer_alternative" expt_info.expt_id 'csv' %}">csv (old style)</a></li>
+                            <li><a href="{% url "export_answer_raw" expt_info.expt_id 'raw' %}">raw json</a></li>
+                        </ul>
+                    </div>
+
+                    </td>
+                    <td>
+
+
+                    <div class="btn-group text-left">
+                        {% if expt_info.alias is None %}
+                        <a href="{% url "experiment_edit" expt_info.expt_id %}"
+                           class="btn btn-primary">
+                            <i class="glyphicon glyphicon-edit"></i>
+                            {% trans "Edit" %}
+                        </a>
+                        {% else %}
+                        <button disabled class="btn btn-primary">
+                            <i class="glyphicon glyphicon-send"></i>
+                            Alias
+                        </button>
+
+                        {% endif %}
+
+                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="{% url "experiment_rename" expt_info.expt_id %}">{% trans "Rename" %}</a>
+                                <a href="{% url "experiment_urlparams" expt_info.expt_id %}">url params</a>
+                                {% if expt_info.alias is  None %}
+                                <a href="{% url "download_zip" expt_info.expt_id %}">{% trans "Download zip" %}</a>
+                                {% endif %}
+                            </li>
+                        <li class="divider"></li>
+                            <li>
+                                <a name="btn_change_order"  href="#" data-expt-id="{{ expt_info.expt_id }}">
+                                    {% trans "Condition Balancer" %}
+                                </a>
+                            </li>
+                        {% if expt_info.alias is None %}
+                            <li class="divider"></li>
+                            <li><a name="btn_mturk_submit" class="btn disabled" href="#" data-expt-id="{{ expt_info.expt_id }}">{% trans "Submit to Mechanical Turk" %}&nbsp;{% if expt_info.mechanicalturkinfo_set.count %}{% bootstrap_icon "ok-sign" %}{% endif %}</a></li>
+                        {% endif %}
+                        </ul>
+                    </div>
+
+                    </td>
+                <td><small style="font-size:70%;">{{ expt_info.expt_id }}</small></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-right">
+            {% bootstrap_pagination paginator.object_list %}
+        </div>
+    </div>
+
+      <div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="smallModal" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+
+              <div class="modal-body" style="text-align: center; display: block; margin: auto auto;">
+                <div style=" display: block; margin: auto auto;" id="qrCodeImage"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+    {% include "experiment/_mturk_confirm_modal.html" %}
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "js/sweetalert.min.js" %}"></script>
+
+
+    <script id="tpl_order_row" type="text/template">
+        <tr>
+            <td><input type="checkbox" name="ck_order" value="<%= id %>"></td>
+            <td><%= sequence %></td>
+            <td><%= order %></td>
+            <td><a name="btn_remove_order" data-order-id="<%= id %>" class="no-underline-link"><i class="icon-remove-circle"></i></a></td>
+        </tr>
+    </script>
+
+    <script>
+
+        $('#delete_data').click( function(e) {
+            if (confirm("Are you sure you want to delete this study's data? This is irreversable!")) {
+
+                    $.ajax({
+                        url: "{% url 'experiment_delete_answers_overview' %}",
+                        type: "POST",
+                        dataType: "json",
+                        data: {expt_id: $(e.target).attr('data-expt_id')},
+                        async: true,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (result) {
+                            window.location.reload(true)
+                        }
+                    });
+                }
+
+
+            e.preventDefault(); /*your_code_here;*/ return false;
+        } );
+    </script>
+
+    <script type="text/javascript">
+        function qrCode(ele){
+            var qr = $('#qrCodeImage');
+            qr.html("");
+            $('#qrCodeImage').qrcode({
+                "render":"image",
+                "width": 100,
+                "height": 100,
+                "color": "#3a3",
+                "label":"Xperiment",
+                "fontname": 'Ubuntu',
+                "fontcolor": '#f37531',
+                "mode":0,
+                "text": ele.getAttribute('link')
+            });
+        }
+
+
+        $(document).ready(function () {
+            $("#select_all").click(function () {
+                var checked = $(this).prop("checked")
+                $("input.row-select").each(function () {
+                    if (!$(this).prop("disabled")) {
+                        $(this).prop("checked", checked);
+                    }
+                });
+            });
+
+            $("#delete_experiment").bind("click", function () {
+                if (get_select_count() <= 0) {
+                    alert("Please select at least one");
+                    return false
+                } else if (confirm("Can you sure want to delete selected experiment?")) {
+                    var params = "";
+                    $.each(get_select_ids(), function (i, id) {
+                        params += "&expt_id=" + id;
+                    });
+                    $.ajax({
+                        url: "/experiment/delete/",
+                        type: "POST",
+                        dataType: "json",
+                        data: params,
+                        async: true,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (result) {
+                            remove_select_row();
+                        }
+                    });
+                }
+            });
+
+        });
+
+        function get_select_count() {
+            var count = 0;
+            $("input.row-select").each(function () {
+                if ($(this).is(":checked")) {
+                    count++;
+                }
+            });
+            return count;
+        }
+
+        function get_select_ids() {
+            var ids = [];
+            $("input.row-select").each(function () {
+                if ($(this).is(":checked")) {
+                    ids.push($(this).data("id"));
+                }
+            });
+            return ids
+        }
+
+        function remove_select_row(id) {
+            $("input.row-select").each(function () {
+                if (id) {
+                    if ($(this).data("id") == id) {
+                        $(this).closest("tr").remove();
+                    }
+                } else {
+                    if ($(this).is(":checked")) {
+                        $(this).closest("tr").remove();
+                    }
+                }
+            });
+        }
+
+
+        function refresh_cdn(expt_id){
+
+            swal({
+              title: "Re-upload your experiment to fast storage?",
+              text: " This incurs a cost. And it takes 5 minutes to take into effect. Experiments auto-refresh daily. Continue anyway?",
+              type: "info",
+              showCancelButton: true,
+              closeOnConfirm: false,
+              showLoaderOnConfirm: true,
+            },
+            function(){
+              $.ajax({
+                        url: "/experiment/" + expt_id + "/refresh_cdn/",
+                        type: "POST",
+                        dataType: "json",
+                        async: true,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (result) {
+                            swal({
+                                title: "Success!",
+                                text: "It can take a few minutes for things to update. Please do not refresh unnecessarily."
+                            });
+                        },
+                        error: function () {
+                            swal("There has been a problem! Can you let the developers know. Thank you.")
+                        }
+                    });
+
+
+            });
+        }
+
+        setTimeout(function(){
+             $('.lockable').click(function(){
+                var _this = this
+                var id = $(this).attr('data-id')
+                command('lock_toggle', id, function(icon){
+                    var str = " "+icon.split("-")[1]+'ed'
+                    $(_this).children().first().removeClass().addClass(icon).text(str)
+                })
+            })
+
+            $('.achievable').click(function(){
+                var _this = this
+                var id = $(this).attr('data-id')
+                command('archive_toggle', id, function(){
+                    $(_this).closest ('tr').remove()
+                })
+
+            })
+
+            $('.live').click(function(){
+                var _this = this
+                var id = $(this).attr('data-id')
+                command('live_toggle', id, function(icon){
+                    var txt
+                    if(icon==='icon-bolt')txt = 'live'
+                    else txt = 'hidden'
+                    $(_this).children().first().removeClass().addClass(icon).text(txt)
+                })
+
+            })
+
+        },3000)
+
+        function command(what, id, callback) {
+
+            function fail(){
+               new PNotify({
+                    text: 'failed to make the change :S',
+                    type: 'error'
+                })
+            }
+
+
+            $.ajax({
+                url: "{% url 'experiment_manage_command' lab.id %}",
+                type: "POST",
+                dataType: "json",
+                data: {what: what, id:id},
+                async: true,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                },
+                success: function (message) {
+                    if(message.status!=='fail') callback(message.icon)
+                    else fail()
+                },
+                error: function(){
+                    fail()
+                }
+
+            });
+        }
+
+        var filter = "{{ filter }}"
+        if(['archived', 'discarded'].indexOf(filter)!==-1){
+
+            var span = $('<span />')
+            span.addClass("caret")
+
+            $('#filter').text(capitalizeTxt(filter)+" studies ").append(span)
+        }
+    function capitalizeTxt(txt) {
+      return txt.charAt(0).toUpperCase() + txt.slice(1);
+    }
+
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "css/sweetalert.css" %}" type="text/css">
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+
+{% block content %}
+    <div class="row lab">
+        <div class="col-md-12">
+                {% block inner_content %}
+                {% endblock %}
+        </div>
+    </div>
+{% endblock %}

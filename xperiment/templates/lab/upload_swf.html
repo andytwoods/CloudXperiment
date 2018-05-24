@@ -1,0 +1,60 @@
+{% load i18n staticfiles account bootstrap3 lab_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% trans "Upload Swf" %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="shortcut icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container upload_swf_form">
+    <form class="form-horizontal" method="POST" action="{% url "upload_swf_submit" lab.id %}" role="form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" id="id_title" maxlength="255" name="title" type="text">
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" cols="40" id="id_description" name="description" rows="10"></textarea>
+        </div>
+
+        <div class="form-group">
+            <button id="choose_swf" type="button" class="btn btn-success btn-block">
+                Upload a new swf
+            </button>
+        </div>
+
+        <div class="form-group">
+            <span id="upload_swf_message" class="label label-success" style="display: none;">Upload swf file successfully</span>
+        </div>
+
+        <input type="hidden" id="id_swf_id" name="swf_id" value="">
+
+        <div class="form-group pull-right">
+            <button id="btn_upload_swf_submit" type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-ok"></span> Submit
+            </button>
+
+            <button id="btn_upload_swf_close" type="button" class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove"></span> Close
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

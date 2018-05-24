@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 experiment_tags %}
+
+{% block content %}{% endblock %}
+{% block full_content %}
+    <div class="experiment-question-content">
+        <ol class="breadcrumb">
+            <li>
+                {% trans "Lab" %} :
+                <a href="{% url "lab_detail" lab.id lab.slug %}">
+                    {{ lab.name }}
+                </a>
+            </li>
+            <li>
+                <a href="{% url "experiment_manage" lab.id %}">
+                    {% trans "Manage Experiments" %}
+                </a>
+            </li>
+            <li class="active">
+                {% trans "Flyingfish Experiment Answers" %}
+            </li>
+        </ol>
+
+        <div class="page-header">
+            <a href="{% url "flyingfish_answer_export" expt_info.expt_id 'csv' %}" class="btn btn-success">
+                <i class="glyphicon glyphicon-download"></i>
+                {% trans "Export Data (csv)" %}
+            </a>
+            <a href="{% url "flyingfish_answer_export" expt_info.expt_id 'xml' %}" class="btn btn-success">
+                <i class="glyphicon glyphicon-download"></i>
+                {% trans "Export Data (xml)" %}
+            </a>
+            <button id="btn_bad" class="btn btn-success" data-point="-1">
+                <i class="glyphicon glyphicon-download"></i>
+                {% trans "Bad" %}
+            </button>
+            <button id="btn_good" class="btn btn-success" data-point="0">
+                <i class="glyphicon glyphicon-download"></i>
+                {% trans "Good" %}
+            </button>
+            <button id="btn_very_good" class="btn btn-success" data-point="1">
+                <i class="glyphicon glyphicon-download"></i>
+                {% trans "Very good" %}
+            </button>
+        </div>
+
+        <div id="bad_reason_container" style="display: none;">
+            <textarea id="bad_reason" placeholder="Reason" cols="100" rows="6"></textarea>
+            <button id="btn_submit_bad" class="btn btn-success">{% trans "Submit Point" %}</button>
+        </div>
+
+        <table class="tablesorter table table-bordered table-experiment">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="select_all"></th>
+                <th title="{% trans "Point" %}">{% trans "Point"|truncatechars:8 %}</th>
+                <th title="{% trans "Experiment name" %}">{% trans "Experiment name"|truncatechars:8 %}</th>
+                <th title="{% trans "Order" %}">{% trans "Order"|truncatechars:8 %}</th>
+                <th title="{% trans "Res x" %}">{% trans "Res x"|truncatechars:8 %}</th>
+                <th title="{% trans "Res y" %}">{% trans "Res y"|truncatechars:8 %}</th>
+                <th title="{% trans "Dpi" %}">{% trans "Dpi"|truncatechars:8 %}</th>
+                <th title="{% trans "Cpu" %}">{% trans "Cpu"|truncatechars:8 %}</th>
+                <th title="{% trans "Between sjs id" %}">{% trans "Between sjs id"|truncatechars:8 %}</th>
+                <th title="{% trans "Time start" %}">{% trans "Time start"|truncatechars:8 %}</th>
+                <th title="{% trans "Time zone" %}">{% trans "Time zone"|truncatechars:8 %}</th>
+                <th title="{% trans "Time stored" %}">{% trans "Time stored"|truncatechars:8 %}</th>
+                <th title="{% trans "Approx duration in seconds" %}">{% trans "Approx duration in seconds"|truncatechars:8 %}</th>
+                {% for q in expt_info.expt_headers.headers %}
+                    <th title="{{ q|underlinebr }}">{{ q|underlinebr|truncatechars:8 }}</th>
+                {% endfor %}
+                <th title="{% trans "Created" %}">{% trans "Created"|truncatechars:8 %}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for expt_answer in expt_answers %}
+                <tr>
+                    <td><input type="checkbox" name="expt_answer_select" value="{{ expt_answer.pk }}" {% if expt_answer.is_point %}disabled="disabled"{% endif %}></td>
+                    <td>
+                        {% if expt_answer.is_point %}
+                            {% if expt_answer.point == -1 %}
+                                <span class="label label-danger">Bad</span>
+                            {% elif expt_answer.point == 0 %}
+                                <span class="label label-info">Good</span>
+                            {% elif expt_answer.point == 1 %}
+                                <span class="label label-success">Very good</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="label label-default">Not rated</span>
+                        {% endif %}
+                    </td>
+                    <td title="{{ expt_answer.expt_info.name }}">{{ expt_answer.expt_info.name|truncatechars:8 }}</td>
+                    <td title="{{ expt_answer.order }}">{{ expt_answer.order|default_if_none:""|truncatechars:5 }}</td>
+                    <td>{{ expt_answer.res_x }}</td>
+                    <td>{{ expt_answer.res_y }}</td>
+                    <td>{{ expt_answer.dpi }}</td>
+                    <td>{{ expt_answer.cpu }}</td>
+                    <td title="{{ expt_answer.between_sjs_id }}">{{ expt_answer.between_sjs_id|truncatechars:5 }}</td>
+                    <td title="{{ expt_answer.time_start|date:"d-m-Y H:i:s" }}">{{ expt_answer.time_start|date:"d-m-Y H:i:s"|truncatechars:14 }}</td>
+                    <td title="{{ expt_answer.time_zone }}">{{ expt_answer.time_zone|truncatechars:5 }}</td>
+                    <td title="{{ expt_answer.time_stored|date:"d-m-Y H:i:s" }}">{{ expt_answer.time_stored|date:"d-m-Y H:i:s"|truncatechars:14 }}</td>
+                    <td title="{{ expt_answer.duration }}">{{ expt_answer.duration|truncatechars:5 }}</td>
+                    {% for q in expt_info.expt_headers.headers %}
+                        <td title="{{ expt_answer.expt_data|get_expt_answer:q }}">{{ expt_answer.expt_data|get_expt_answer:q|truncatechars:5 }}</td>
+                    {% endfor %}
+                    <td title="{{ expt_answer.created|date:"d-m-Y H:i:s" }}">{{ expt_answer.created|date:"d-m-Y H:i:s"|truncatechars:14 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        $(function () {
+            $("table").tablesorter({
+                headers: {
+                    0: {
+                        sorter: false
+                    }
+                }
+            });
+            $("table").bind("sortStart", function () {
+                $("#overlay").show();
+            }).bind("sortEnd", function () {
+                $("#overlay").hide();
+            });
+
+            $("#experiment_delete_answers").on("click", function () {
+                if (confirm("Are you sure to delete all the data?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+            $('#select_all').add_slide_from_id(function () {
+                var checkboxes = $(this).closest('table').find(":checkbox[name='expt_answer_select']:not(:disabled)");
+                if ($(this).is(':checked')) {
+                    checkboxes.prop('checked', true);
+                } else {
+                    checkboxes.prop('checked', false);
+                }
+            });
+
+            $("#btn_bad").on("click", function(){
+                $("#bad_reason_container").toggle();
+            });
+
+            $("#btn_submit_bad").on("click", function(){
+                var point = $("#btn_bad").data("point");
+                var reason = $("#bad_reason").val();
+                var answer_ids = is_selected();
+
+                if(answer_ids.length > 0){
+                    submit_point(answer_ids, point, reason);
+                    $("#bad_reason").val("");
+                    $("#bad_reason_container").css('display', 'none');
+                }else{
+                    alert('Please select at least one');
+                }
+            });
+
+            $("#btn_good").on("click", function(){
+                $("#bad_reason_container").css('display', 'none');
+                var point = $(this).data("point");
+                var answer_ids = is_selected();
+
+                if(answer_ids.length > 0){
+                    submit_point(answer_ids, point);
+                }else{
+                    alert('Please select at least one');
+                }
+            });
+
+            $("#btn_very_good").on("click", function(){
+                $("#bad_reason_container").css('display', 'none');
+                var point = $(this).data("point");
+                var answer_ids = is_selected();
+
+                if(answer_ids.length > 0){
+                    submit_point(answer_ids, point);
+                }else{
+                    alert('Please select at least one');
+                }
+            });
+
+            function is_selected() {
+                var chk_value = [];
+                $(':checkbox[name="expt_answer_select"]:checked').each(function () {
+                    chk_value.push($(this).val());
+                });
+                return chk_value;
+            }
+
+            function submit_point(answer_ids, point, reason){
+                var reason = reason ? reason : "";
+                $.ajax({
+                    url: "/flyingfish/answer/point/" ,
+                    type: "POST",
+                    dataType: "json",
+                    data: {answer_ids: answer_ids, point: point, reason:reason},
+                    async: true,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        if (data.status == "success") {
+                            alert("success");
+                            $('table').find(":checkbox[name='expt_answer_select']").each(function () {
+                                if ($(this).is(':checked')) {
+                                    $(this).prop('checked', false);
+                                    $(this).prop('disabled', true);
+                                    window.location.reload();
+                                }
+                            });
+                        }else{
+                            alert(data.reason);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

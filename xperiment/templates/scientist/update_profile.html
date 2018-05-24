@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 %}
+
+{% block title %}{% trans "Edit Profile" %}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="page-header">
+                <h3>
+                    Update Profile
+                </h3>
+            </div>
+            <div class="well well-lg">
+                <form class="form-horizontal" method="POST" action="" role="form">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            {% bootstrap_icon "ok" %} Submit
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

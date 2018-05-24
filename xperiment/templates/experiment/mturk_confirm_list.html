@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 %}
+
+{% block content %}
+    <div class="row">
+        <div class="page-header">
+            <h3>
+                {% trans "Mechanical turk confirm list" %}
+            </h3>
+        </div>
+
+        <div class="mt_info_list">
+            <table class="table table-striped table-experiment">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{% trans "Title" %}</th>
+                    <th>{% trans "Description" %}</th>
+                    <th>{% trans "Keyword" %}</th>
+                    <th>{% trans "Reward" %}</th>
+                    <th>{% trans "Participant Count" %}</th>
+                    <th>{% trans "Duration" %}</th>
+                    <th>{% trans "Lifetime" %}</th>
+                    <th>{% trans "Creator" %}</th>
+                    <th>{% trans "Experiment" %}</th>
+                    <th>{% trans "Created" %}</th>
+                    <th>{% trans "Action" %}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                    {% for mt_info in paginator.object_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ mt_info.title|truncatechars:20 }}</td>
+                            <td>{{ mt_info.description|truncatechars:20 }}</td>
+                            <td>{{ mt_info.keyword|truncatechars:20 }}</td>
+                            <td>{{ mt_info.reward }}</td>
+                            <td>{{ mt_info.participant_count }}</td>
+                            <td>{{ mt_info.duration }}</td>
+                            <td>{{ mt_info.lifetime }}</td>
+                            <td>{{ mt_info.creator }}</td>
+                            <td>{{ mt_info.expt_info }}</td>
+                            <td>{{ mt_info.created|date:"Y-m-d H:i:s" }}</td>
+                            <td>
+                                <a name="btn_mturk_confirm_admin" data-mt-id="{{ mt_info.pk }}"
+                                   data-expt-id="{{ mt_info.expt_info.expt_id }}" data-access-key="true" href="#">
+                                    {% bootstrap_icon "pencil" %} {% trans "Confirm" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            {% bootstrap_pagination paginator.object_list %}
+        </div>
+    </div>
+{% endblock %}

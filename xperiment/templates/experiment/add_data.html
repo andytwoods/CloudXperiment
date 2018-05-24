@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <textarea style="width:100%;height:80%;" type="text" id='backup_data' placeholder="paste SJs backup data (new line per SJ)" novalidate="" autocomplete="off"></textarea>
+            <button type="submit" id="myInput" class="btn btn-success">upload</button>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_js %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+        $('#myInput').click(function(e){
+            e.preventDefault();
+            var backup_data = $('#backup_data').val()
+            if(backup_data.length===0) return false
+
+            window.setTimeout(function() {
+
+                $.ajax({
+                    url: '{% url "backup_upload" %}',
+                    type: 'post',
+                    async: true,
+                    data: {'backup':backup_data},
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        if(data['status']==='success')alert('success')
+                        else{
+                            var failures = data['fails']
+                            console.log(failures)
+                            alert('failures: '+failures.length)
+                            $('#backup_data').val(failures.join("\n"))
+                        }
+                    },
+                    error: function (jqXHR, error) {
+                        alert('problem: '+ error)
+                    }
+                });
+            },0);
+
+            return false
+        });
+
+
+    </script>
+
+{% endblock %}

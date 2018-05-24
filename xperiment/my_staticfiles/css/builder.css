@@ -1,0 +1,33 @@
+.navbar-fixed-bottom {
+    padding: 0 0 0px !important;
+    visibility: hidden !important;
+    height: 0 !important;
+}
+
+#wrap {
+    padding: 0 0 0px !important;
+}
+
+.CodeMirror {
+    height: auto;
+}
+
+.CodeMirror-scroll {
+    max-height: 700px;
+}
+
+.datagrid-header .datagrid-cell {
+    line-height: normal;
+    height: auto;
+}
+
+.whiteBackground {
+    opacity: .8;
+    background: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    position: fixed;
+}

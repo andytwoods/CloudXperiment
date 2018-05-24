@@ -1,0 +1,43 @@
+{% load i18n staticfiles bootstrap3 %}
+
+<form id="aform" method="POST" action=".">
+    {% csrf_token %}
+    <div id="swf_editor" style="background-color: rgb(66, 139, 202);" class="panel panel-primary" >
+        <div class="panel-heading hidden-xs">
+            <span>edit:</span>
+            <input type="checkbox" id="editMode" name="editMode" data-size="mini" checked>
+
+            <div class="btn-group" id="editModeType" data-toggle="buttons">
+              <label class="btn btn-primary btn-small active" name="overTrials">
+                <input type="checkbox" autocomplete="off" name="overTrials" checked>Over Trials
+              </label>
+            </div>
+            <span style="padding-left: 5px;">trial:</span>
+            <input name="trial" class="form-control insert-trial-control" id="trialToolTip" value="1"/>
+
+            <div class="btn-toolbar navbar-right"  id="builder_toolbar">
+                <div class="btn-group" id="stimMenu">
+                    <button type="button" name="duplicate" class="btn btn-default btn-small" data-toggle="tooltip" data-placement="right" title="duplicate currently selected stimuli">duplicate</button>
+                    {% comment %}<button type="button" name="splitup" class="btn btn-default"   data-toggle="tooltip" data-placement="right" title="split up stimuli specified in the same stimulus-object" >splitup</button>{% endcomment %}
+                    {% comment %}<button type="button" name="combine" class="btn btn-default"  data-toggle="tooltip" data-placement="right" title="combine similar stimuli">combine</button>{% endcomment %}
+                </div>
+                <div class="btn-group">
+                    <button type="button" name="first" class="btn btn-default btn-small" data-toggle="tooltip" data-placement="right" title="goto the very first trial"><img name="first" src="/static/css/AcidJs.Ribbon/icons/16/first.png" ></button>
+                    <button type="button" name="prev" class="btn btn-default btn-small" data-toggle="tooltip" data-placement="right" title="goto the previous trial"><img name="prev" src="/static/css/AcidJs.Ribbon/icons/16/left.png" ></button>
+
+                    <button type="button" name="next" class="btn btn-default btn-small" data-toggle="tooltip" data-placement="right" title="goto the next trial"><img name="next" src="/static/css/AcidJs.Ribbon/icons/16/right.png" ></button>
+                    <button type="button" name="last" class="btn btn-default btn-small" data-toggle="tooltip" data-placement="right" title="goto the very last trial"><img  name="last" src="/static/css/AcidJs.Ribbon/icons/16/last.png" ></button>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" name="play" class="btn btn-default navbar-inner btn-small" data-toggle="tooltip" data-placement="right" title="start the trial running" title="run trial"><img src="/static/css/AcidJs.Ribbon/icons/16/play.png" ></button>
+                    <button type="button" name="pause" class="btn btn-default navbar-inner btn-small" data-toggle="tooltip" data-placement="right" title="pause the trail" title="pause trial" ><img src="/static/css/AcidJs.Ribbon/icons/16/pause.png" ></button>
+                    <button type="button" name="reset" class="btn btn-default navbar-inner btn-small"  data-toggle="tooltip" data-placement="right" title="reset the trial (time 0)" title="restart trial" ><img src="/static/css/AcidJs.Ribbon/icons/16/redo.png" ></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body" id="panel-body">
+            {% include "experiment/_create_swf.html" with swf_name="swf/Builder.swf" swf_id="builder" container_name="swfcontainer" %}
+        </div>
+    </div>
+ </form>

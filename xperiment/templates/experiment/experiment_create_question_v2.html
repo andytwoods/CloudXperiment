@@ -1,0 +1,915 @@
+{% extends "base.html" %}
+
+{% load i18n staticfiles bootstrap3  %}
+{% block content %}{% endblock %}
+
+{% block full_content %}
+
+
+    <div class="row" style="margin-left:0px;margin-right:0px">
+        <div id="main_splitter" class="col-md-4">
+
+            <div id="uploaderXpt"><p>Your browser doesn't have HTML5 support.</p></div>
+            <div class="progress">
+                <div class="progress-bar" id="mbBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%;min-width: 10em;">
+                0%
+                </div>
+            </div>
+            <div id="directoryListing"></div>
+            <div id="messenger" title="info panel"></div>
+
+
+        </div>
+        <div class="col-md-8">
+            <textarea id="textEditor" style="width:100%; height:100%">editor</textarea>
+        </div>
+    </div>
+
+    <div class="" style="background-color:grey;position:fixed;bottom:0px;z-index:10000; width:400px; padding-bottom:2px;">
+        <div class="input-group">
+          <span class="input-group-btn" style="color:white">
+            <button type="submit" class="btn btn-default" onclick="saveFile()";>Save (Ctrl+s)</button>
+              <input type="text" id="filename" class="form-control" placeholder="filename">
+          </span>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "js/plupload/jquery.ui.plupload/css/jquery.ui.plupload.css" %}"type="text/css"/>
+    <link type="text/css" rel="stylesheet" href="{% static "css/font-awesome.min.css" %}" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{% static "js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css"%}" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{% static "js//jstree/themes/default/style.min.css"%}" media="screen" />
+    <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/codemirror.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/night.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/sweetalert.css" %}" type="text/css">
+
+    <style>
+        .text-muted{
+            visibility: hidden;
+        }
+    </style>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "js/pace.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/plupload/plupload.full.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/plupload/jquery.ui.plupload/jquery.ui.plupload.js" %}"></script>
+    <script type="text/javascript" src="//www.google.com/jsapi"></script>
+    <script type="text/javascript" src="{% static "js/plupload/jquery.plupload.queue/jquery.plupload.queue.min.js"%}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{% static "js//jstree/jstree.min.js"%}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{% static "js/codemirror/codemirror.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/codemirror/mode/xml/xml.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/sweetalert.min.js" %}"></script>
+
+
+    <script>
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("textEditor"), {
+            mode: "xml",
+            theme: "night",
+            lineNumbers: true,
+            lineWrapping: true,
+            });
+
+        editor.setSize('100%', '100%');
+
+
+
+    </script>
+
+    <script type="text/javascript">
+    function command(what,info, callback){
+
+            var data = {
+                acl: 'private',
+                what: what,
+                expt_id: '{{ expt_id }}'
+            }
+
+            if(info!=undefined) {
+                for (var key in info) {
+                    data[key] = info[key];
+                }
+            }
+
+            window.setTimeout(function() {
+
+                $.ajax({
+                    url: 'command/',
+                    type: 'post',
+                    async: true,
+                    data: data,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        if (callback)    callback('success', data);
+
+                    },
+                    error: function (jqXHR, error, errorThrown) {
+                        console.log(jqXHR, error, errorThrown)
+                        if (callback)    callback('fail');
+                    }
+                });
+            },0);
+        }
+    </script>
+
+
+
+    <script>
+
+    var tree;
+    function updateDirInfo(freshlyUploaded) {
+        if(freshlyUploaded === undefined) freshlyUploaded = false;
+        var namSplit;
+
+        function setIcon(myNam) {
+            namSplit = myNam.split(".");
+            if (namSplit.length == 2) {
+                switch (namSplit[1]) {
+
+                    case 'xml':
+                        return "glyphicon glyphicon-pencil"
+                    case 'png':
+                    case 'jpg':
+                        return "glyphicon glyphicon-picture"
+                }
+            }
+
+            return "glyphicons glyphicons-file";
+        }
+
+        function sortdir(files) {
+
+            var jsonFiles = [];
+            var dirList = [];
+
+
+            var nam;
+            for (var i = 0; i < files.length; i++) {
+                nam = files[i];
+                if (nam.charAt(nam.length - 1) == "/") processDir(files[i]);
+                else processFile(files[i]);
+            }
+
+            function processFile(id) {
+
+                var dirFile = id.split("/");
+
+                var filename = dirFile.pop();
+                var dirListStr = dirFile.join("/") + '/';
+
+                var jsonFile = {"id": id, "text": filename, "parent": dirListStr};
+                jsonFile.icon = setIcon(filename);
+
+                jsonFiles.push(jsonFile);
+
+                if (dirListStr != undefined && dirListStr != '#' && dirList.indexOf(dirListStr) == -1) {
+                    processDir(dirListStr);
+                }
+            }
+
+
+            function processDir(id) {
+
+                var dirFile = id.split("/");
+                var dir_nam, parent;
+
+                if (dirFile.length == 2) {
+                    dir_nam = '';
+                    parent = '#';
+                }
+
+                else {
+                    dirFile.pop();
+                    dir_nam = dirFile.pop();
+                    parent = dirFile.join("/") + '/';
+                }
+
+                if (dirList.indexOf(id) == -1) {
+
+                    var jsonFile = {"id": id, "text": dir_nam, "parent": parent};
+                    if (dirFile.length == 2 || dir_nam == "experiments/") jsonFile.state = {'opened': true};
+                    jsonFiles.push(jsonFile);
+
+                    dirList.push(id);
+
+                    if (parent != undefined && parent != '#' && dirList.indexOf(parent) == -1) {
+                        processDir(parent);
+                    }
+                }
+            }
+
+            var obj = {core: {data: jsonFiles}};
+
+            if (tree == undefined) {
+                obj['plugins'] = ['theme', 'wholerow', 'contextmenu', 'hotkeys', 'dnd','crrm'];
+
+
+                obj["crrm"]= {
+                    "move" : {
+                        "check_move" : function (m) {
+                            var p = this._get_parent(m.o);
+                            if(!p) return false;
+                            p = p == -1 ? this.get_container() : p;
+                            if(p === m.np) return true;
+                            if(p[0] && m.np[0] && p[0] === m.np[0]) return true;
+                            return false;
+                        }
+                    }
+                }
+                obj["dnd"]= {
+                    "drop_target" : false,
+                    "drag_target" : false
+                }
+
+                obj['contextmenu'] = {
+                    "items": function ($node) {
+                        var tree = $("#tree").jstree(true);
+                        return {
+                            "delete": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "label": "delete",
+                                "icon": 'glyphicon glyphicon-remove',
+                                "action": treeDelete
+                            },
+                             "rename": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "label": "rename",
+                                "icon": 'glyphicon glyphicon-download',
+                                "action": rename
+
+                            },
+                            "add Experiment directory": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "icon": 'glyphicon glyphicon-download',
+                                "label": "add Experiment directory",
+                                "action":function (obj) {
+                                    newDir("experiment");
+                                }
+                            },
+                            "new directory": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "icon": 'glyphicon glyphicon-download',
+                                "label": "new directory",
+                                "action": function (obj) {
+                                    newDir("untitled")
+                                }
+                            },
+                            "download": {
+                                "separator_before": false,
+                                "separator_after": false,
+                                "icon": 'glyphicon glyphicon-download',
+                                "label": "download",
+                                "action": function (obj) {
+                                    showNotificationBar("not developed yet")
+                                }
+                            },
+                        };
+                    }
+                }
+                tree = $('#directoryListing').jstree(obj);
+
+                tree.bind("loaded.jstree", function () {
+                    if(editor.getValue()!='editor') return
+                    openFirstExpt(freshlyUploaded)
+                });
+
+                tree.on('dblclick', '.jstree-anchor', function () {
+                    var selectedList = tree.jstree(true).get_selected();
+                    if (selectedList.length > 0) {
+                        loadFile(selectedList[0])
+                    }
+                });
+
+                tree.bind("move_node.jstree", function (e, data) {
+                                /*
+                    requires crrm plugin
+
+                    .o - the node being moved
+                    .r - the reference node in the move
+                    .ot - the origin tree instance
+                    .rt - the reference tree instance
+                    .p - the position to move to (may be a string - "last", "first", etc)
+                    .cp - the calculated position to move to (always a number)
+                    .np - the new parent
+                    .oc - the original node (if there was a copy)
+                    .cy - boolen indicating if the move was a copy
+                    .cr - same as np, but if a root node is created this is -1
+                    .op - the former parent
+                    .or - the node that was previously in the position of the moved node */
+
+                    var nodeType = $(data.rslt.o).attr("rel");
+                    var parentType = $(data.rslt.np).attr("rel");
+
+                    if (nodeType && parentType) {
+                        // TODO!
+                        alert('not developed yet')
+                    }
+                });
+
+
+
+            }
+            else {
+                tree.jstree(true).settings.core.data = jsonFiles;
+                tree.jstree(true).refresh();
+
+            }
+
+
+            //if(tree.core == undefined) tree.core = {};
+            //tree.core.data = jsonFiles;
+            //$('#directoryListing').jstree(obj);
+            //  $('#directoryListing').jstree(true).redraw(true);
+
+
+        }
+
+        function getUrl(file_id) {
+            var split = file_id.split("/");
+            split.unshift("experiment");
+            split.splice(2, 0, "run");
+
+            //nb some bizarreness below as location.host not needed. Seems ajax adds this.
+            return location.protocol + '/' + split.join("/");
+        }
+
+
+        function rename(){
+
+            alert('not implemented yet.')
+        }
+
+
+
+        function newDir(what){
+            if(what==""){
+                showNotificationBar('not developed yet');
+            }
+            else if(what=='untitled'){
+                var all = tree.jstree(true).get_selected();
+                if(all.length==0) return;
+                var cur_dir = all[0];
+                if(cur_dir.charAt(cur_dir.length-1)!="/"){
+                    var arr = cur_dir.split("/");
+                    if(arr.length>1) {
+                        arr.pop();
+                        cur_dir = arr.join("/")+"/";
+                    }
+                }
+                var new_dir = cur_dir + 'untitled/';
+                command('new_dir', {'new_dir':new_dir}, function (success, data) {
+                    if (success == "success") {
+                        updateDirInfo();
+                        selectNode_fromId(new_dir);
+                    }
+                });
+            }
+            else if(what=='experiment') {
+                command('experimentDir', {}, function (success, data) {
+                    if (success == "success") {
+                        updateDirInfo();
+                        selectNode('experiments');
+                    }
+
+                });
+            }
+        }
+
+
+        command("s3_mb", {}, function(success,data){
+            if(success=='success'){
+                var mb = parseFloat(data['size'])/1000000;
+                var max = parseFloat(data['max']);
+                var txt = String(Math.round(mb *100)/100) + " / " + String(max) + "MB";
+                var bar  = $("#mbBar")
+                bar.css('width',txt.length);
+                bar.text(txt );
+                sortdir(data['dir']);
+            }
+        });
+
+    }
+
+
+    function treeMakeDefault(){
+        var selectedList = tree.jstree(true).get_selected();
+        if(selectedList.length>1){
+            showNotificationBar("more than one item selected.");
+            return;
+        }
+        if(selectedList.length==0){
+            showNotificationBar("one item must be selected.");
+            return;
+        }
+        var selected = selectedList[0];
+        if(selected.substr(selected.length-3)!="xml"){
+            showNotificationBar("only xml files can be made as default scripts.");
+            return;
+        }
+
+        if (selected.indexOf('/') != -1) {
+            var arr = selected.split("/");
+            arr.shift();
+            selected = arr.join("/")
+        }
+    }
+
+    updateDirInfo();
+
+    function loadFile(selected){
+
+        var checks = ['xml','html', 'js', 'html'];
+        var passed = false;
+        for(var i = 0;i< checks.length;i++ ) {
+            var check = checks[i];
+            if (selected.substr(selected.length - check.length) == check){
+                passed = true;
+            }
+        }
+        if(passed == false){
+            showNotificationBar('only xml files can be edited.');
+            return;
+        }
+
+        command('getfile', {file:selected}, function (success, data) {
+            if (success == "success") {
+                editor.setValue(data);
+                var filenameArr = selected.split("/");
+                filenameArr.shift();
+                selected = filenameArr.join("/");
+                if (fileNameInput == undefined) fileNameInput = $('#filename');
+                fileNameInput.val(selected);
+                var len = selected.length;
+                if (len > 200) len = 200;
+                fileNameInput.attr('size', len);
+                treeMakeDefault()
+            }
+        });
+
+    }
+
+    function selectNode(str){
+        var instance = tree.jstree(true);
+        var m = instance._model.data;
+        for(var i in m) {
+            if(m[i].li_attr !=null && m[i].text == str) {
+                instance.deselect_all();
+                instance.select_node(i);
+                instance.open_node(i);
+                break;
+            }
+        }
+    }
+
+    function selectNode_fromId(str){
+        var instance = tree.jstree(true);
+        var m = instance._model.data;
+        for(var i in m) {
+            if(m[i].li_attr !=null && m[i].id == str) {
+                instance.deselect_all();
+                instance.select_node(i);
+                instance.open_node(i);
+                break;
+            }
+        }
+    }
+
+
+    function openFirstExpt(freshlyDownloaded){
+        var instance = tree.jstree(true);
+        var m = instance._model.data;
+
+        var defaultStr = "{{ xpt2_xml }}";
+        if(defaultStr.length>0){
+            for (var i in m) {
+                if (m[i].li_attr != null && m[i].id.indexOf(defaultStr)!=-1) {
+                    selectMagic(m[i]);
+                }
+            }
+        }
+        else {
+
+            for (var i in m) {
+                if (m[i].li_attr != null && m[i].text.indexOf("index.html") != -1) {
+                    selectMagic(m[i]);
+                }
+            }
+        }
+
+        function selectMagic(item){
+            instance.deselect_all();
+            instance.select_node(item);
+            loadFile(item.id, freshlyDownloaded);
+        }
+    }
+
+    function treeDelete() {
+
+            var ask=confirm("Are you sure you want to delete?");
+            if(ask) {
+
+                var children_to_add;
+                var all;
+
+                function children_to_delete(parentStr) {
+                    if (children_to_add == undefined) children_to_add = [];
+                    if (all == undefined) all = tree.jstree(true).settings.core.data;
+                    var currentChild;
+
+                    for (var i_all = 0; i_all < all.length; i_all++) {
+                        currentChild = all[i_all];
+                        if (currentChild.parent.substr(0, parentStr.length) === parentStr) {
+                            children_to_add[children_to_add.length] = currentChild.id;
+                        }
+                    }
+                }
+
+                var selectedList = tree.jstree(true).get_selected();
+
+                var selectedFile;
+
+
+                for (var i_s = selectedList.length - 1; i_s >= 0; i_s--) {
+                    selectedFile = selectedList[i_s];
+                    if (selectedFile.charAt(selectedFile.length - 1) === "/") {
+                        children_to_delete(selectedFile);
+                    }
+                }
+                if (children_to_add != undefined) selectedList = selectedList.concat(children_to_add);
+                if (selectedList.length === 0) return;
+
+                command("delete", {files: selectedList}, function (success, data) {
+                    if (success == "success"){
+                    updateDirInfo();
+                }
+            });
+        }
+    }
+
+    </script>
+
+
+    <script>
+        function showNotificationBar(message, duration, bgColor, txtColor, height) {
+            /*set default values*/
+            duration = typeof duration !== 'undefined' ? duration : 1500;
+
+            var footer = $('.text-muted');
+            var origText = footer.text();
+
+            footer.text(message);
+            footer.animate({'padding-left':'100px'},50);
+            footer.delay(50).animate({'padding-left':'0px'},50);
+
+            setTimeout(function() {
+                footer.text(origText);
+
+            }, duration);
+
+
+
+        }
+    </script>
+
+
+    <script type="text/javascript">
+
+        var fileNameInput;
+
+        $(document).bind('keydown', function(e) {
+            if(e.ctrlKey && (e.which == 83)) {
+                e.preventDefault();
+                saveFile();
+            }
+            else if(editor.hasFocus()) return;
+
+            else if(e.which == 46){
+              e.preventDefault();
+              treeDelete();
+            }
+        });
+
+        function saveFile(){
+            if(fileNameInput == undefined ) return;
+            var txt = fileNameInput.val();
+            if(txt.length===0)return;
+            var filenameVal = '{{ expt_id }}/' + txt;
+
+            command("savefile",{filename:filenameVal,text:editor.getValue()},function(success,data){
+                    if(success=="success"){
+                        showNotificationBar("saved " +txt)
+                        swal({
+                            title:"saved!",
+                            text: "Yay!",
+                            type: "success",
+                            timer: 1000
+                        })
+                    }
+                    else {
+                        showNotificationBar("failed to save " + txt + "!", 1500, "#f4e0e8")
+                    }
+            });
+        }
+
+
+
+    </script>
+
+
+    <script type="text/javascript">
+        var s3_params = {};
+        var dropFile_relPath = {};
+        var uploader;
+
+
+    // Initialize the widget when the DOM is ready
+
+        plupload.addFileFilter('exclude_file_types', function(list, file, cb) {
+            if (list.indexOf(file.name.slice(-2)) !== -1) {
+                console.log('not allowed to upload this file-type: ' + file.name);
+                cb(false);
+            } else {
+                cb(true);
+            }
+        });
+
+        // Setup html5 version
+
+        var uploader = $("#uploaderXpt").pluploadQueue({
+            // General settings
+
+            runtimes: 'html5,html4',
+            url: '{{ bucket_url }}',
+            send_file_name: false,
+            //chunk_size : '1mb',
+            dragdrop: true,
+            multipart: true,
+            unique_names: false,
+            filters: {
+                // Maximum file size
+                max_file_size: '10mb',
+                exclude_file_types: ['db'],
+            },
+            preinit: {
+                UploadFile: function (up, file) {
+                    up.settings.multipart_params = {
+                        key: s3_params[file.id]["key"],
+                        AWSAccessKeyId: '{{ access_key }}',
+                        acl: 'public-read',
+                        policy: s3_params[file.id]["policy"],
+                        signature: s3_params[file.id]["signature"],
+                        'Content-Type': file.type,
+                    }
+                },
+                UploadComplete: function (up, files) {
+                    infoBar();
+                    updateDirInfo(true);
+                },
+                Error: function (up, err) {
+                    if (err.hasOwnProperty("file")) {
+                        showNotificationBar('problem uploading files: '+err);
+                    }
+                    else{
+                        showNotificationBar("upload finished successfully.");
+                    }
+                }
+            },
+
+
+            init: {
+                PostInit: function () {
+                    document.getElementById('uploaderXpt_filelist').addEventListener('drop', function (e) {
+                        var items = e.dataTransfer.items, n, item;
+
+                        for (n = 0; n < items.length; n++) {
+                            item = items[n].webkitGetAsEntry();
+                            if (item) {
+                                traverseFileTree(item, "");
+                            }
+                        }
+
+
+                    }, false);
+
+                },
+
+                FilesAdded: function (up, files) {
+                    infoBar();//reset info bar
+                    infoBar('please wait...');
+                    var folderSelected = function(){
+                        var selectedList = tree.jstree(true).get_selected();
+                        if(selectedList.length==0) return "";
+                        var selectedFile = selectedList[0];
+                        var arr =  selectedFile.split("/");
+                        if(selectedFile[selectedFile.length-1]!="/"){
+                            arr[arr.length-1]="";
+                        }
+                        arr.shift();
+                        selectedFile = arr.join("/");
+
+                        return selectedFile;
+                    }()
+
+                    var keys = []
+                    var types = []
+                    var tags = []
+                    infoBar("adding security credentials");//reset info bar
+                    plupload.each(files, function (file) {
+
+                        if(dropFile_relPath.hasOwnProperty(file.name) === false){
+                            up.removeFile(file);
+                        }
+                        else {
+                            var relPath = folderSelected + dropFile_relPath[file.name].shift();
+
+                            if (relPath.length > 0)  relPath += '/';
+
+                            var tag = file.id
+
+                            var key = '{{ expt_id }}' + '/' + relPath + file.name;
+                            key = key.split("//").join("/");
+
+
+                            if (s3_params.hasOwnProperty(tag) === false) s3_params[tag] = {};
+
+                            s3_params[tag]['key'] = key
+
+
+
+                            keys.push(key)
+                            types.push(file.type)
+                            tags.push(file.id)
+                        }
+
+
+                    })
+
+
+                    $.ajax({
+                        url: '{% url 'sign_s3' %}',
+                        type: 'post',
+                        async: true,
+                        data: {
+                            acl: 'private',
+                            keys: keys,
+                            types: types,
+                            tags: tags
+                        },
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (data) {
+
+                            data.forEach(function(d) {
+
+                                var tag = d['tag']
+
+                                if (s3_params.hasOwnProperty(tag) === false) s3_params[tag] = {};
+
+                                s3_params[tag]['policy'] = d['policy']
+                                s3_params[tag]['signature'] = d['signature']
+
+                            })
+                            infoBar()
+                            infoBar("uploading files")
+                            up.start()
+
+                        },
+                        error: function (jqXHR, error, errorThrown) {
+                            if (jqXHR.status && jqXHR.status === 400) {
+                                console.log("err:", jqXHR.responseText);
+                            } else {
+                                console.log(jqXHR, error, errorThrown);
+                            }
+                        }
+                    })
+                }
+            }
+        });
+
+
+   </script>
+
+    <script>
+
+    setDefaultText('{{ xpt2_xml }}');
+
+        function setDefaultText(str) {
+            $('#defaultXML').text(str);
+        }
+
+    </script>
+    <script>
+
+        var traverseComplete = false;
+          // all relative paths are built here
+
+        var infoBar = function(){
+
+            var prevUpdate = new Date().getTime();
+            var time;
+
+            var header = $(".plupload_header_title");
+            var subheader = $(".plupload_header_text");
+
+            var headerOrigText = header.text();
+            var subheaderOrigText = subheader.text();
+
+            function reset(){
+                counters = {};
+                header.text(headerOrigText);
+                subheader.text(subheaderOrigText);
+            }
+
+
+
+            var counters = {};
+
+            return function(message){
+                if(message == undefined){
+                    reset();
+                    return;
+                }
+
+                time = new Date().getTime();
+
+                if(time - prevUpdate <100) return;
+                prevUpdate = time;
+
+
+                var counter;
+
+                if(counters.hasOwnProperty(message)){
+                    counter = counters[message]+= 1;
+                }
+                else{
+                    counter = counters[message] = 0;
+                }
+
+                if(counter == 0){
+                    $(header).text(message);
+                    subheader.text("");
+                }
+                else {
+                    $(header).text(message + " (" + String(counter) + ")");
+                }
+            }
+        }();
+
+        function traverseFileTree(item, path) {
+            infoBar('retrieving file info');
+            function cleanPath(str) {
+                var rem = "html5/";
+                if (str.substr(0, rem.length) == rem) str = str.substr(rem.length);
+                return str;
+            }
+
+            var dirReader = null;
+            if (item.isFile) {
+                item.file(function (file) {
+                    // careful here, could be several files of the same name
+                    // we assume files will be in the same order here than in plupload
+                    if (dropFile_relPath.hasOwnProperty(file.name) == false) {
+                        dropFile_relPath[file.name] = [];
+                    }
+                    dropFile_relPath[file.name].push(cleanPath(path));
+                });
+            } else if (item.isDirectory == true) {
+
+                var dirReader = item.createReader();
+                var entries = [];
+
+                // Keep calling readEntries() until no more results are returned.
+                var readEntries = function () {
+                    dirReader.readEntries (function (results) {
+                        if (!results.length) {
+                            for (var n = 0; n < entries.length; n++) {
+                                traverseFileTree(entries[n], path + item.name + "/");
+                            }
+                        } else {
+                            entries = entries.concat(results);
+                            readEntries();
+                        }
+                    }, function(error){
+                        console.log("error in signing:",error)
+                    });
+                };
+                readEntries();
+            }
+        }
+
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,58 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+    <div class="modal-dialog" style="z-index: 0; width:320px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>{% trans "Participant Sign In" %}</h4>
+                <hr/>
+
+                <form id="modal_signin_form" role="form">
+                    <div class="signin_errors alert alert-danger" style="display:none;">
+
+                    </div>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {% comment %}<label class="control-label" for="id_email">
+                            {% trans "Email" %}
+                        </label>{% endcomment %}
+                        <input name="login" class="form-control" id="id_email" placeholder="Email or username"
+                               tabindex="1"
+                               required autofocus>
+                    </div>
+                    <div class="form-group">
+                        {% comment %}<label class="control-label" for="id_password">
+                            {% trans "Password" %}
+                            (<a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>)
+                        </label>{% endcomment %}
+                        <input type="password" name="password" class="form-control" id="id_password"
+                               placeholder="Password" tabindex="2"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input id="id_remember" name="remember" type="checkbox"> {% trans "Remember me" %}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            {% trans "Sign in" %}
+                        </button>
+                    </div>
+                </form>
+
+                <p class="text-center">
+                    <a href="{% url 'account_reset_password' %}">{% trans "Forgot your password?" %}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

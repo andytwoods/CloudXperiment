@@ -1,0 +1,57 @@
+{% load i18n %}
+
+<div id="mturk_confirm_modal" class="modal hide fade">
+    <div class="modal-header">
+        <h3>Do you have your own Mechanical Turk access key and secret?</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                When filling in the details of your studies for Mechanical Turk, you will also need to provide your access key and secret each time. You can run your study as soon as you fill in the details.
+            </div>
+            <div class="col-md-6">
+                We can use our credentials if you do not have your own. However, we will need to check your study meets Amazon Mturk’s requirements. Because of this you will not be able to run your study immediately. We also will need to monitor Mechanical Turk as people complete your study so kindly request a donation to cover this additional work for us.
+            </div>
+        </div>
+        <div class="row m-t">
+            <div class="col-md-6">
+                <a name="btn_mturk_confirm" data-access-key="true" class="btn btn-primary btn-block">Yes</a>
+            </div>
+            <div class="col-md-6">
+                <a name="btn_mturk_confirm" data-access-key="false" class="btn btn-primary btn-block">No</a>
+            </div>
+        </div>
+        <div class="row m-t">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Please enter assignment id to get the password">
+                    <span class="input-group-btn">
+                        <a name="btn_mturk_password" class="btn btn-default">Get Password</a>
+                        <a class="btn btn-default" style="display: none;">Show Password</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="mturk_no_confirm_modal" class="modal fade" style="z-index: 10000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <p>We can use our credentials if you do not have your own. However, we will need to check your study meets Amazon Mturk’s requirements. Because of this you will not be able to run your study immediately. We also will need to monitor Mechanical Turk as people complete your study so kindly request a donation to cover this work for us.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
+                <button id="submit_confirm" type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

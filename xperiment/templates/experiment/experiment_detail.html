@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-10">
+            {% include "experiment/_experiment_detail.html" %}
+        </div>
+
+        <div class="col-md-3">
+            <a class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#experiment_aggrement_modal">
+                <i class="glyphicon glyphicon-ok"></i>
+                Take Part In
+            </a>
+
+            {% include "experiment/_similar_experiments.html" %}
+
+            {% include "experiment/_same_scientist_experiments.html" %}
+
+            {% include "experiment/_same_lab_experiments.html" %}
+
+        </div>
+    </div>
+
+    {% include "experiment/_experiment_aggrement_modal.html" %}
+{% endblock %}

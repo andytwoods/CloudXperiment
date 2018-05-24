@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% load i18n gmap_tags %}
+
+{% block content %}
+    {% ip_on_map ip_list None 600 True True %}
+{% endblock %}

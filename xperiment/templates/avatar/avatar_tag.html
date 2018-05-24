@@ -1,0 +1,8 @@
+{% load i18n util_tags %}
+
+{% if url %}
+    <img src="{{ url }}" class="img-thumbnail user-avatar" alt="{{ alt }}" width="{{ size }}" height="{{ size }}">
+{% else %}
+    <img data-src="holder.js/200x200/{{ 'sky,vine,lava,gray,industrial,social'|split:","|random }}/text:{{ alt }}"
+         class="img-thumbnail" alt="{{ alt }}">
+{% endif %}

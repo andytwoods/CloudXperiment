@@ -1,0 +1,30 @@
+{% extends "experiment/base.html" %}
+
+{% load i18n staticfiles bootstrap3 experiment_tags %}
+
+{% block inner_content %}
+
+
+    <h1>URL parameters for {{ expt_info.name }}</h1>
+
+      <form id="url_params_form" class="form-horizontal" method="POST" action="" role="form">
+        {% csrf_token %}
+
+            <label for="params">Add params here, one per line, equal sign in between key and val</label>
+            <textarea class="form-control" name="pretty_params">{{ pretty_params }}</textarea>
+
+            <br>
+            <button type="submit" class="btn btn-primary pull-left">
+                {% bootstrap_icon "arrow-right" %} {% trans "Save" %}
+            </button>
+    </form>
+
+
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+
+
+    </script>
+{% endblock %}

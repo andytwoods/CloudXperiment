@@ -1,0 +1,52 @@
+{% load i18n %}
+
+<div id="signup_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <h4>{% trans "Sign Up" %}</h4>
+                <hr/>
+
+                <form id="modal_signup_form" role="form">
+                    <div class="signup_errors alert alert-danger" style="display:none;">
+
+                    </div>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" id="id_email" placeholder="Email"
+                               tabindex="1"
+                               required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password1" class="form-control" id="id_password1"
+                               placeholder="Password" tabindex="2"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password2" class="form-control" id="id_password2"
+                               placeholder="Password (again)" tabindex="3"
+                               required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            {% trans "Sign up" %}
+                        </button>
+                    </div>
+                </form>
+
+                <p class="text-center">
+                    {% trans "Already have an account?" %}
+                    <a class="modal_signin_link" href="{% url "account_login" %}">
+                        {% trans "Sign in" %}
+                    </a>
+                </p>
+
+                <hr/>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

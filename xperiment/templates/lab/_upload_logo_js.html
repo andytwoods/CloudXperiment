@@ -1,0 +1,48 @@
+<script type="text/javascript" src="{{ STATIC_URL }}js/plupload/plupload.full.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var uploader = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            browse_button: 'upload_logo',
+            url: "{% url 'upload_logo' %}",
+            flash_swf_url: "{{ STATIC_URL }}js/plupload/Moxie.swf",
+            silverlight_xap_url: '{{ STATIC_URL }}js/plupload/Moxie.xap',
+            filters: {
+                max_file_size: '10mb',
+                mime_types: [
+                    {title: "Image files", extensions: "jpg,gif,png"}
+                ]
+            },
+            headers: {
+                "ACCEPT": "application/json",
+                "X-CSRFToken": $.cookie("csrftoken")
+            },
+            init: {
+                FilesAdded: function (up, files) {
+                    var request_url = up.settings.url;
+                    up.settings.url = request_url + "?lab_id=" + String($("#upload_logo_container").data("lab-id"));
+                    up.start();
+                    up.refresh(); // Reposition Flash/Silverlight
+                    up.settings.url = request_url;
+                },
+
+                FileUploaded: function (up, file, info) {
+                    var obj = $.parseJSON(info.response);
+                    if (obj.status == "success") {
+                        $("#upload_logo_container").find("img").attr("src", obj.thumbnail_url);
+                    } else {
+                        alert(obj.message);
+                    }
+                },
+
+                Error: function (up, err) {
+                    alert(err.message);
+                    up.refresh(); // Reposition Flash/Silverlight
+                }
+            }
+        });
+
+        uploader.init();
+    });
+</script>

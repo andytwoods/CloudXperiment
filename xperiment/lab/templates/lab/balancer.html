@@ -1,0 +1,190 @@
+{% extends "experiment/base.html" %}
+{% load i18n staticfiles %}
+
+{% block inner_content %}
+
+    <script id="tpl_order_row" type="text/template">
+        <table class="table table-hover text-center">
+            <label><h1>Balancers</h1></label>
+             <tbody>
+                 <% _.each(rows,function(row){ %>
+                    <tr>
+                        <td style="text-align:left;" data-id="<%= row.id %>">
+                            <a target="_blank" href='{{ url }}<%= row.slug %>/'><%= row.name %></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" name="btn_remove_order" onclick="edit('<%= row.id %>')">
+                                edit</a>
+                            <button class="btn" name="btn btn_remove_order" onclick="remove('<%= row.id %>')">
+                                remove</button>
+                        </td>
+                          <td style="text-align:left;">
+                            <input type="number" class="input-sm col-xs-2 text-center" min="-1" id="randomness" value='<%= row.randomness %>'
+                            data-toggle="tooltip" title="That to add to the selection process (sum collective times each url visited, divide url counts by this total * rand() * randomness. Whichever lowest, that is next)."
+                            />
+                            <button class='btn' style="margin-left:10px;" onclick="update('<%= row.id %>')">update randomness</button>
+                        </td>
+
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </script>
+
+
+    <div class="container change-order-modal">
+
+        <div id="batch_add_order_content" class="form-group"><label><h1>Add new balancer name</h1></label>
+            <div class="row">
+                <div class="col-md-5">
+                    <textarea id="batch_order_text" class="form-control" rows="1"></textarea>
+                </div>
+                <div class="col-md-2">
+                    <button id="btn_batch_add_order" type="button" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div id="order_table"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ {% endblock %}
+    {% block extra_js %}
+<script>
+                function edit(balance_id){
+                    location.href='./edit/'+balance_id+'/'
+                }
+
+
+                function remove(order_id){
+                    $.ajax({
+                        url: "./delete/",
+                        data: {"order_ids": [order_id]},
+                        dataType: "json",
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (result) {
+                            if (result.status === "success") {
+                                populate_table(tablefy_dataset(JSON.parse(result.order_list)))
+                            } else {
+                                new PNotify({
+                                    title: "Change Order",
+                                    text: result.message,
+                                    type: "error"
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                        }
+
+                    });
+                }
+                function update(order_id){
+                    $.ajax({
+                        url: "./update/",
+                        data: {"batch_id": order_id, "randomness": $('#randomness').val()},
+                        dataType: "json",
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"))
+                        },
+                        success: function (result) {
+                            console.log(result)
+                            if (result.status !== "success") {
+                                new PNotify({
+                                    title: "Update randomness error",
+                                    text: result.message,
+                                    type: "error"
+                                })
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText)
+                        }
+                    })
+                }
+
+
+
+
+
+                $("#btn_batch_add_order").on("click", function (e) {
+                    var batch_order_text = $("#batch_order_text").val();
+                    if(batch_order_text && batch_order_text.length>0) {
+
+                        $.ajax({
+                            url: "./add/",
+                            data: {batch_name: batch_order_text},
+                            dataType: "json",
+                            type: "POST",
+                            beforeSend: function (xhr) {
+                                $(this).prop("disabled", true);
+                                xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                            },
+                            success: function (result) {
+                                if (result.status === "success") {
+                                    populate_table(tablefy_dataset(JSON.parse(result.order_list)))
+                                } else {
+                                    new PNotify({
+                                        title: "Adding new balancer problem",
+                                        text: result.message,
+                                        type: "error"
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                            },
+                            complete: function () {
+                                $(this).prop("disabled", false);
+                            }
+                        })
+                    }
+
+                     else {
+                        new PNotify({
+                            title: "Adding order problem",
+                            text: "Nothing given to add as an order",
+                            type: "info"
+                        });
+                    }
+
+                    e.preventDefault();
+                });
+
+                var tablefied = tablefy_dataset({{ order_list|safe }})
+
+                populate_table(tablefied)
+
+                function tablefy_dataset(obj){
+                    var rows = obj.map(function(table_row){
+                        return {
+                            id: table_row['pk'],
+                            name: table_row['fields']['name'],
+                            slug: table_row['fields']['slug'],
+                            randomness: table_row['fields']['randomness']
+                        }
+                    })
+                    return rows
+                }
+
+                function populate_table(rows){
+                    var template = $("#tpl_order_row").html()
+                    $("#order_table").html(_.template(template)({rows:rows}))
+                }
+
+
+</script>
+
+
+{% endblock %}

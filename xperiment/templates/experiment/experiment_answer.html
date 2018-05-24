@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 experiment_tags static %}
+
+{% block content %}
+
+{% endblock %}
+{% block full_content %}
+    <div class="experiment-question-content">
+        <ol class="breadcrumb">
+            <li>
+                {% trans "Lab" %} :
+                <a href="{% url "lab_detail" lab.id lab.slug %}">
+                    {{ lab.name }}
+                </a>
+            </li>
+            <li>
+                <a href="{% url "experiment_manage" lab.id %}">
+                    {% trans "Manage Experiments" %}
+                </a>
+            </li>
+            <li class="active">
+                {% trans "Experiment Answers" %} for <b>{{ expt_info.slug }}</b>
+            </li>
+        </ol>
+
+        <div class="page-header" >
+                <a href="{% url "export_answer_alternative" expt_info.expt_id 'csv' %}" class="btn btn-default">
+                    <i class="glyphicon glyphicon-download"></i>
+                    {% trans "Export old style Data (csv)" %}
+                </a>
+
+                <div class="btn-group">
+                  <a href="{% url "export_answer" expt_info.expt_id 'csv' %}?exclude_unfinished=true" class="btn btn-success"> <i class="glyphicon glyphicon-download"></i> {% trans "Export Data (csv)" %}</a>
+                  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url "export_answer" expt_info.expt_id 'csv' %}">Include unfinished</a></li>
+                  </ul>
+                </div>
+                {% if expt_info.locked == False %}
+                    <a id="experiment_delete_answers" href="{% url "experiment_delete_answers" expt_info.expt_id %}"
+                       class="btn btn-danger">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        {% trans "Delete Data" %}
+                    </a>
+
+                    <div class="pull-right" >
+                        <textarea style="width:300px;height:35px;margin-left:100px;" type="text" id='backup_data' placeholder="paste salvaged data for uploaded (1 SJ / line)" novalidate="" autocomplete="off"></textarea>
+                        <button type="submit" id="myInput" class="btn btn-success">upload</button>
+                    </div>
+                {% endif %}
+        </div>
+
+        <table class="tablesorter table table-bordered table-experiment">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th title="{% trans "Course Name" %}">{% trans "Course Name"|truncatechars:8 %}</th>
+                <th title="{% trans "Participant" %}">{% trans "Participant"|truncatechars:8 %}</th>
+                <th title="{% trans "Experiment name" %}">{% trans "Experiment name"|truncatechars:8 %}</th>
+                <th title="{% trans "Order" %}">{% trans "Order"|truncatechars:8 %}</th>
+                <th title="{% trans "Res x" %}">{% trans "Res x"|truncatechars:8 %}</th>
+                <th title="{% trans "Res y" %}">{% trans "Res y"|truncatechars:8 %}</th>
+                <th title="{% trans "Dpi" %}">{% trans "Dpi"|truncatechars:8 %}</th>
+                <th title="{% trans "Cpu" %}">{% trans "Cpu"|truncatechars:8 %}</th>
+                <th title="{% trans "Between sjs id" %}">{% trans "Between sjs id"|truncatechars:8 %}</th>
+                <th title="{% trans "Time start" %}">{% trans "Time start"|truncatechars:8 %}</th>
+                <th title="{% trans "Time zone" %}">{% trans "Time zone"|truncatechars:8 %}</th>
+                <th title="{% trans "Time stored" %}">{% trans "Time stored"|truncatechars:8 %}</th>
+                <th title="{% trans "Approx duration in seconds" %}">{% trans "Approx duration in seconds"|truncatechars:8 %}</th>
+                {% for q in expt_info.expt_headers.headers %}
+                    <th title="{{ q|underlinebr }}">{{ q|underlinebr|truncatechars:8 }}</th>
+                {% endfor %}
+                <th title="{% trans "Created" %}">{% trans "Created"|truncatechars:8 %}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for expt_answer in paginator.object_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td title="{{ expt_answer.course }}">{{ expt_answer.course|default_if_none:""|truncatechars:8 }}</td>
+                    <td title="{{ expt_answer.user }}">{{ expt_answer.user|default_if_none:""|truncatechars:5 }}</td>
+                    <td title="{{ expt_answer.expt_info.name }}">{{ expt_answer.expt_info.name|truncatechars:8 }}</td>
+                    <td title="{{ expt_answer.order }}">{{ expt_answer.order|default_if_none:""|truncatechars:5 }}</td>
+                    <td>{{ expt_answer.res_x }}</td>
+                    <td>{{ expt_answer.res_y }}</td>
+                    <td>{{ expt_answer.dpi }}</td>
+                    <td>{{ expt_answer.cpu }}</td>
+                    <td title="{{ expt_answer.between_sjs_id }}">{{ expt_answer.between_sjs_id|truncatechars:5 }}</td>
+                    <td title="{{ expt_answer.time_start|date:"Y-m-d H:i:s" }}">{{ expt_answer.time_start|date:"Y-m-d H:i:s"|truncatechars:14 }}</td>
+                    <td title="{{ expt_answer.time_zone }}">{{ expt_answer.time_zone|truncatechars:5 }}</td>
+                    <td title="{{ expt_answer.time_stored|date:"Y-m-d H:i:s" }}">{{ expt_answer.time_stored|date:"Y-m-d H:i:s"|truncatechars:14 }}</td>
+                    <td title="{{ expt_answer.duration }}">{{ expt_answer.duration|truncatechars:5 }}</td>
+                    {% for q in expt_info.expt_headers.headers %}
+                        <td title="{{ expt_answer.expt_data|get_expt_answer:q }}">{{ expt_answer.expt_data|get_expt_answer:q|truncatechars:5 }}</td>
+                    {% endfor %}
+                    <td title="{{ expt_answer.created|date:"Y-m-d H:i:s" }}">{{ expt_answer.created|date:"Y-m-d H:i:s"|truncatechars:14 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if paginator.num_pages > 1 %}
+            <div class="text-right">
+                {% bootstrap_pagination paginator.object_list %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script>
+        $('#myInput').click(function(e){
+            e.preventDefault();
+            var backup_data = $('#backup_data').val()
+            if(backup_data.length===0) return false
+
+            window.setTimeout(function() {
+
+                $.ajax({
+                    url: '{% url "backup_upload" expt_info.expt_id %}',
+                    type: 'post',
+                    async: true,
+                    data: {'backup':backup_data},
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        console.log(data)
+
+                        if(data['success']==='success')alert('success')
+                        else{
+                            alert('problem: '+data['status'])
+                        }
+                    },
+                    error: function (jqXHR, error) {
+                        alert('problem: '+ error)
+                    }
+                });
+            },0);
+
+            return false
+        });
+
+
+    </script>
+
+
+    <script>
+        $(function () {
+            $("table").tablesorter();
+            $("table").bind("sortStart", function () {
+                $("#overlay").show();
+            }).bind("sortEnd", function () {
+                $("#overlay").hide();
+            });
+
+            $("#experiment_delete_answers").on("click", function () {
+                if (confirm("Are you sure to delete all the data?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+    </script>
+
+
+
+{% endblock %}

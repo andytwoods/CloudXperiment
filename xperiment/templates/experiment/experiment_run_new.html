@@ -1,0 +1,306 @@
+{% load staticfiles %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title></title>
+    <meta name="google" value="notranslate"/>
+    <meta http-equiv="PRAGMA" content="NO-CACHE"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <style type="text/css" media="screen">
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: auto;
+            text-align: center;
+            /* TODO */
+            background-color: #000000;
+            z-index: 100;
+        }
+
+        object:focus {
+            outline: none;
+        }
+
+        #LoadingImage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+
+        #flashContent {
+            display: none;
+        }
+
+        #wrapper {
+            width: 100%;
+            height: 100%;
+        }
+
+        #container {
+            position: relative;
+            left: 0;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            /* TODO */
+            max-width: 1024px;
+            max-height: 768px;
+        }
+    </style>
+
+    <script type="text/javascript"
+            src="//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script type="text/javascript"
+            src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    <script src="{% static 'js/jQueryRotateCompressed.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static "js/sync.js" %}"></script>
+
+</head>
+<body onload="loadflash()">
+<!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough
+     JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
+     when JavaScript is disabled.
+-->
+
+
+<img id='LoadingImage' src={% static "img/expt_loading.png" %} alt="Loading..."/>
+
+<div id="wrapper">
+    <div id="container">
+        <div id="flashContent">
+            <p>
+                To view this page ensure that Adobe Flash Player version
+                11.5.0 or greater is installed.
+            </p>
+            <script type="text/javascript">
+                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://");
+                document.write("<a href='https://www.adobe.com/go/getflashplayer' target='_blank' style='text-align:center;'><img src='"
+                        + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>");
+            </script>
+        </div>
+
+        <noscript>
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="xpt">
+                <param name="movie" value="{{ expt_info.swf_file_name }}"/>
+                <param name="quality" value="high"/>
+                <param name="bgcolor" value="<?php echo $flash_colour ?>"/>
+                <param name="allowScriptAccess" value="always"/>
+                <param name="allowFullScreenInteractive" value="true"/>
+                <!--[if !IE]>-->
+                <object type="application/x-shockwave-flash" data="{{ expt_info.swf_file_name }}"
+                        width="<?php echo $flash_width ?>" height="<?php echo $flash_height ?>">
+                    <param name="quality" value="high"/>
+                    <param name="bgcolor" value="<?php echo $flash_colour ?>"/>
+                    <param name="allowScriptAccess" value="always"/>
+                    <param name="allowFullScreenInteractive" value="true"/>
+                    <!--<![endif]-->
+                    <!--[if gte IE 6]>-->
+                    <p>
+                        Either scripts and active content are not permitted to run or Adobe Flash Player
+                        version
+                        11.5.0 or greater is not installed.
+                    </p>
+                    <!--<![endif]-->
+                    <a href="https://www.adobe.com/go/getflashplayer" target="_blank"
+                       style="text-align:center;">
+                        <img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
+                             alt="Get Adobe Flash Player"/>
+                    </a>
+                    <!--[if !IE]>-->
+                </object>
+                <!--<![endif]-->
+            </object>
+        </noscript>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var respect_ratio = 1024 / 768;
+    $(window).resize(function () {
+        var wrapper_height = $("#wrapper").height();
+        var wrapper_width = $("#wrapper").width();
+        $("#container").css("width", "100%");
+        $("#container").css("height", "100%");
+        var c_width = $("#container").width();
+        var c_height = $("#container").height();
+        var c_ratio = c_width / c_height;
+        if (c_ratio > respect_ratio) {
+            $("#container").width(c_height * respect_ratio);
+        } else if (c_ratio < respect_ratio) {
+            $("#container").height(c_width / respect_ratio);
+        }
+        if ($("#container").height() > wrapper_height) {
+            $("#container").height(wrapper_height);
+            $("#container").width(wrapper_height * respect_ratio);
+        }
+        if ($("#container").width() > wrapper_width) {
+            $("#container").width(wrapper_width);
+            $("#container").height(wrapper_width / respect_ratio);
+        }
+        var container_height = $("#container").height();
+        var top_pos = (wrapper_height - container_height) / 2;
+        if (top_pos < 0) top_pos = 0;
+        $("#container").css("top", top_pos + "px");
+
+    }).resize();
+</script>
+<script type="text/javascript">
+    // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection.
+    var swfVersionStr = "11.5.0";
+    // To use express install, set to expressInstall.swf, otherwise the empty string.
+    var xiSwfUrlStr = "expressInstall.swf";
+    var flashvars = {};
+
+    // AW: Passing url params
+    var query_string = {};
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length - 1; i++) {
+        var pair = vars[i].split("=");
+        // If first entry with this name
+        if (pair.length = 2) {
+            flashvars[pair[0]] = pair[1];
+        }
+    }
+
+    flashvars.ip = "{{ client_ip }}";
+    {% if one_key %}
+        flashvars.one_key = "{{ one_key }}";
+    {% endif %}
+    flashvars.exptId = "{{ exptId }}";
+
+    flashvars.xpt_user_id = "{{ user_id|default_if_none:"" }}";
+    flashvars.xpt_course_id = "{{ course_id|default_if_none:"" }}";
+
+    flashvars.assignment_id = "{{ assignment_id }}";
+    flashvars.hit_id = "{{ hit_id }}";
+    flashvars.worker_id = "{{ worker_id }}";
+    flashvars.platform = "{{ platform }}";
+
+    flashvars.overSJs = "{{ overSJs }}";
+
+    flashvars.flyingfish_id = "{{ flyingfish_id }}";
+    flashvars.flyingfish_study_id = "{{ flyingfish_study_id }}";
+    flashvars.flyingfish_participant_id = "{{ flyingfish_participant_id }}";
+    flashvars.flyingfish_site_id = "{{ flyingfish_site_id }}";
+
+    var params = {};
+    params.quality = "high";
+    params.bgcolor = "#ffffff";
+    params.allowscriptaccess = "always";
+    params.allowFullScreenInteractive = "true";
+    var attributes = {};
+    attributes.id = "xperiment";
+    attributes.name = "xperiment";
+    attributes.align = "middle";
+
+    function loadflash() {
+
+        {% if expt_info.swf_version %}
+            swfobject.embedSWF(
+                            "{% url 'swf_version_file' expt_info.swf_version.id  %}?" + Math.round(Math.random() * 10000), "flashContent",
+                    "100%", "100%", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, callback);
+        {% else %}
+            swfobject.embedSWF(
+                            "{% static 'swf/xperiment.swf' %}?" + Math.round(Math.random() * 10000), "flashContent",
+                    "100%", "100%", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, callback);
+        {% endif %}
+    }
+
+    // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
+    swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+
+    function callback(e) {
+
+        //Only execute if SWFObject embed was successful
+        if (!e.success || !e.ref) {
+            return false;
+        }
+
+        $("#LoadingImage").stopRotate();
+        linkXpt();
+
+    }
+
+
+    addAction("as3Error", as3Error);
+
+    function as3Error(data) {
+        log("AS3 error 1/3:", data.message);
+        log("AS3 error 2/3:", "what: " + data.command);
+        log("AS3 error 3/3:", "data: " + data.data);
+        log("---");
+    }
+
+    var rotation = function () {
+        $("#LoadingImage").rotate({
+            angle: 0,
+            animateTo: 360,
+            duration: 2000,
+            callback: rotation
+        });
+    };
+
+    function upload_experiment_answer_xml(xml_content, extra_data) {
+        {% comment %}
+        //Test of answer xml
+        $.ajax({
+            url: "/static/expt_answer.xml",
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                xml_content = data;
+            }
+        });
+
+        //Examples of "extra_data"
+        extra_data = {
+            "xpt_course_id": "?",
+            "xpt_user_id": "?",
+            "ip": "?",
+            "final": "?",
+            "order": "?"
+        };
+        {% endcomment %}
+
+        try {
+            if (xml_content) {
+                $.ajax({
+                    url: "/experiment/answer/upload/",
+                    data: {"xml_content": xml_content, "extra_data": extra_data},
+                    dataType: "json",
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (result) {
+                        console.log(result.message);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    rotation();
+</script>
+
+</body>
+</html>

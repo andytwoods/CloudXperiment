@@ -1,0 +1,68 @@
+{% extends "experiment/base.html" %}
+
+{% load i18n bootstrap3 static %}
+
+{% block title %}{% trans "Admin Upload Experiment Answer" %}{% endblock %}
+
+{% block content %}
+    <div class="well well-lg">
+        <form class="form-horizontal" method="POST" action="" role="form">
+            <div class="form-group">
+                <label>XML Content</label>
+                <textarea class="form-control" id="xml_content" name="xml_content" rows="20"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Extra Data</label>
+                <textarea class="form-control" id="extra_data" name="extra_data" rows="5"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button id="upload_xml" type="button" class="btn btn-primary pull-right">
+                    {% bootstrap_icon "ok-circle" %} Submit
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#upload_xml").on("click", function () {
+                var xml_content = $("#xml_content").val();
+                var extra_data = $("#extra_data").val();
+
+                if(extra_data){
+                    extra_data = JSON.parse(extra_data);
+                }
+
+                try {
+                    if (xml_content) {
+                        $.ajax({
+                            url: "/experiment/manual/answer/upload/",
+                            data: {"xml_content": xml_content, "extra_data": extra_data},
+                            dataType: "json",
+                            type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                            },
+                            success: function (result) {
+                                new PNotify({
+                                    title: "Message",
+                                    text: result.message,
+                                    type: result.status
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(error);
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+{% endblock %}

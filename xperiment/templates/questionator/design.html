@@ -1,0 +1,878 @@
+{% load i18n staticfiles account bootstrap3 %}
+{% block content %}{% endblock %}
+
+{% block full_content %}
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button onClick='save()' type='button' class='btn btn-xl btn-success pull-left'>
+                    <div class='glyphicon glyphicon-floppy-disk'></div>&nbsp;Save</button>
+                <h2 class="modal-title">&nbsp;</h2>
+            </div>
+
+            <div class="modal-body">
+
+
+                <div id="dropZone"></div>
+                    <h1>1. Name your question</h1>
+                    <input type="text" id='q_title' class="form-control col-md-3 text-center" value="{{ title }}"
+                           placeholder="Title:" style="margin-bottom:40px"  />
+                    <hr class="featurette-divider">
+                    <h1 class="browse_button">2. Drag and drop your media</h1>
+                        <div class="text-center"><button id='browse-button' type="button" class='btn btn-xs' style="margin-bottom:10px">or browse</button></div>
+                    <div class="row-fluid">
+                        <div class="col-md-12">
+                            <div id="slick" class="slick_class"/>
+                        </div>
+                    </div>
+                    <hr class="featurette-divider">
+
+                    <h1>3. Chose your question</h1>
+                    <div class="row-fluid ">
+                        <div id="main_splitter" class="col-md-6">
+                            <div class="panel panel-default clickable questions" question="q1">
+                                <div class="panel-heading"><h1 class="panel-title">Which is most...</h1></div>
+                                <div class="panel-body">Ask people several questions about your images, such as, which
+                                    is most:
+                                </div>
+                                <div class="center-block">
+                                    <strong>
+                                        <ul>
+                                            <li>liked</li>
+                                            <li>professional</li>
+                                            <li>honest</li>
+                                            <li>artistic</li>
+                                        </ul>
+                                    </strong>
+                                </div>
+                                <img src="{% static "img/graph1.png" %}" class="img-responsive center-block">
+                                <div class="panel-body">If you tell us how important is each attribute, we can compute
+                                    the overall 'winner'.
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="main_splitter" class="col-md-6">
+                            <div class="panel panel-default clickable questions" question="q2">
+                                <div class="panel-heading "><h1 class="panel-title">Compare...</h1></div>
+                                <div class="panel-body">When there are subtle differences about your images, 'Compare'
+                                    is the best tool for finding any differences on one or more questions:
+                                </div>
+                                <div class="center-block">
+                                    <strong>
+                                        <ul>
+                                            <li>liked</li>
+                                            <li>professional</li>
+                                            <li>honest</li>
+                                            <li>artistic</li>
+                                        </ul>
+                                    </strong>
+                                </div>
+                                <img src="{% static "img/graph1.png" %}" class="img-responsive center-block">
+                                <div class="panel-body">If you tell us how important is each attribute, we can compute
+                                    the overall 'winner'.
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    <hr class="featurette-divider">
+                    <div class="editor collapse" id="editor" style="visibility: hidden;">
+                        <h1>4. Tweak</h1>
+                        <div class="slide_editor">
+                            <div id="add_more_slides" class="col-md-3">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="container">
+                        <div class="row-fluid">
+                            <div id="main_splitter" class="col-md-12">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onClick='save()' type='button' class='btn btn-xl btn-success pull-left'>
+                    <div class='glyphicon glyphicon-floppy-disk'></div>&nbsp;Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block extra_css %}
+
+    <link type="text/css" rel="stylesheet" href="{% static "css/font-awesome.min.css" %}" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{% static "css/slick.css" %}" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{% static "css/slick-theme.css" %}" media="screen" />
+    <link type="text/css" rel="stylesheet" href="{% static "css/questionator/questionator_design.css" %}" media="screen" />
+     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+    <script>window.jQuery || document.write('<script src="{% static 'js/jquery-1.11.1.min.js' %}"><\/script>')</script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static "js/slick.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/plupload/plupload.full.min219.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/handlebars-1.0.rc.1.min.js" %}"></script>
+
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.pnotify.js' %}"></script>
+
+<script>
+
+function save(){
+
+    var title = $('#q_title').val();
+    if(title.length==0) {
+        alert('You need to give this question a title.');
+        return;
+    }
+
+    var imageList = $('.slick-slide:not(.slick-cloned)');
+    var images = [];
+    for(var i=0;i<imageList.length;i++){
+        images.push($(imageList[i]).find('img').attr('src'));
+    }
+    if(images.length==0){
+        alert('You need to provide some images.');
+        return;
+    }
+
+    var question_info = editor.stringify_questions({images:images});
+
+    if(question_info.length==null){
+        alert('You need to add some things to ask.');
+        return;
+    }
+
+
+    command('save', {title:title, question_info:question_info}, function(success, message){
+        if(success=='success'){
+            console.log('saved');
+
+        }
+        else{
+            alert('problem saving')
+        }
+
+    })
+}
+
+</script>
+
+
+
+    <script>
+
+    var all_question_types = $(".questions");
+    all_question_types.click(function(e) {
+                var selected_q = e.currentTarget;
+                var q;
+                for (var i = 0; i < all_question_types.length; i++) {
+                    q = all_question_types[i];
+                    if (q == selected_q) {
+                        if($(q).hasClass('selected_question') == false){
+                            $(q).addClass('selected_question');
+                            $(q).addClass('panel-success');
+                            $('.editor').collapse('show')
+                            editor.add_slide_from_id($(q).attr('question'), true);
+                        }
+                    }
+                    else {
+                        $(q).removeClass('selected_question');
+                        $(q).removeClass('panel-success');
+                    }
+                }
+            }
+    );
+
+    </script>
+
+    <script type="text/javascript">
+
+
+    function command(what, info, callback){
+
+            var data = {
+                acl: 'private',
+                what: what
+            }
+
+            if(info!=undefined) {
+                for (var key in info) {
+                    data[key] = info[key];
+                }
+            }
+            data['grand_question_id'] = '{{ grand_question_id }}';
+
+            window.setTimeout(function() {
+
+                $.ajax({
+                    url: '{% url 'questionator_command' %}',
+                    type: 'post',
+                    async: true,
+                    data: data,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                    },
+                    success: function (data) {
+                        if (callback)    callback('success', data);
+
+                    },
+                    error: function (jqXHR, error, errorThrown) {
+                        console.log(jqXHR, error, errorThrown);
+                        if (callback)    callback('fail');
+                    }
+                });
+            },0);
+        }
+    </script>
+
+
+
+<script type="text/javascript">
+        var s3_params = {};
+        var uploader;
+
+
+        function infoBar(str){
+            console.log(str)
+        }
+
+        var uploader = new plupload.Uploader({
+
+            //browse_button : 'browse_button',
+            runtimes: 'html5,html4',
+            drop_element : 'dropZone',
+            browse_button: 'browse-button',
+            url: '{{ bucket_url }}',
+            send_file_name: false,
+            //chunk_size : '1mb',
+            dragdrop: true,
+            multipart: true,
+            unique_names: false,
+            filters: {
+                // Maximum file size
+                max_file_size: '10mb',
+                exclude_file_types: ['db'],
+            },
+            preinit: {
+                UploadFile: function (up, file) {
+                    up.settings.multipart_params = {
+                        key: s3_params[file.id]["key"],
+                        AWSAccessKeyId: '{{ access_key }}',
+                        acl: 'public-read',
+                        policy: s3_params[file.id]["policy"],
+                        signature: s3_params[file.id]["signature"],
+                        'Content-Type': file.type,
+                    }
+                },
+                UploadComplete: function (up, files) {
+                    populate_images();
+                },
+                Error: function (up, err) {
+                    if (err.hasOwnProperty("file")) {
+                        infoBar('problem uploading files: '+err);
+                    }
+                    else{
+                        console.log(up)
+                        console.log(err)
+                        infoBar("upload finished successfully.");
+                    }
+                }
+            },
+
+
+            init: {
+
+                PostInit: function () {
+                      dropZone.addEventListener('drop', function (e) {
+                         var items = e.dataTransfer.items, n, item;
+
+                          uploader.addFile(items);
+                      }, false);
+                  },
+
+
+
+                FilesAdded: function (up, files) {
+
+                    var folderSelected = 'media';
+
+                    var keys = []
+                    var types = []
+                    var tags = []
+                    plupload.each(files, function (file) {
+
+                        var key = '{{ grand_question_id }}' + '/' + folderSelected + '/' + file.name
+                        key = key.split("//").join("/")
+
+                        keys.push(key)
+                        types.push(file.type)
+                        tags.push(file.id)
+
+                    })
+
+                    console.log(keys,types, tags,2222)
+                    $.ajax({
+                        url: '{% url 'questionator_sign' %}',
+                        type: 'post',
+                        async: true,
+                        data: {
+                            acl: 'private',
+                            keys: keys,
+                            types: types,
+                            tags: tags
+                        },
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (data) {
+                            console.log(data,2323)
+                            data.forEach(function(d) {
+                                console.log(d)
+                                var tag = d['tag']
+
+                                if (s3_params.hasOwnProperty(tag) === false) s3_params[tag] = {};
+
+                                s3_params[tag]['key'] = d['key']
+                                s3_params[tag]['policy'] = d['policy']
+                                s3_params[tag]['signature'] = d['signature']
+
+                            }
+
+                            up.start()
+
+                        },
+                        error: function (jqXHR, error, errorThrown) {
+                            if (jqXHR.status && jqXHR.status === 400) {
+                                console.log("err:", jqXHR.responseText);
+                            } else {
+                                console.log(jqXHR, error, errorThrown);
+                            }
+                        }
+                    })
+                }
+            }
+        });
+        console.log('init')
+        uploader.init();
+
+
+
+
+        dropZone = document.getElementById('dropZone');
+
+        function showDropZone() {
+            $('.dropZone').height($(document).width());
+            dropZone.style.visibility = "visible";
+        }
+        function hideDropZone() {
+            dropZone.style.visibility = "hidden";
+        }
+
+        function allowDrag(e) {
+            if (true) {  // Test that the item being dragged is a valid one
+                e.dataTransfer.dropEffect = 'copy';
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+
+        function handleDrop(e) {
+            hideDropZone();
+        }
+
+        window.addEventListener('dragenter', function(e) {
+            showDropZone();
+        });
+
+        dropZone.addEventListener('dragenter', allowDrag);
+
+        dropZone.addEventListener('dragover', allowDrag);
+
+        dropZone.addEventListener('dragleave', function(e) {
+            hideDropZone();
+        });
+
+        // 4
+        dropZone.addEventListener('drop', handleDrop);
+
+    $( "div" ).remove( ".plupload_header" );
+    pl_header =$( ".plupload_content" );
+    pl_header.css('top','0');
+    $('.plupload_filelist').css("background", "repeating-linear-gradient(  45deg,  #606dbc,  #606dbc 10px,  #465298 10px,#465298 20px)");
+
+    $('.plupload_filelist_footer').css("position","relative").css("border-top",'0');
+
+
+   </script>
+
+
+    <script>
+
+
+        var infoBar = function(){
+
+            var prevUpdate = new Date().getTime();
+            var time;
+
+            var header = $(".plupload_header_title");
+            var subheader = $(".plupload_header_text");
+
+            var headerOrigText = header.text();
+            var subheaderOrigText = subheader.text();
+
+            function reset(){
+                counters = {};
+                header.text(headerOrigText);
+                subheader.text(subheaderOrigText);
+            }
+
+
+
+            var counters = {};
+
+            return function(message){
+                if(message == undefined){
+                    reset();
+                    return;
+                }
+
+                time = new Date().getTime();
+
+                if(time - prevUpdate <100) return;
+                prevUpdate = time;
+
+
+                var counter;
+
+                if(counters.hasOwnProperty(message)){
+                    counter = counters[message]+= 1;
+                }
+                else{
+                    counter = counters[message] = 0;
+                }
+
+                if(counter == 0){
+                    $(header).text(message);
+                    subheader.text("");
+                }
+                else {
+                    $(header).text(message + " (" + String(counter) + ")");
+                }
+            }
+        }();
+
+
+
+    </script>
+
+    {% verbatim %}
+
+    <script id="q1" type="text/x-handlebars-template">
+            <div class="editor_slide col-md-6 top-buffer col-md-offset-3 {{ question_id }}" question_id="{{ question_id }}" instance_id="{{ instance_id }}">
+                <div style="padding-top:10px">
+                    <button onClick='editor.delete_slide(this)' id='delete_button' type='button' class='btn btn-xs btn-danger'
+                    data-toggle="tooltip" title="delete this sub-question?">
+                        <div class='glyphicon glyphicon-trash'></div>&nbsp;
+                    </button>
+                </div>
+                <img class="img-responsive center-block" src='{{ q_image }}' >
+
+                <div class="row form-inline">
+                        <input class="input-sm text-center pull-left" id="lhs" style="margin-bottom:0px; width:35%; position:relative; left:5%"
+                               type="text" name="input1" value="{{  lhs }}">
+                        <input class="input-sm text-center pull-right" id='rhs' style="margin-bottom:0px; width:35%; position:relative; right:5%"
+                               type="text" name="input2" value="{{ rhs }}">
+                </div>
+                <div class="row form-inline lowest center-block">
+                        <input class="input-sm text-center center-block" id="q" style="margin-bottom:0px; width:80%; margin-top: 10%;"
+                               type="text" name="input1" value="{{ q }}">
+                </div>
+            </div>
+    </script>
+
+
+        <script id="q2" type="text/x-handlebars-template">
+            <div class="editor_slide col-md-6 top-buffer col-md-offset-3 {{ question_id }}" question_id="{{ question_id }}" instance_id="{{ instance_id }}">
+                <div style="padding-top:10px">
+                    <button onClick='editor.delete_slide(this)' id='delete_button' type='button' class='btn btn-xs btn-danger'
+                            data-toggle="tooltip" title="delete this sub-question?">
+                        <div class='glyphicon glyphicon-trash'></div>&nbsp;
+                    </button>
+                </div>
+                <img class="img-responsive center-block"
+                     src='{{ q_image }}' >
+                <div class="row form-inline">
+                        <input class="input-sm text-center pull-left" id="lhs" style="margin-bottom:0px; width:35%; position:relative; left:5%"
+                               type="text" name="input1" value="{{  lhs }}">
+                        <input class="input-sm text-center pull-right" id='rhs' style="margin-bottom:0px; width:35%; position:relative; right:5%"
+                               type="text" name="input2" value="{{ rhs }}">
+                </div>
+                <div class="row form-inline lowest center-block">
+                        <input class="input-sm text-center center-block" id="q" style="margin-bottom:0px; width:80%; margin-top: 10%;"
+                               type="text" name="input1" value="{{ q }}">
+                </div>
+            </div>
+    </script>
+
+
+    {% endverbatim %}
+
+    <script>
+
+    var editor = function(){
+        var data = {
+            q1:
+                {q_image: '{% static "img/questionator/q1.png" %}', question_id: 'q1', q:'How innovative is the logo?',lhs:'not at all', rhs:'very much so'},
+            q2:
+                {q_image: '{% static "img/questionator/q2.png" %}', question_id: 'q2', q:'How banana is the logo?',lhs:'not at all', rhs:'very much so'}
+        };
+        var instances = [];
+        var api = {id: undefined};
+        var container = null;
+
+        var unique = function(){
+            var IDs = [];
+            var api = {};
+
+            function generate(){
+                var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                for( var i=0; i < 5; i++ )
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+                return text;
+            }
+            api.ID = function(id){
+                if(id != undefined){
+                    IDs.push(id);
+                    return id;
+                }
+
+                var code = null;
+                do{
+                    code = generate();
+                }
+                while(IDs.indexOf(code)!=-1)
+                IDs.push(code);
+                return code;
+            };
+            return api;
+        }();
+
+
+        api.init = function(css_name){
+            container = $(css_name);
+
+
+            ////////////////////////remove later
+            $('.editor').collapse('show');
+
+            /////////////////////////
+        };
+
+
+
+        function getSlides(){
+            return $('#add_more_slides').siblings()
+        }
+
+        function get_slide_instance_id(slideContainer){
+            return $(slideContainer).attr('instance_id');
+        }
+
+        function get_slide_question_id(slideContainer){
+            return $(slideContainer).attr('question_id');
+        }
+
+        function get_current_q_id(){
+            var slides = getSlides();
+            if(slides.length==0)    return null;
+            return get_slide_question_id(slides[0]);
+        }
+
+        function remove_slide_visuals(slide){
+            if(slide!=undefined){
+                $(slide).remove().fadeOut();
+                return;
+            }
+            var slides = getSlides();
+            var count = slides.length;
+            for(var i=0;i<count;i++){
+                $(slides[i]).remove();
+            }
+        }
+
+        function get_unrendered_instance(){
+            if(instances.length==0) return null;
+            var on_screen = getSlides();
+            var on_screen_ids = [];
+            for(var i = 0;i<on_screen.length;i++){
+                on_screen_ids.push(get_slide_instance_id(on_screen[i]));
+            }
+
+            var remove_index = null;
+            var instance = null;
+            for(i=0;i<instances.length;i++){
+                instance = instances[i];
+                remove_index = on_screen_ids.indexOf(instance['data']['instance_id']);
+                if(remove_index ==-1){
+                   return instance;
+                }
+            }
+
+            return null;
+        }
+
+        function remove_from_memory(instance_id){
+            var instance = null;
+            for(var i=0;i<instances.length;i++){
+                instance = instances[i];
+                if(instance['data']['instance_id'] == instance_id){
+                    instances.splice(i, 1);
+                    return;
+                }
+            }
+            alert('devel err, could not find instance to remove from memory')
+        }
+
+        function render_instance(instance, question){
+            $('#editor').css({'visibility': 'visible'});
+            var context = $('#'+question).html();
+            var template = Handlebars.compile(context);
+
+            var possible_extra_data = data[question];
+            for(var key in possible_extra_data){
+                if(instance['data'].hasOwnProperty(key)==false){
+                    instance['data'][key] = possible_extra_data[key];
+                }
+            }
+            instance['data']['question_id'] = question;
+
+            var html_to_add = template(instance['data']);
+            $("#add_more_slides").before(html_to_add).fadeIn();
+
+            var prevent_repeated_fires = '';
+
+            $('.'+question+' :input').on('change textInput input', function () {
+                var val = this.value;
+                if(val != prevent_repeated_fires) {
+                    prevent_repeated_fires = val;
+                    var _id = $(this).attr('id');
+                    instance['data'][_id] = val;
+
+                }
+            });
+        }
+
+        function generate_instance(id){
+            var instance = {};
+            instance['data'] = {};
+            instance['data']['instance_id'] = instance['id'] = unique.ID(id);
+            instances.push(instance);
+            return instance;
+        }
+
+        api.reincarnate_json = function(json_str){
+            if(json_str.length==0) return;
+            var json = JSON.parse(json_str);
+
+            var instance;
+            var json_instance;
+            var question_id;
+            for(var i=0;i<json.length;i++){
+                instance = generate_instance(json['instance_id']);
+                json_instance = json[i];
+                for(var key in json_instance){
+                    instance['data'][key] = json_instance[key];
+                }
+
+                render_instance(instance,json_instance['question_id']);
+            }
+        };
+
+
+        api.stringify_questions = function(extra){
+            if(instances.length == 0) return null;
+            var question_info = [];
+            var instance_copy;
+            var key;
+            var instance;
+            for(var i=0;i<instances.length;i++){
+                instance = instances[i];
+                instance_copy = {}
+                for(key in instance['data']){
+                    instance_copy[key] = instance['data'][key];
+                }
+                for(key in extra){
+                     instance_copy[key] = extra[key];
+                }
+
+
+                question_info.push(instance_copy);
+            }
+
+
+
+            return JSON.stringify(question_info);
+        }
+
+        api.delete_slide = function(_target){
+            var container = $(_target).parent().parent();
+            var slide_instance_id = get_slide_instance_id(container);
+            //var slide_question_id = get_slide_question_id(container);
+            remove_slide_visuals(container);
+            remove_from_memory(slide_instance_id);
+        };
+
+        api.addSlide = function(){
+            var slides = getSlides();
+            if(slides.length == 0){
+                alert('devel err');
+                return;
+            }
+            var question_id = get_slide_question_id(slides[slides.length-1]);
+
+            api.add_slide_from_id(question_id);
+        };
+
+
+        api.add_slide_from_id = function(question){
+            var instance = get_unrendered_instance();
+            if(instance == null) instance = generate_instance();
+
+            render_instance(instance, question)
+        };
+
+
+        return api;
+    }();
+
+    editor.reincarnate_json('{{ question_info|safe }}');
+
+    </script>
+
+
+    <script>
+
+    var slick;
+    //var slide_editor;
+
+        $(document).ready(function(){
+            slick = $('.slick_class');
+            slick.slick({
+            variableWidth: true,
+            edgeFriction: .0001,
+            draggable: true,
+            infinite: false,
+            dots:true,
+            autoplaySpeed: 2000,
+                speed: 500,
+                slidesToScroll: 1,
+            arrows:false,
+                autoplay:true
+            });
+
+            editor.init('.slide_editor');
+
+
+
+            populate_images();
+    });
+
+
+    function delete_image(src){
+        event.preventDefault();
+        var arr = src.split("/")
+        var filename = arr[arr.length-1]
+
+        command('delete_file', {filenames: [filename]}, callback)
+
+        function callback(message, info){
+            if(message == 'success') {
+                $('.slick-slide').each(function (i, obj) {
+                    if (obj.getElementsByTagName('img')[0].src == src) {
+                        var index = obj.getAttribute('data-slick-index');
+                        slick.slick('slickRemove', index);
+                        return false;
+                    }
+                });
+            }
+        }
+    }
+
+    function current_image_urls(){
+        var list = [];
+        $('.slick-slide').each(function (i, obj) {
+            console.log(111,obj)
+            list.push(obj.getElementsByTagName('img')[0].src);
+            });
+        return list;
+    }
+
+
+    function populate_images(){
+
+        command('get_images', {}, callback);
+
+        function callback(message, info) {
+            if(message=='success') {
+                var json_obj = JSON.parse(info);
+
+                var arr = Object.keys(json_obj).map(function (k) {
+                    return json_obj[k]
+                });
+
+                var image_url;
+
+                var current_list = current_image_urls();
+
+                for (var i = 0; i < arr.length; i++) {
+                    image_url = arr[i];
+
+                    if (current_list.indexOf(image_url) == -1) {
+                        slick.slick('slickAdd',
+                                "<div class='slide slide_caption slick-slide'>" +
+                                "<button onClick='delete_image(\"" + image_url + "\")' id='delete_button' type='button'" +
+                                " class='btn btn-xs btn-danger style='padding-top:10px; float:left'; left:100px>" +
+                                "<div class='glyphicon glyphicon-trash'></div>&nbsp;</button>" +
+                                "<img class='img-responsive center-block' src='" + image_url + "' ></div>");
+                        current_list.push(image_url);
+                    }
+                }
+            }
+
+        }
+    }
+
+    </script>
+
+    <script>
+
+
+
+    </script>
+
+
+
+{% endblock %}
+

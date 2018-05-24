@@ -1,0 +1,12 @@
+{% load i18n avatar_tags %}
+
+<div id="upload_avatar_container">
+    <div class="profile-avatar">
+        <a class="change-avatar" href="#">
+            {% avatar scientist 200 %}
+            {% if user == scientist %}
+                <span id="upload_avatar" class="change-avatar-text"> {% trans "Change Avatar" %} </span>
+            {% endif %}
+        </a>
+    </div>
+</div>

@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+{% load i18n staticfiles %}
+
+{% block extra_css %}
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block body %}
+
+    <script id="tpl_order_row" type="text/template">
+        <table class="table table-hover text-center">
+             <thead>
+                <tr class="text-center">
+                    <th class="text-left" width="10%"><h4>Tally</h4></th>
+                    <th class="text-left" width="90%"><h4>Urls (please check they are correct)</h4></th>
+
+                </tr>
+             </thead>
+             <tbody>
+                 <% _.each(rows,function(row){
+                %>
+                    <tr>
+                        <td>
+                            <div class="form-group" style=''>
+                                <input data.pk="<%= row.id %>"
+                                       style="width:100%;text-align:center;" type="number" class="form-control new_counts"
+                                       value="<%= parseInt(row.count) %>" >
+                            </div>
+                        </td>
+                        <td style="text-align:left;" data-id="<%= row.id %>"><a target="_blank" href="<%= row.ordering %>">
+                            <%= row.ordering %></a>
+                            <button class="btn" name="btn_remove_order" onclick="remove('<%= row.id %>')">
+                                remove</button>
+                        </td>
+
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </script>
+
+
+    <div class="container change-order-modal" style="margin-top:50px;">
+
+        <div id="batch_add_order_content" class="form-group"><label><h1>Conditions</h1></label>
+            <div class="row">
+                <div class="col-md-10">
+                    <textarea id="batch_order_text" class="form-control" rows="5"
+                              placeholder="Add one condition per line, no spaces."
+                    ></textarea>
+                </div>
+                <div class="col-md-2">
+                    <button id="btn_batch_add_order" type="button" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label><h1>Balance table</h1></label>
+                    <div id="order_table"/>
+                </div>
+                <a onclick="save()" href="#" class="btn btn-warning">
+                <i class="glyphicon glyphicon-floppy-disk"></i>
+                save count changes
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.pnotify.js' %}"></script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/underscore.js' %}"></script>
+
+    <script>
+
+                function save(){
+                    var found = []
+                    $('.new_counts').each(function(i,f){
+                        found.push({pk: $(f).attr('data.pk'), count: $(f).val()})
+                    })
+                    if(found.length>0){
+                        $.ajax({
+                        url: "./modify/",
+                        data: {"modify_order": JSON.stringify(found)},
+                        dataType: "json",
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (result) {
+                            if (result.status === "success") {
+                                populate_table(tablefy_dataset(JSON.parse(result.order_list)))
+                            } else {
+                                new PNotify({
+                                    title: "Change Order",
+                                    text: result.message,
+                                    type: "error"
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                        }
+
+                    });
+                    }
+                }
+
+                function remove(order_id){
+                    $.ajax({
+                        url: "./delete/",
+                        data: {"order_ids": [order_id]},
+                        dataType: "json",
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                        },
+                        success: function (result) {
+                            if (result.status === "success") {
+                                populate_table(tablefy_dataset(JSON.parse(result.order_list)))
+                            } else {
+                                new PNotify({
+                                    title: "Change Order",
+                                    text: result.message,
+                                    type: "error"
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                        }
+
+                    });
+                }
+
+
+
+
+                $("#btn_batch_add_order").on("click", function (e) {
+                    var batch_order_text = $("#batch_order_text").val();
+                    if(batch_order_text && batch_order_text.length>0) {
+
+
+                        var batch_order_text_list = batch_order_text.split(" ").join("\n").split(",").join("\n").split("\n");
+
+                        $.ajax({
+                            url: "./add/",
+                            data: {batch_order: JSON.stringify(batch_order_text_list)},
+                            dataType: "json",
+                            type: "POST",
+                            beforeSend: function (xhr) {
+                                $(this).prop("disabled", true);
+                                xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+                            },
+                            success: function (result) {
+                                if (result.status === "success") {
+                                    populate_table(tablefy_dataset(JSON.parse(result.order_list)))
+                                } else {
+                                    new PNotify({
+                                        title: "Adding order problem",
+                                        text: result.message,
+                                        type: "error"
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                            },
+                            complete: function () {
+                                $(this).prop("disabled", false);
+                            }
+                        })
+                    }
+
+                     else {
+                        new PNotify({
+                            title: "Adding order problem",
+                            text: "Nothing given to add as an order",
+                            type: "info"
+                        });
+                    }
+
+                    e.preventDefault();
+                });
+
+                var tablefied = tablefy_dataset({{ order_list|safe }})
+
+                populate_table(tablefied)
+
+
+
+                function tablefy_dataset(obj){
+                    var rows = obj.map(function(table_row){
+                        return {
+                            id: table_row['pk'],
+                            ordering: table_row['fields']['ordering'],
+                            count: table_row['fields']['count']
+                        }
+                    })
+                    return rows
+                }
+
+                function populate_table(rows){
+                    var template = $("#tpl_order_row").html()
+                    $("#order_table").html(_.template(template)({rows:rows}))
+                }
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% load i18n %}
+
+<div class="panel panel-primary" style="margin:20px 0;">
+    <div class="panel-heading">
+        <h3 class="panel-title">The Scientist experiments</h3>
+    </div>
+    <div class="panel-body">
+        {% for i in 12345|make_list %}
+            <div class="media">
+                <a class="pull-left" href="#">
+                    <img class="media-object img-thumbnail" data-src="holder.js/50x50"
+                         alt="Experiment Title">
+                </a>
+
+                <div class="media-body">
+                    <h5 class="media-heading">
+                        <a href="#">
+                            Experiment Title
+                        </a>
+                    </h5>
+
+                    <div class="experiment-meta">
+                        <i class="glyphicon glyphicon-time"></i>
+                        2013-10-31
+
+                        <i class="glyphicon glyphicon-th"></i>
+                        1031
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,337 @@
+#left_panel {
+    width: 400px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    /*background: #eee;*/
+    height: 100%;
+    overflow-x: visible;
+    top: 61px;
+}
+
+#left_panel.mobile-show {
+    position: fixed;
+    z-index: 1000
+}
+
+#left_panel.full {
+    bottom: auto;
+    height: auto
+}
+
+#left_panel.sidebar-fixed {
+    position: fixed;
+    top: 40px;
+    overflow-x: hidden
+}
+
+#left_panel.sidebar-fixed .ui-resizable-handle {
+    right: 0
+}
+
+#left_panel .subnav {
+    margin-top: 15px
+}
+
+#left_panel .subnav:hover .subnav-title .toggle-subnav i {
+    display: block
+}
+
+#left_panel .subnav .subnav-content {
+    *zoom: 1;
+    padding: 10px 20px
+}
+
+#left_panel .subnav .subnav-content:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+#left_panel .subnav .subnav-content.less {
+    padding: 10px 13px
+}
+
+#left_panel .subnav .subnav-title {
+    *zoom: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+#left_panel .subnav .subnav-title:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+#left_panel .subnav .subnav-title span {
+    margin-left: 20px;
+    font-size: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+#left_panel .subnav .subnav-title .toggle-subnav {
+    color: #444;
+    padding: 1px 6px;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden
+}
+
+#left_panel .subnav .subnav-title .toggle-subnav i {
+    position: absolute;
+    font-size: 14px;
+    left: 10px;
+    top: 4px;
+    display: none
+}
+
+#left_panel .subnav .subnav-title .toggle-subnav:hover {
+    color: #222
+}
+
+#left_panel .subnav .subnav-menu {
+    list-style-type: none;
+    margin: 5px 0;
+    padding: 0
+}
+
+#left_panel .subnav .subnav-menu > li {
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown > a {
+    position: relative
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown > a:after {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    width: 5px;
+    border-color: rgba(0, 0, 0, 0);
+    border-left-color: #999;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    content: " "
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown.open > a {
+    background: #ccc;
+    color: #333
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown.open .dropdown-menu {
+    left: 100%;
+    top: 0;
+    border-color: #aaa;
+    border-left: 0;
+    margin: 0
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown.open .dropdown-menu .dropdown-submenu .dropdown-menu {
+    border-left: 2px solid #999
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown.open .dropdown-menu .dropdown-submenu:hover > a, #left_panel .subnav .subnav-menu > li.dropdown.open .dropdown-menu .dropdown-submenu:focus > a {
+    background: #ccc;
+    color: #333
+}
+
+#left_panel .subnav .subnav-menu > li.dropdown.open .dropdown-menu .dropdown-submenu:hover > a:after, #left_panel .subnav .subnav-menu > li.dropdown.open .dropdown-menu .dropdown-submenu:focus > a:after {
+    border-left-color: #999
+}
+
+#left_panel .subnav .subnav-menu > li > a {
+    color: #555;
+    display: block;
+    padding: 5px 0 5px 27px;
+    text-decoration: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+}
+
+#left_panel .subnav .subnav-menu > li > a:hover {
+    background: #ddd;
+    color: #222
+}
+
+#left_panel .subnav .subnav-menu > li.active > a {
+    background: #ccc;
+    color: #222;
+    font-weight: bold
+}
+
+#right_panel {
+    *zoom: 1;
+    background: #fff;
+    margin-left: 400px;
+    overflow: visible;
+    padding-bottom: 30px;
+    height: 100%;
+}
+
+#right_panel:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+#right_panel .page-header {
+    border: 0;
+    margin: 15px 0 15px 0;
+    padding: 0 3px;
+    *zoom: 1
+}
+
+#right_panel .page-header:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+#right_panel .page-header .pull-left h1 {
+    font-size: 30px;
+    color: #2a2a2a;
+    line-height: 24px;
+    font-weight: 400;
+    margin: 20px 0
+}
+
+#right_panel .page-header .pull-left h6 {
+    color: #777;
+    font-weight: normal;
+    margin: 0
+}
+
+#right_panel .breadcrumbs {
+    *zoom: 1;
+    background: #f4f4f4
+}
+
+#right_panel .breadcrumbs:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+#right_panel .breadcrumbs ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 2px 5px;
+    *zoom: 1;
+    float: left
+}
+
+#right_panel .breadcrumbs ul:after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+#right_panel .breadcrumbs ul > li {
+    float: left;
+    color: #666
+}
+
+#right_panel .breadcrumbs ul > li > a {
+    color: #666;
+    display: block;
+    padding: 2px 6px;
+    font-size: 12px;
+    float: left
+}
+
+#right_panel .breadcrumbs ul > li i {
+    float: left;
+    font-size: 11px;
+    margin: 7px 0 6px 0
+}
+
+#right_panel .breadcrumbs .close-bread {
+    float: right
+}
+
+#right_panel .breadcrumbs .close-bread > a {
+    color: #999;
+    display: block;
+    font-size: 14px;
+    margin: 4px 8px
+}
+
+#right_panel .breadcrumbs .close-bread > a:hover {
+    text-decoration: none
+}
+
+#right_panel #vmap {
+    width: 100%;
+    height: 300px
+}
+
+.ui-resizable-handle {
+    cursor: col-resize;
+    border-right: solid 4px #F27613;
+    z-index: 1;
+}
+
+.btn-slide {
+    background-color: #f27613;
+    text-align: center;
+    width: 14px;
+    height: 31px;
+    padding: 10px 10px 0 0;
+    margin: 0 0 0 7px;
+    display: block;
+    font: bold 120%/100% Arial, Helvetica, sans-serif;
+    color: #fff;
+    text-decoration: none;
+}
+
+.playButton  {
+  .buttonBackground(@lighterColor, @darkerColor);
+}
+
+
+.panel-body {
+    height:100%;
+    padding:0px;
+}
+
+#right_bottom_left_top_splitter form,
+#right_bottom_left_top_splitter form div#swf_editor,
+#right_bottom_left_top_splitter form div#swf_editor div#swfcontainer,
+#right_bottom_left_top_splitter form div#swf_editor div#swfcontainer object#xperiment {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.white, .white .active a,
+.white .active a:hover {
+    background-color: white !important;
+}
+
+.plupload_wrapper {
+
+    min-width: auto;
+
+}
+
+.plupload_container {
+    padding:0px;
+}
+
+.plupload_header_content{
+    width:100%;
+}
+
+
+.navbar {
+    min-height:40px!important;
+    height:40px;
+}

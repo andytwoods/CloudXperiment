@@ -1,0 +1,28 @@
+{% extends "experiment/base.html" %}
+
+{% load i18n staticfiles bootstrap3 experiment_tags %}
+
+{% block inner_content %}
+
+
+    <h1>Rename an experiment currently called {{ old_name }}</h1>
+    <form id="create_experiment_form" class="form-horizontal" method="POST" action="" role="form">
+        {% csrf_token %}
+        {% bootstrap_field form.name %}
+
+
+        {% buttons %}
+            <button type="submit" class="btn btn-primary pull-right">
+                {% bootstrap_icon "arrow-right" %} {% trans "Save" %}
+            </button>
+        {% endbuttons %}
+    </form>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+
+
+    </script>
+{% endblock %}

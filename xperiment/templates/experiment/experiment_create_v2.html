@@ -1,0 +1,58 @@
+{% extends "experiment/base.html" %}
+
+{% load i18n bootstrap3 static %}
+
+{% block title %}{% trans "Create Experiment" %}{% endblock %}
+
+{% block inner_content %}
+    <div class="row">
+        <ol class="breadcrumb">
+            <li>
+                {% trans "Lab" %} :
+                <a href="{% url "lab_detail" lab.id lab.slug %}">
+                    {{ lab.name }}
+                </a>
+            </li>
+            <li>
+                <a href="{% url "experiment_manage" lab.id %}">
+                    {% trans "Manage Experiments" %}
+                </a>
+            </li>
+            <li class="active">
+                {% trans "Create Experiments" %}
+            </li>
+        </ol>
+        <div class="well well-lg">
+            <form id="create_experiment_form" class="form-horizontal" method="POST" action="" role="form">
+                {% csrf_token %}
+                <div class="form-group"><label>Experiment name(s)</label>
+                    <span class="help-block">create multiple studies by seperating their names with a comma</span>
+                <textarea class="form-control" name="name"></textarea>
+                </div>
+                <div class="form-group"><label>Laboratory</label>
+                    <select class="form-control" id="id_lab_id" name="lab_id" placeholder="Laboratory">
+                        {% for item in ls_list %}
+                            <option {% if item.lab.id == lab.id %}selected="selected"{% endif %} value="{{ item.lab.id }}">{{ item.lab.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group"><label>Alias</label>
+                    <span class="help-block">such experiments point to the url of the below study and incorporate the same balancers, but have their own results table. Nb these studies no NOT have their own script</span>
+                    <select class="form-control" id="id_alias_id" name="alias_id" placeholder="Alias">
+                            <option value=""></option>
+                        {% for item in es_list %}
+                            <option value="{{ item.expt_id }}">{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary pull-right">
+                        {% bootstrap_icon "floppy-saved" %} {% trans "Save" %}
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

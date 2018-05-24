@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap3 %}
+
+{% block title %}{% trans "Experiment Payment" %}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="page-header">
+                <h3>{% trans "Experiment Payment" %}</h3>
+            </div>
+            {% if expt_info.is_paid %}
+                <div class="well well-lg">
+                    <h4>{% trans "Successful payment" %}</h4>
+                    <a class="btn btn-primary" href="{% url "experiment_manage" expt_info.lab.id %}">
+                        {% bootstrap_icon "arrow-right" %} {% trans "Next" %}
+                    </a>
+                </div>
+            {% else %}
+                <div class="well well-lg">
+                    <form class="form-horizontal" method="POST" action="{% url "experiment_payment_complete" expt_info.expt_id %}" role="form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label>Amount(balance:{{ expt_info.lab.balance }}&nbsp;amount:{{ amount }})</label>
+                            <input class="form-control" name="amount" type="text" placeholder="Amount" value="{{ payment_amount }}">
+                        </div>
+
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "ok" %} {% trans "Submit" %}
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

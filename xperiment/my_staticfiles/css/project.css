@@ -1,0 +1,804 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html,
+body {
+    height: 100%;
+    /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto;
+    /* Negative indent footer by its height */
+    margin: 0 auto -60px;
+    /* Pad bottom by footer height */
+    padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+    height: 40px;
+    background-color: rgb(16, 16, 16);
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+#wrap > .container {
+    padding: 60px 15px 0;
+}
+
+.container .text-muted {
+    margin: 20px 0;
+}
+
+#footer > .container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+code {
+    font-size: 80%;
+}
+
+/* Sign In modal styles
+-------------------------------------------------- */
+#signin_modal h4, #signup_modal h4 {
+    text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+    #signin_modal .modal-dialog, #signup_modal .modal-dialog {
+        width: 320px;
+        margin-top: 60px;
+    }
+}
+
+#signin_modal .modal-content, #signup_modal .modal-content {
+    padding: 10px 20px 20px 20px;
+}
+
+#signin_modal .modal-body, #signup_modal .modal-body {
+    padding: 0;
+}
+
+#signin_modal .socialaccount_providers, #signup_modal .socialaccount_providers {
+    text-align: center;
+}
+
+#signin_modal .socialaccount_provider, #signup_modal .socialaccount_provider {
+    width: 45px;
+}
+
+/* profile styles
+-------------------------------------------------- */
+.profile {
+    margin-top: 20px;
+}
+
+.profile-main {
+    margin-top: -30px;
+}
+
+.profile-actions {
+    margin: 10px 0 0 0;
+}
+
+.profile-actions .btn {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.profile-main-footer {
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.profile-user-summary {
+    margin: 15px 0 20px 15px;
+}
+
+.profile-user-commands {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    margin-bottom: 20px;
+}
+
+.change-avatar-text {
+    margin: 0 auto;
+    top: -45px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: none;
+    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    text-align: center;
+    width: 190px;
+    z-index: 3;
+}
+
+.change-avatar:hover .change-avatar-text {
+    display: block;
+    text-decoration: underline;
+}
+
+/* lab styles
+-------------------------------------------------- */
+.lab {
+    margin-top: 20px;
+}
+
+.lab-main {
+    margin-top: -30px;
+}
+
+.lab-actions {
+    margin: 10px 0 0 0;
+}
+
+.lab-actions .btn {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.lab-main-footer {
+    margin-bottom: 20px;
+}
+
+.lab-logo {
+    width: 200px;
+    margin: 0 auto;
+}
+
+.lab-summary {
+    margin: 15px 0 20px 15px;
+}
+
+.lab-commands {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    margin-bottom: 20px;
+}
+
+.change-logo-text {
+    margin: 0 auto;
+    top: -45px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: none;
+    font-weight: bold;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    text-align: center;
+    width: 190px;
+    z-index: 3;
+}
+
+.change-logo:hover .change-logo-text {
+    display: block;
+    text-decoration: underline;
+}
+
+.nav .nav-header {
+    color: #bbb;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+#input_member .lab-member {
+    line-height: 36px;
+}
+
+.table-experiment th, .table-experiment tr {
+    text-align: center;
+}
+
+.table-experiment > tbody > tr > td {
+    line-height: 34px;
+}
+
+img.experiment-attachment {
+    width: 55px;
+    height: 55px;
+}
+
+.thumbnail > img.experiment-attachment, .thumbnail a > img.experiment-attachment {
+    width: 55px;
+    height: 55px;
+}
+
+.thumbnail > div.experiment-attachment, .thumbnail a > div.experiment-attachment {
+    width: 55px;
+    height: 55px;
+    text-align: center;
+    color: #817B7B;
+    font-size: 21px;
+    font-weight: bold;
+    text-transform: lowercase;
+    overflow: hidden;
+    line-height: 55px;
+}
+
+.tabs-below > .nav-tabs,
+.tabs-right > .nav-tabs,
+.tabs-left > .nav-tabs {
+    border-bottom: 0;
+}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+    display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+    display: block;
+}
+
+.tabs-below > .nav-tabs {
+    border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+    margin-top: -1px;
+    margin-bottom: 0;
+}
+
+.tabs-below > .nav-tabs > li > a {
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+    border-top-color: #ddd;
+    border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+    border-color: transparent #ddd #ddd #ddd;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+    float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+    min-width: 74px;
+    margin-right: 0;
+    margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+    float: left;
+    margin-right: 19px;
+    border-right: 1px solid #ddd;
+    position: absolute;
+    height: 100%;
+}
+
+.tabs-left > .nav-tabs > li > a {
+    margin-right: -1px;
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+    border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+    border-color: #ddd transparent #ddd #ddd;
+    *border-right-color: #ffffff;
+}
+
+.tabs-right > .nav-tabs {
+    float: right;
+    margin-left: 19px;
+    border-left: 1px solid #ddd;
+}
+
+.tabs-right > .nav-tabs > li > a {
+    margin-left: -1px;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+    border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+    border-color: #ddd #ddd #ddd transparent;
+    *border-left-color: #ffffff;
+}
+
+.tabs-left .tab-content {
+    margin-left: 80px;
+}
+
+.pre-scrollable {
+    max-height: 600px;
+}
+
+#behaviour a {
+    margin: 0px 10px 10px 0px;
+}
+
+#stimuli a {
+    margin: 0px 10px 10px 0px;
+}
+
+#left_panel .tab-pane {
+    margin-right: 20px;
+    margin-left: -10px;
+}
+
+.attachment-delete-active {
+    background-color: #CE4133;
+    font-size: 12px;
+    line-height: 17px;
+    height: 13px;
+    margin: -28px -2px;
+    min-width: 13px;
+    padding: 0 1px;
+    width: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+    border-radius: 40%;
+    color: #ffffff;
+    font-weight: 700;
+    position: absolute;
+    right: 12px;
+    text-align: center;
+    top: 28px;
+    z-index: 10;
+    opacity: 0.8;
+}
+
+.attachment-delete-inactive {
+    background-color: #CE4133;
+    font-size: 12px;
+    line-height: 17px;
+    height: 13px;
+    margin: -28px -2px;
+    min-width: 13px;
+    padding: 0 1px;
+    width: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+    border-radius: 40%;
+    color: #ffffff;
+    font-weight: 700;
+    position: absolute;
+    right: 12px;
+    text-align: center;
+    top: 28px;
+    z-index: 10;
+    opacity: 0.8;
+}
+
+a.attachment_delete {
+    margin-top: -25px;
+    margin-right: 20px;
+}
+
+.attachment-manager-bar {
+    margin-bottom: 20px;
+}
+
+#sortable tr.item {
+    cursor: move;
+}
+
+a.course_expt_delete {
+    cursor: pointer;
+}
+
+#resize_bar {
+    position: absolute;
+    height: 100%;
+    min-height: 900px;
+}
+
+/*#right_panel_right {
+   padding-left: 35px;
+}*/
+
+#upload_file {
+    height: 500px;
+    overflow-y: scroll;
+}
+
+#upload_file .select_status {
+    position: absolute;
+    margin: 5px;
+    width: 44px;
+    height: 44px;
+    background: url(img/select_status.png) no-repeat;
+    display: none;
+}
+
+#upload_file a.item-selected .select_status {
+    display: block;
+    background-position: 0 -44px;
+}
+
+#upload_file a:hover .select_status {
+    display: block;
+}
+
+#upload_file .attachment_thumb {
+    position: relative;
+}
+
+.lab-logo-small {
+    width: 50px;
+}
+
+.user-avatar {
+    width: auto;
+    max-height: 200px;
+}
+
+#drop-target {
+    position: relative;
+    z-index: 0;
+    text-align: center;
+    text-shadow: -2px -2px 0 #ffffff,
+    2px -2px 0 #ffffff,
+    -2px 2px 0 #ffffff,
+    2px 2px 0 #ffffff;
+    color: #999;
+    font-size: 20px;
+    width: 100%;
+    height: 80px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQIW2N06j71nwEI9pWaMYJoRgwBkCgyACtDBgCyXQgF/l5gugAAAABJRU5ErkJggg==) repeat;
+}
+
+.disabled, .disabled:hover {
+    color: #808080;
+    cursor: default;
+    text-decoration: none !important;
+}
+
+#snippet_modal {
+    padding: 15px;
+}
+
+#snippet_modal h3 {
+    color: #084567;
+    text-align: left;
+    line-height: 1;
+    font-weight: 300;
+    margin: 10px 0 30px;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid #cbe0ec;
+    font-size: 21px;
+}
+
+#snippet_modal h3 {
+    margin-bottom: 20px;
+}
+
+.snippet-like-link {
+    text-decoration: none !important;
+}
+
+.snippet-code {
+    width: 100%;
+    height: 118px;
+}
+
+#snippet_select_contain {
+    font-size: 12px;
+    display: inline-block;
+    margin-left: 200px;
+}
+
+#snippet_select {
+    padding: 5px;
+    width: 300px;
+}
+
+#snippet_more {
+    margin: 10px 0 10px 0;
+}
+
+.m-b {
+    margin-top: 15px
+}
+
+.m-b-xs {
+    margin-top: 5px;
+}
+
+.m-b-sm {
+    margin-top: 10px;
+}
+
+.m-b-md {
+    margin-top: 20px;
+}
+
+.m-b-lg {
+    margin-top: 30px;
+}
+
+.m-b-xl {
+    margin-top: 40px;
+}
+
+.m-b-xxl {
+    margin-top: 50px;
+}
+
+.m-b-none {
+    margin-top: 0px;
+}
+
+.m-t {
+    margin-top: 15px
+}
+
+.m-t-xs {
+    margin-top: 5px;
+}
+
+.m-t-sm {
+    margin-top: 10px;
+}
+
+.m-t-md {
+    margin-top: 20px;
+}
+
+.m-t-lg {
+    margin-top: 30px;
+}
+
+.m-t-xl {
+    margin-top: 40px;
+}
+
+.m-t-xxl {
+    margin-top: 50px;
+}
+
+.m-t-none {
+    margin-top: 0px;
+}
+
+.mechanical_turk_form {
+    width: 600px;
+    padding: 20px 0 20px 0;
+}
+
+.mechanical_turk_form textarea {
+    height: 114px;
+}
+
+.flyingfish_container {
+    width: 600px;
+    padding: 20px 0 20px 0;
+}
+
+.flyingfish_container textarea {
+    height: 114px;
+}
+
+.mt-question-logo {
+    width: 100px;
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.wrapper {
+    padding: 15px
+}
+
+.mt-question-link {
+    height: 35px;
+    width: 200px;
+    background-color: #ccc;
+    line-height: 35px;
+    text-align: center;
+    color: #d9534f;
+    float: left;
+    margin-right: 10px;
+}
+
+.btn-group-xs
+.toggle-btn-group a {
+    height: 30px;
+    line-height: 16px;
+}
+
+.pg-ckeditor {
+    overflow: hidden;
+    position: absolute;
+    z-index: 1000;
+}
+
+#settings_modal {
+    padding: 15px;
+}
+
+#settings_modal h3 {
+    color: #084567;
+    text-align: left;
+    line-height: 1;
+    font-weight: 300;
+    margin: 10px 0 30px;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid #cbe0ec;
+    font-size: 21px;
+}
+
+#settings_modal h3 {
+    margin-bottom: 20px;
+}
+
+.flash-hide {
+    position: absolute;
+    left: -99999px;
+}
+
+.insert-trial-control {
+    display: inline-block !important;
+    width: 50px !important;
+    height: 24px; !important;
+}
+
+.trial-menu-title {
+    float: left;
+    line-height: 24px;
+    padding: 0 5px 0 5px;
+}
+
+.m-r-xs {
+    margin-right: 5px;
+}
+
+.no-underline-link {
+    text-decoration: none !important;
+}
+
+.dropdown-menu {
+    z-index: 1031 !important;
+}
+
+.no-border {
+    border: none;
+}
+
+.experiment-question-content {
+    padding: 0px 20px 0px 20px;
+}
+
+.create-question-content {
+    padding: 0 2px 0 2px;
+}
+
+@keyframes flashing-warning {
+    from {
+        background-image: linear-gradient(to bottom, lightgrey, lightgrey);
+    }
+    to {
+        background-image: linear-gradient(to bottom, yellow, yellow);
+    }
+}
+
+@-moz-keyframes flashing-warning /* Firefox */
+{
+    from {
+        background-image: linear-gradient(to bottom, lightgrey, lightgrey);
+    }
+    to {
+        background-image: linear-gradient(to bottom, yellow, yellow);
+    }
+}
+
+@-webkit-keyframes flashing-warning /* Safari 和 Chrome */
+{
+    from {
+        background-image: linear-gradient(to bottom, lightgrey, lightgrey);
+    }
+    to {
+        background-image: linear-gradient(to bottom, yellow, yellow);
+    }
+}
+
+@-o-keyframes flashing-warning /* Opera */
+{
+    from {
+        background-image: linear-gradient(to bottom, lightgrey, lightgrey);
+    }
+    to {
+        background-image: linear-gradient(to bottom, yellow, yellow);
+    }
+}
+
+.flashing-warning {
+    animation: flashing-warning 0.3s linear 0s 2;
+    /* Firefox: */
+    -moz-animation: flashing-warning 0.3s linear 0s 2;
+    /* Safari 和 Chrome: */
+    -webkit-animation: flashing-warning 0.3s linear 0s 2;
+    /* Opera: */
+    -o-animation: flashing-warning 0.3s linear 0s 2;
+}
+
+.mturk-password-input {
+    float: left;
+    width: 200px;
+    margin: 0px 10px 0px 10px;
+}
+
+.mturk-password-button {
+    float: left;
+}
+
+.mturk-copy-link {
+    float: left;
+}
+
+.datagrid-group {
+    line-height: normal !important;
+    height: auto !important;
+}
+
+.btn-small {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+#editModeType {
+    padding-left: 5px;
+}
+
+.change-order-modal {
+    width: 650px;
+    padding: 20px 0 20px 0;
+}
+
+.upload_swf_form {
+    width: 600px;
+    padding: 20px 0 20px 0;
+}
+
+.alert {
+    position:fixed;
+    bottom:0;
+    z-index:10000;
+}

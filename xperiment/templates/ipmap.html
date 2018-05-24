@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load gmap_tags %}
+
+{% block title %}Show IP locations on a google map{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Show IP locations on a google map</h1>
+    </div>
+    {% ip_on_map "" None 500 True True %}
+    <p class="pull-right">
+        Powered by the OpenSource:
+        <a href="https://github.com/mygu/django-googlemap" target="_blank">
+            https://github.com/mygu/django-googlemap
+        </a>
+    </p>
+{% endblock %}

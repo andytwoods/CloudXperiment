@@ -1,0 +1,777 @@
+<Experiment id="534b343cdc414df2a74237fc5697c0cb">
+  <betweenSJsID>Taste</betweenSJsID>
+  <nerdStuff>uniqueID:9A172BA39AAE8E3941E0C7AA41A0B1F1 browser:5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36-Netscape Web appID: OS:Windows 7 resX:1280 resY:1024 DPI:72 CPUarch:x86 version:WIN 15,0,0,189</nerdStuff>
+  <timeStart>Mon Nov 10 12:09:30 GMT-0500 2014</timeStart>
+  <approxDurationInSeconds>293</approxDurationInSeconds>
+  <deviceID>9A1BDB789AAE8E1741D8E61B8C69778D</deviceID>
+  <trialData name="ethics1|b0i0">
+    <trialOrder>0</trialOrder>
+    <noPeg1>1</noPeg1>
+    <xpt_user_id>null</xpt_user_id>
+    <xpt_course_id>3MG8450X2N9XR3XB8KABE9S3YZLPUY</xpt_course_id>
+  </trialData>
+  <trialData name="ethics2|b1i0">
+    <trialOrder>1</trialOrder>
+    <noPeg12>yes</noPeg12>
+    <noPeg13>yes</noPeg13>
+    <noPeg14>yes</noPeg14>
+    <noPeg15>yes</noPeg15>
+    <noPeg16>yes</noPeg16>
+    <noPeg17>yes</noPeg17>
+    <noPeg18>yes</noPeg18>
+    <noPeg19>yes</noPeg19>
+    <noPeg20>yes</noPeg20>
+    <noPeg21>yes</noPeg21>
+    <noPeg22>yes</noPeg22>
+    <noPeg23>yes</noPeg23>
+    <noPeg24>2</noPeg24>
+  </trialData>
+  <trialData name="b2i0">
+    <trialOrder>2</trialOrder>
+    <ran_fullscreen>false</ran_fullscreen>
+  </trialData>
+  <trialData name="b3i0">
+    <trialOrder>3</trialOrder>
+    <hit_id>3MG8450X2N9XR3XB8KABE9S3YZLPUY</hit_id>
+    <worker_id>A162JX4ML69UIC</worker_id>
+    <assignment_id>351SEKWQS0G8CHN5KBXWCPQ5J1QMD1</assignment_id>
+    <exptId>534b343cdc414df2a74237fc5697c0cb</exptId>
+    <platform>real</platform>
+    <ip>165.123.243.100</ip>
+    <sex>male</sex>
+    <age>39</age>
+    <origin>United States</origin>
+    <language>English</language>
+  </trialData>
+  <trialData name="b4i0">
+    <trialOrder>4</trialOrder>
+    <language>unmodified</language>
+  </trialData>
+  <trialData name="b5i0">
+    <trialOrder>5</trialOrder>
+  </trialData>
+  <trialData name="14|b7i13">
+    <trialOrder>6</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>2356</rt>
+  </trialData>
+  <trialData name="22|b7i21">
+    <trialOrder>7</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>2604</rt>
+  </trialData>
+  <trialData name="59|b7i58">
+    <trialOrder>8</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>3695</rt>
+  </trialData>
+  <trialData name="24|b7i23">
+    <trialOrder>9</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1125</rt>
+  </trialData>
+  <trialData name="67|b7i66">
+    <trialOrder>10</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>932</rt>
+  </trialData>
+  <trialData name="51|b7i50">
+    <trialOrder>11</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1571</rt>
+  </trialData>
+  <trialData name="2|b7i1">
+    <trialOrder>12</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>980</rt>
+  </trialData>
+  <trialData name="62|b7i61">
+    <trialOrder>13</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>3001</rt>
+  </trialData>
+  <trialData name="27|b7i26">
+    <trialOrder>14</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>876</rt>
+  </trialData>
+  <trialData name="26|b7i25">
+    <trialOrder>15</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1253</rt>
+  </trialData>
+  <trialData name="45|b7i44">
+    <trialOrder>16</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1170</rt>
+  </trialData>
+  <trialData name="25|b7i24">
+    <trialOrder>17</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1848</rt>
+  </trialData>
+  <trialData name="41|b7i40">
+    <trialOrder>18</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>2730</rt>
+  </trialData>
+  <trialData name="34|b7i33">
+    <trialOrder>19</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1685</rt>
+  </trialData>
+  <trialData name="72|b7i71">
+    <trialOrder>20</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>2740</rt>
+  </trialData>
+  <trialData name="69|b7i68">
+    <trialOrder>21</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1173</rt>
+  </trialData>
+  <trialData name="61|b7i60">
+    <trialOrder>22</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>3784</rt>
+  </trialData>
+  <trialData name="36|b7i35">
+    <trialOrder>23</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>937</rt>
+  </trialData>
+  <trialData name="30|b7i29">
+    <trialOrder>24</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>3185</rt>
+  </trialData>
+  <trialData name="42|b7i41">
+    <trialOrder>25</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>2827</rt>
+  </trialData>
+  <trialData name="54|b7i53">
+    <trialOrder>26</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>2260</rt>
+  </trialData>
+  <trialData name="60|b7i59">
+    <trialOrder>27</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1686</rt>
+  </trialData>
+  <trialData name="79|b7i78">
+    <trialOrder>28</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1112</rt>
+  </trialData>
+  <trialData name="80|b7i79">
+    <trialOrder>29</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>3065</rt>
+  </trialData>
+  <trialData name="65|b7i64">
+    <trialOrder>30</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>876</rt>
+  </trialData>
+  <trialData name="37|b7i36">
+    <trialOrder>31</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>2068</rt>
+  </trialData>
+  <trialData name="68|b7i67">
+    <trialOrder>32</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1188</rt>
+  </trialData>
+  <trialData name="44|b7i43">
+    <trialOrder>33</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1048</rt>
+  </trialData>
+  <trialData name="13|b7i12">
+    <trialOrder>34</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1047</rt>
+  </trialData>
+  <trialData name="6|b7i5">
+    <trialOrder>35</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>2468</rt>
+  </trialData>
+  <trialData name="64|b7i63">
+    <trialOrder>36</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>2816</rt>
+  </trialData>
+  <trialData name="78|b7i77">
+    <trialOrder>37</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1099</rt>
+  </trialData>
+  <trialData name="53|b7i52">
+    <trialOrder>38</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>991</rt>
+  </trialData>
+  <trialData name="29|b7i28">
+    <trialOrder>39</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>893</rt>
+  </trialData>
+  <trialData name="57|b7i56">
+    <trialOrder>40</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1284</rt>
+  </trialData>
+  <trialData name="39|b7i38">
+    <trialOrder>41</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>2361</rt>
+  </trialData>
+  <trialData name="49|b7i48">
+    <trialOrder>42</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1013</rt>
+  </trialData>
+  <trialData name="47|b7i46">
+    <trialOrder>43</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1727</rt>
+  </trialData>
+  <trialData name="46|b7i45">
+    <trialOrder>44</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1502</rt>
+  </trialData>
+  <trialData name="4|b7i3">
+    <trialOrder>45</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1065</rt>
+  </trialData>
+  <trialData name="b6i0">
+    <trialOrder>46</trialOrder>
+    <nextTr>2</nextTr>
+  </trialData>
+  <trialData name="9|b7i8">
+    <trialOrder>47</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>952</rt>
+  </trialData>
+  <trialData name="17|b7i16">
+    <trialOrder>48</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1148</rt>
+  </trialData>
+  <trialData name="50|b7i49">
+    <trialOrder>49</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>904</rt>
+  </trialData>
+  <trialData name="3|b7i2">
+    <trialOrder>50</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>732</rt>
+  </trialData>
+  <trialData name="71|b7i70">
+    <trialOrder>51</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1007</rt>
+  </trialData>
+  <trialData name="31|b7i30">
+    <trialOrder>52</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1054</rt>
+  </trialData>
+  <trialData name="7|b7i6">
+    <trialOrder>53</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1969</rt>
+  </trialData>
+  <trialData name="75|b7i74">
+    <trialOrder>54</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1791</rt>
+  </trialData>
+  <trialData name="66|b7i65">
+    <trialOrder>55</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>815</rt>
+  </trialData>
+  <trialData name="33|b7i32">
+    <trialOrder>56</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1018</rt>
+  </trialData>
+  <trialData name="5|b7i4">
+    <trialOrder>57</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>2860</rt>
+  </trialData>
+  <trialData name="1|b7i0">
+    <trialOrder>58</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>837</rt>
+  </trialData>
+  <trialData name="15|b7i14">
+    <trialOrder>59</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1692</rt>
+  </trialData>
+  <trialData name="38|b7i37">
+    <trialOrder>60</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>821</rt>
+  </trialData>
+  <trialData name="48|b7i47">
+    <trialOrder>61</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1296</rt>
+  </trialData>
+  <trialData name="43|b7i42">
+    <trialOrder>62</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>819</rt>
+  </trialData>
+  <trialData name="63|b7i62">
+    <trialOrder>63</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1825</rt>
+  </trialData>
+  <trialData name="10|b7i9">
+    <trialOrder>64</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>771</rt>
+  </trialData>
+  <trialData name="56|b7i55">
+    <trialOrder>65</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>2621</rt>
+  </trialData>
+  <trialData name="21|b7i20">
+    <trialOrder>66</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>1256</rt>
+  </trialData>
+  <trialData name="76|b7i75">
+    <trialOrder>67</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>834</rt>
+  </trialData>
+  <trialData name="74|b7i73">
+    <trialOrder>68</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>928</rt>
+  </trialData>
+  <trialData name="8|b7i7">
+    <trialOrder>69</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1912</rt>
+  </trialData>
+  <trialData name="23|b7i22">
+    <trialOrder>70</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>868</rt>
+  </trialData>
+  <trialData name="20|b7i19">
+    <trialOrder>71</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>907</rt>
+  </trialData>
+  <trialData name="16|b7i15">
+    <trialOrder>72</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1120</rt>
+  </trialData>
+  <trialData name="19|b7i18">
+    <trialOrder>73</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>745</rt>
+  </trialData>
+  <trialData name="40|b7i39">
+    <trialOrder>74</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1662</rt>
+  </trialData>
+  <trialData name="32|b7i31">
+    <trialOrder>75</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>4101</rt>
+  </trialData>
+  <trialData name="12|b7i11">
+    <trialOrder>76</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1241</rt>
+  </trialData>
+  <trialData name="35|b7i34">
+    <trialOrder>77</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>822</rt>
+  </trialData>
+  <trialData name="55|b7i54">
+    <trialOrder>78</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>1248</rt>
+  </trialData>
+  <trialData name="18|b7i17">
+    <trialOrder>79</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1335</rt>
+  </trialData>
+  <trialData name="11|b7i10">
+    <trialOrder>80</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>0</angle>
+    <rt>926</rt>
+  </trialData>
+  <trialData name="58|b7i57">
+    <trialOrder>81</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1323</rt>
+  </trialData>
+  <trialData name="73|b7i72">
+    <trialOrder>82</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.7</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>826</rt>
+  </trialData>
+  <trialData name="28|b7i27">
+    <trialOrder>83</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>1380</rt>
+  </trialData>
+  <trialData name="70|b7i69">
+    <trialOrder>84</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>180</angle>
+    <rt>1447</rt>
+  </trialData>
+  <trialData name="52|b7i51">
+    <trialOrder>85</trialOrder>
+    <depth>1</depth>
+    <button>left</button>
+    <ratio>0.7</ratio>
+    <col>16777215</col>
+    <angle>180</angle>
+    <rt>854</rt>
+  </trialData>
+  <trialData name="77|b7i76">
+    <trialOrder>86</trialOrder>
+    <depth>1</depth>
+    <button>right</button>
+    <ratio>0.3</ratio>
+    <col>8421504</col>
+    <angle>0</angle>
+    <rt>816</rt>
+  </trialData>
+</Experiment>

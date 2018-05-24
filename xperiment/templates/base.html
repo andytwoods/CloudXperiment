@@ -1,0 +1,85 @@
+{% load i18n account bootstrap3 lab_tags %}
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% trans "Xperiment" %}{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="shortcut icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+
+
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="{% static 'css/social-buttons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/colorbox.css' %}" rel="stylesheet">
+    <link href="{% static 'css/jquery.tagit.css' %}" rel="stylesheet">
+    <link href="{% static 'select2/select2.css' %}" rel="stylesheet">
+    <link href="{% static 'js/tablesorter/themes/blue/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/jquery.pnotify.css' %}" rel="stylesheet">
+
+
+
+
+    <!-- This file store project specific CSS -->
+    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+
+    <!-- Use this to quickly test CSS changes in a template,
+        then move to project.css -->
+    {% block extra_header %}{% endblock extra_header %}
+
+    {% block extra_css %}{% endblock extra_css %}
+
+</head>
+
+<body>
+{% include "_nav.html" with navbar="inverse" %}
+{% block body %}
+    <div id="wrap">
+        <div class="container">
+            {% bootstrap_messages %}
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+        <!-- /container -->
+
+        {% block full_content %}{% endblock full_content %}
+
+    </div>
+
+    <div id="footer" class="navbar navbar-inverse navbar-fixed-bottom" style="height:40px; min-height:40px;">
+            <p class="text-muted" >
+                &copy;
+                {% trans "Xperiment 2018" %}
+            </p>
+
+    </div>
+{% endblock %}
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.pnotify.js' %}"></script>
+<script src="{% static 'js/jquery.cookie.js' %}"></script>
+<script src="{% static 'js/holder.js' %}"></script>
+<script src="{% static 'js/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'js/underscore.js' %}"></script>
+<script src="{% static 'js/tag-it-custom.js' %}"></script>
+<script src="{% static 'select2/select2.js' %}"></script>
+<script src="{% static 'js/tablesorter/jquery.tablesorter.min.js' %}"></script>
+
+
+<!-- place project specific Javascript in this file -->
+<script src="{% static 'js/project.js' %}"></script>
+{% block extra_js %}{% endblock extra_js %}
+
+</body>
+</html>

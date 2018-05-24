@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% load i18n static util_tags %}
+
+{% block title %}{% trans "Lab" %}{% endblock %}
+
+{% block content %}
+    <div class="row lab">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="row">
+                <div class="col-md-8 lab-main">
+                    <!-- Lab Bio -->
+                    <div class="lab-bio">
+                        <div class="page-header">
+                            <h3>
+                                <i class="glyphicon glyphicon-home"></i>
+                                {{ lab.name }}
+                            </h3>
+                            <h4><a href="{% url "experiment_manage" lab.id %}"><i class="glyphicon glyphicon-wrench"></i> <strong>{% trans "Manage experiments" %}</strong></a></h4>
+                        </div>
+
+                        <div>
+                            {% if lab.email %}
+                                <p>
+                                    <i class="glyphicon glyphicon-envelope"></i>
+                                    {{ lab.email }}
+                                </p>
+                            {% endif %}
+                            {% if lab.phone %}
+                                <p>
+                                    <i class="glyphicon glyphicon-phone"></i>
+                                    {{ lab.phone }}
+                                </p>
+                            {% endif %}
+                            {% if lab.website %}
+                                <p>
+                                    <i class="glyphicon glyphicon-globe"></i>
+                                    {{ lab.website }}
+                                </p>
+                            {% endif %}
+                        </div>
+
+                        {% if lab.description %}
+                            <div>
+                                <blockquote>
+                                    {{ lab.description|capfirst }}
+                                </blockquote>
+                            </div>
+                        {% endif %}
+
+                        {% if user == lab.creator %}
+                            <div class="lab-actions">
+                                <a href="{% url "edit_lab" lab.id %}" class="btn btn-default btn-block">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                    {% trans "Change name and detail" %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- End of lab bio -->
+
+                    <!-- Payment -->
+                    <div class="profile-payment">
+                        <div class="page-header">
+                            <h4>
+                                <i class="glyphicon glyphicon-usd"></i>
+                                {% trans "Payment" %}
+                            </h4>
+                        </div>
+                        <div class="well">
+                            Current balance: ${{ lab.balance }}
+                        </div>
+
+                        {% if user == lab.creator %}
+                            <div class="lab-actions">
+                                <a href="{% url "payment" lab.id %}" class="btn btn-default btn-block">
+                                    <i class="glyphicon glyphicon-ok-circle"></i>
+                                    {% trans "Update the balance" %}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    <!-- End of payment -->
+
+                    <!-- Members -->
+                    <div class="lab-labs">
+                        <div class="page-header">
+                            <h4>
+                                <i class="glyphicon glyphicon-user"></i>
+                                {% trans "Scientists" %}
+                            </h4>
+                        </div>
+
+                        <input id="lab_id" type="hidden" value="{{ lab.id }}">
+
+                        <!-- Member list -->
+                        <div id="member_list">
+                            {% for scientist in lab.scientists %}
+                                <div class="row media">
+                                    <div class="col-md-10">
+                                        <div class="media">
+                                            <a class="pull-left" href=" {% if scientist.scientist %}{% url "scientist_detail" scientist.scientist.username %}{% endif %}">
+                                                {% if scientist.scientist.profile.avatar %}
+                                                    <img src="{{ scientist.scientist.profile.avatar }}" class="img-thumbnail lab-logo-small"
+                                                         alt="{{ scientist.scientist.profile.fullname|default:scientist.email }}">
+                                                {% else %}
+                                                    <img data-src="holder.js/50x50/{{ 'sky,vine,lava,gray,industrial,social'|split:","|random }}/text:{{ scientist.scientist.profile.fullname|default:scientist.email }}"
+                                                         class="img-thumbnail" alt="{{ scientist.scientist.profile.fullname|default:scientist.email }}">
+                                                {% endif %}
+                                            </a>
+
+                                            <div class="media-body">
+                                                <h5 class="media-heading">
+                                                    <a href="
+                                                            {% if scientist.scientist %}{% url "scientist_detail" scientist.scientist.username %}{% endif %}">
+                                                        {{ scientist.scientist.profile.fullname|default:scientist.email }}
+                                                    </a> ({{ scientist.get_role_display }})
+                                                </h5>
+                                                <i class="glyphicon glyphicon-time"></i> {% trans "Joined at" %} {{ scientist.created|date:"M. d, Y, h:i A." }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {% if user == lab.creator and scientist.get_role_display != "Creator" %}
+                                            <a name="delete_member" href="#" class="btn"
+                                               data-member-email="{{ scientist.scientist.email|default:scientist.email }}"><i
+                                                    class="icon-remove-circle"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- end of member list -->
+
+                        {% if user == lab.creator %}
+                            <div class="lab-actions">
+                                <a id="invite_member" class="btn btn-default btn-block" href="#">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    {% trans "Invite new members" %}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        <div id="input_member" class="lab-actions" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-3"><span class="lab-member">{% trans "Input Email" %}:</span></div>
+                                <div class="col-md-9">
+                                    <div id="tag_contact"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- End of Members -->
+
+                    <div class="lab-main-footer"></div>
+
+                </div>
+
+                <div class="col-md-4 lab-sidebar">
+                    {% include "lab/_upload_logo.html" %}
+
+                    <div class="lab-summary">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_css %}
+    <link href="{% static 'css/TagContacts.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+    <script id="tpl_member" type="text/template">
+        <div class="row media">
+            <div class="col-md-10">
+                <div class="media">
+                    <a class="pull-left" href="/scientist/<%= username %>/">
+                        <img class="media-object" src="<%= url %>"
+                             alt="<%= fullname %>">
+                    </a>
+
+                    <div class="media-body">
+                        <h5 class="media-heading">
+                            <a href="/scientist/<%= username %>/">
+                                <%= fullname %>
+                            </a> (<%= role %>)
+                        </h5>
+                        <i class="glyphicon glyphicon-time"></i> {% trans "Joined at" %} <%= created %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <a name="delete_member" href="#" class="btn" data-member-email="<%= member_email %>"><i class="icon-remove-circle"></i></a>
+            </div>
+        </div>
+    </script>
+
+    <script src="{% static 'js/TagContacts.js' %}"></script>
+    <script src="{% static 'js/invite_member.js' %}"></script>
+
+    {% include "lab/_upload_logo_js.html" %}
+{% endblock %}
