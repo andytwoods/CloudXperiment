@@ -736,7 +736,7 @@ def command(request, expt_id):
             return HttpResponse(dumps(data), content_type="application/json")
 
         except Exception as e:
-            print(e,22)
+            print(e, 22)
             create_bucket_url = reverse('create_bucket')
             message = f'you may need to set up your aws s3 bucket (it should be called "' \
                       f'{ settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME }). <a href="{ create_bucket_url }">Create it?</a>"'
