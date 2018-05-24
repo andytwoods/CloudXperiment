@@ -19,6 +19,7 @@ build
 
 # Virtualenv
 env/*
+VE/
 
 # IDE
 .idea
@@ -28,3 +29,5 @@ env/*
 
 # local uploads
 xperiment/media
+
+zappa_settings.json

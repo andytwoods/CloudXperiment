@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from .models import ExptInfo, ExptAnswer, QuestionOrder
+from .models import ExptInfo, QuestionOrder
 
 
 class ExptInfoAdmin(ModelAdmin):
@@ -35,6 +35,5 @@ class QuestionOrderAdmin(ModelAdmin):
 
 
 admin.site.register(ExptInfo, ExptInfoAdmin)
-admin.site.register(ExptAnswer, ExptAnswerAdmin)
 admin.site.register(QuestionOrder, QuestionOrderAdmin)
 

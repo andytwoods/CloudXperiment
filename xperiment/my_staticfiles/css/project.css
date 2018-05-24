@@ -799,6 +799,6 @@ a.course_expt_delete {
 
 .alert {
     position:fixed;
-    bottom:0;
+    bottom:100px;
     z-index:10000;
 }

@@ -254,50 +254,6 @@
         });
     };
 
-    function upload_experiment_answer_xml(xml_content, extra_data) {
-        {% comment %}
-        //Test of answer xml
-        $.ajax({
-            url: "/static/expt_answer.xml",
-            dataType: "text",
-            async: false,
-            success: function (data) {
-                xml_content = data;
-            }
-        });
-
-        //Examples of "extra_data"
-        extra_data = {
-            "xpt_course_id": "?",
-            "xpt_user_id": "?",
-            "ip": "?",
-            "final": "?",
-            "order": "?"
-        };
-        {% endcomment %}
-
-        try {
-            if (xml_content) {
-                $.ajax({
-                    url: "/experiment/answer/upload/",
-                    data: {"xml_content": xml_content, "extra_data": extra_data},
-                    dataType: "json",
-                    type: "POST",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
-                    },
-                    success: function (result) {
-                        console.log(result.message);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                    }
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     rotation();
 </script>

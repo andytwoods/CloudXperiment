@@ -2,6 +2,7 @@
 from os import environ
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
+import os
 
 ########## PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
@@ -25,7 +26,17 @@ path.append(DJANGO_ROOT)
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
 
-RUNNING_DEVSERVER = 'SERVERTYPE' not in environ or environ['SERVERTYPE'] != 'AWS Lambda'
+ON_DEV_SERVER = False
+if 'SERVERTYPE' not in os.environ or os.environ['SERVERTYPE'] != 'AWS Lambda':
+    ON_DEV_SERVER = True
+    import json
+    import os
+
+    json_data = open('zappa_settings.json')
+    env_vars = json.load(json_data)['production']['environment_variables']
+    for key, val in env_vars.items():
+        if key not in ['DJANGO_SETTINGS_MODULE', 'django_settings']:
+            os.environ[key] = val
 
 
 ########## END DEBUG CONFIGURATION
@@ -248,32 +259,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-LOG_ROOT_PATH = SITE_ROOT
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': [],
-            'class': 'django.utils.log.AdminEmailHandler'
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-
-    }
-}
-########## END LOGGING CONFIGURATION
 
 
 ########## WSGI CONFIGURATION
@@ -290,30 +275,23 @@ ENCRYPT_KEY = 'experiment'
 
 APPEND_SLASH = True
 
-AWS_STORAGE_EXPERIMENTS_BUCKET_NAME = 'xpt2experiments'
+AWS_STORAGE_EXPERIMENTS_BUCKET_NAME = os.environ.get('EXPERIMENT_BUCKET_NAME')
 
-AWS_ACCESS_KEY_ID = 'AKIAIPZO2RET7MZ6RHNA'
-AWS_SECRET_ACCESS_KEY = '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'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_MAX_SIZE_MB = 50
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-#CORS_ORIGIN_ALLOW_ALL = False
-#CORS_ORIGIN_REGEX_WHITELIST = (AWS_BUCKET_LOCATION+AWS_STORAGE_EXPERIMENTS_BUCKET_NAME+'$', )
-
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#server-email
-#SERVER_EMAIL = EMAIL_HOST_USER
 
 MANDRILL_API_KEY = 'WsGrHDYxFF65hjS1m14tWQ'
 DEFAULT_FROM_EMAIL = 'support@xperiment.mobi'
 EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
 SERVER_EMAIL = 'support@xperiment.mobi'
-
-CDN_URL = 'https://d1o63hvqrnn2hm.cloudfront.net'
-CDN_ID = 'E1KTAS87KK2KJ1'
 
 SOCIALACCOUNT_ENABLED = False
 
@@ -343,5 +321,11 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+
+AWS_BUCKET_LOCATION = os.environ.get('AWS_BUCKET_LOCATION', 'https://s3-eu-west-1.amazonaws.com/')
+
+if ON_DEV_SERVER:
+    AWS_BUCKET_LOCATION = AWS_BUCKET_LOCATION.replace('https', 'http')
 
 

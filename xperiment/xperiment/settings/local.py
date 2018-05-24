@@ -60,8 +60,6 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 mimetypes.add_type("image/png", ".png", True)
 
-AWS_BUCKET_LOCATION = 'http://s3-eu-west-1.amazonaws.com/'
-
 
 import sys
 

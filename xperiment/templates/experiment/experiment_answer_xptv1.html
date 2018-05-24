@@ -26,17 +26,6 @@
 
 
 
-                    <a href="{% url "export_answer" expt_info.expt_id 'csv' %}" class="btn btn-success">
-                    <i class="glyphicon glyphicon-download"></i>
-                    {% trans "Export Data (csv)" %}
-                </a>
-                <a id="experiment_delete_answers" href="{% url "experiment_delete_answers" expt_info.expt_id %}"
-                   class="btn btn-success">
-                    <i class="glyphicon glyphicon-remove"></i>
-                    {% trans "Delete Data" %}
-                </a>
-
-
                     <input style="width:300px" type="text" id='backup_data' placeholder="paste backup data (Firefox please)" novalidate="" autocomplete="off">
 
 

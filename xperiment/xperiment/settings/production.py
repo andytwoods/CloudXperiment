@@ -50,7 +50,7 @@ SECRET_KEY = r"6=uean-9+-^kjcq26wn_t_4up!6sstp(h)tn)i6454kuy70l5k"
 ########## END SECRET CONFIGURATION
 
 
-if RUNNING_DEVSERVER is False:
+if ON_DEV_SERVER is False:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -58,8 +58,6 @@ if RUNNING_DEVSERVER is False:
 
 AWS_S3_SECURE_URLS = True
 AWS_QUERYSTRING_AUTH = False
-
-AWS_BUCKET_LOCATION = 'https://s3-eu-west-1.amazonaws.com/'
 
 LOGGING = {}
 
@@ -107,7 +105,7 @@ CACHES = {
     }
 }
 
-if RUNNING_DEVSERVER:
+if ON_DEV_SERVER:
     DEBUG = True
     CACHES['default'] = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache', }
     LOGGING = {

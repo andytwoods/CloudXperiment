@@ -25,21 +25,8 @@
         </ol>
 
         <div class="page-header" >
-                <a href="{% url "export_answer_alternative" expt_info.expt_id 'csv' %}" class="btn btn-default">
-                    <i class="glyphicon glyphicon-download"></i>
-                    {% trans "Export old style Data (csv)" %}
-                </a>
 
-                <div class="btn-group">
-                  <a href="{% url "export_answer" expt_info.expt_id 'csv' %}?exclude_unfinished=true" class="btn btn-success"> <i class="glyphicon glyphicon-download"></i> {% trans "Export Data (csv)" %}</a>
-                  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="{% url "export_answer" expt_info.expt_id 'csv' %}">Include unfinished</a></li>
-                  </ul>
-                </div>
+
                 {% if expt_info.locked == False %}
                     <a id="experiment_delete_answers" href="{% url "experiment_delete_answers" expt_info.expt_id %}"
                        class="btn btn-danger">

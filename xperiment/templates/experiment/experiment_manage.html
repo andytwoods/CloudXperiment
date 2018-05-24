@@ -29,19 +29,9 @@
                 {% trans "Create experiment" %}
             </a>
 
-            <a href="{% url "lab_balancer" lab.id %}" class="btn btn-primary btn-xs">
-                <i class="glyphicon glyphicon-pencil"></i>
-                {% trans "Manage 'over study' balancers" %}
-            </a>
-
             <a id="delete_experiment" href="#" class="btn btn-danger btn-xs">
                 <i class="glyphicon glyphicon-minus"></i>
                 {% trans "Delete study" %}
-            </a>
-
-            <a href="{% url "add_data" %}" class="btn btn-success btn-xs">
-                <i class="glyphicon glyphicon-minus"></i>
-                {% trans "Upload backup data" %}
             </a>
 
              <div class="dropdown pull-right">
@@ -112,26 +102,14 @@
                     <td>
 
                     <div class="btn-group text-left">
-                        <a href="{% url "experiment_answer" expt_info.expt_id %}"
-                           class="btn btn-default">
-                            {% get_answer_count expt_info.expt_id %}
-                        </a>
+
 
                         <button type="button" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
-                        <ul class="dropdown-menu" role="menu">
-                            {% if expt_info.alias is not None %}
-                                <li>
-                                    <a href="{% url "experiment_answer_alias_family" expt_info.expt_id %}">combined results for alias family</a>
-                                </li>
-                            {% endif %}
-                            <li><a href="{% url "export_answer" expt_info.expt_id 'csv' %}">csv</a></li>
-                            <li><a href="{% url "export_answer_alternative" expt_info.expt_id 'csv' %}">csv (old style)</a></li>
-                            <li><a href="{% url "export_answer_raw" expt_info.expt_id 'raw' %}">raw json</a></li>
-                        </ul>
+
                     </div>
 
                     </td>
