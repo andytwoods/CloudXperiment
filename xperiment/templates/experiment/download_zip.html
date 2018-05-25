@@ -1,11 +1,8 @@
 {% extends "base.html" %}
 
-{% load i18n bootstrap3 experiment_tags static %}
+{% load i18n static %}
 
 {% block content %}
-
-{% endblock %}
-{% block full_content %}
     <div class="container">
         <div class="row">
             <div class="col-md-11">
@@ -34,8 +31,13 @@
         $(document).ready(
             function(event) {
             var files = {{ files|safe }}
-            $('#files').text(files.join("\n"))
-
+            var my_files = files.map(
+                function(f){
+                    for(var key in f) {
+                        return '<p>' + key + '</p>'
+                    }
+                })
+            $('#files').append(my_files.join(""))
             add(files)
 
     })
@@ -69,9 +71,10 @@
 
         var zip = new JSZip();
 
-
-        files.forEach(function (url) {
-            zip.file(url, urlToPromise('{{ dir|safe }}' + url), {binary: true});
+        files.forEach(function (obj) {
+            for(var filename in obj) {
+                zip.file(filename, urlToPromise(obj[filename]), {binary: true});
+            }
         })
 
 

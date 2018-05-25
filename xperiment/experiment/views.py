@@ -1,35 +1,27 @@
-from hashlib import sha1
-import unicodecsv
+import hmac
 import json
+from base64 import b64encode
+from datetime import datetime, timedelta
+from hashlib import sha1
+from json import dumps
+
 import boto3
 from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-
-from base64 import b64encode
-from datetime import datetime, timedelta
-from json import dumps
-import hmac
-import re
-
-from django.template.defaultfilters import urlencode
 from django.contrib.auth.decorators import login_required
-from django.contrib.messages import error
-from django.core.files.base import ContentFile
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.safestring import mark_safe
-
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from django.template.defaultfilters import urlencode
+from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
 
 from core.utils import get_page, json_result, get_client_ip
-from lab.models import PaymentRecord, LabScientist, Lab
-
-from .models import ExptInfo, QuestionOrder
-
+from lab.models import LabScientist, Lab
 from .forms import RenameForm, ExptForm_v2
+from .models import ExptInfo, QuestionOrder
 
 
 def experiment_list(request, template='experiment/experiment_list.html', extra_context=None):
@@ -130,27 +122,42 @@ def experiment_manage(request, lab_id, filtered=None, template='experiment/exper
 
 
 @login_required
-def experiment_edit(request, expt_id):
+def see_results(request, expt_id):
+    extra_context = {
+        'save': False,
+        'bucket_url': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '-data/',
+        'type': 'data',
+    }
+
+    return experiment_edit(request, expt_id, extra_context=extra_context)
+
+
+@login_required
+def experiment_edit(request, expt_id, template='experiment/experiment_create_question.html', extra_context=None):
     expt_info = get_object_or_404(ExptInfo, expt_id=expt_id)
     if expt_info.alias:
         expt_info = expt_info.alias
     if not expt_info.lab.scientist_belong_this(request.user):
         raise Http404
-    return experiment_create_question_v2(request, expt_info, expt_id)
 
+    if request.method == 'POST':
+        expt_info.is_publish = True
+        expt_info.save()
+        return HttpResponseRedirect(reverse_lazy('experiment_manage', args=[expt_info.lab.id]))
 
-def experiment_delete_answers_overview(request):
-    expt_id = request.POST['expt_id']
-    expt_info = get_object_or_404(ExptInfo, expt_id=expt_id)
+    context = {
 
-    if not expt_info.lab.scientist_belong_this(request.user):
-        raise Http404
+        'expt_info': expt_info,
+        'access_key': settings.AWS_ACCESS_KEY_ID,
+        'bucket_url': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/',
+        'expt_id': expt_id,
+        'type': 'experiment',
+    }
 
-    expt_info.exptanswer_set.all().delete()
-    expt_info.expt_headers = '{}'
-    expt_info.save()
+    if extra_context:
+        context.update(extra_context)
 
-    return JsonResponse({'success': True}, status=200)
+    return render(request, template, context)
 
 
 @login_required
@@ -224,7 +231,7 @@ def experiment_delete(request):
         else:
             result = {'status': 'fail', 'reason': 'experiment info does not exist'}
     except Exception as e:
-        print(e, 33)
+
         result = {'status': 'fail', 'reason': ''}
     return json_result(request, result)
 
@@ -241,16 +248,6 @@ def experiment_attachment_delete_all(request):
     except Exception as e:
         result = {'status': 'fail', 'reason': e.message}
     return json_result(request, result)
-
-
-@login_required
-def experiment_create_question(request, expt_id, template='experiment/experiment_create_question.html',
-                               extra_context=None):
-    expt_info = get_object_or_404(ExptInfo, expt_id=expt_id)
-    if not expt_info.lab.scientist_belong_this(request.user):
-        raise Http404
-
-    return experiment_create_question_v2(request, expt_info, expt_id)
 
 
 def get_question_order(expt_id):
@@ -423,13 +420,6 @@ def experiment_order_batch_add(request, expt_id):
     return json_result(request, result)
 
 
-#  __  __                _                      _      ____          _          __  __
-#  \ \/ /_ __   ___ _ __(_)_ __ ___   ___ _ __ | |_   |___ \     ___| |_ _   _ / _|/ _|
-#   \  /| '_ \ / _ \ '__| | '_ ` _ \ / _ \ '_ \| __|    __) |   / __| __| | | | |_| |_
-#   /  \| |_) |  __/ |  | | | | | | |  __/ | | | |_    / __/    \__ \ |_| |_| |  _|  _|
-#  /_/\_\ .__/ \___|_|  |_|_| |_| |_|\___|_| |_|\__|  |_____|   |___/\__|\__,_|_| |_|
-#       |_|
-
 def experiment2_run_expt(request, expt, extra_content=None):
     context = generate_context(request, expt, extra_content)
     return expt_run_v2(context, expt, request)
@@ -437,7 +427,6 @@ def experiment2_run_expt(request, expt, extra_content=None):
 
 def expt_run_v2(initial_context, expt_info, request):
     initial_context['ip'] = urlencode(initial_context['client_ip'])
-    initial_context['cloudUrl'] = urlencode(request.build_absolute_uri(reverse('sj_data')))
     initial_context.pop('expt_info', None)
     initial_context.pop('client_ip', None)
 
@@ -459,7 +448,7 @@ def get_experiment_file(request, expt_id, filename):
 
 
 @login_required
-def experiment_create_v2(request, lab_id, template='experiment/experiment_create_v2.html', extra_context=None):
+def create(request, lab_id, template='experiment/create.html', extra_context=None):
     expt_info = None
 
     if request.method == 'POST':
@@ -502,7 +491,6 @@ def experiment_create_v2(request, lab_id, template='experiment/experiment_create
             'ls_list': ls_list,
             'es_list': es_list
         }
-
     if extra_context:
         context.update(extra_context)
 
@@ -510,29 +498,7 @@ def experiment_create_v2(request, lab_id, template='experiment/experiment_create
 
 
 @login_required
-def experiment_create_question_v2(request, expt_info, expt_id, template='experiment/experiment_create_question_v2.html',
-                                  extra_context=None):
-    if request.method == 'POST':
-        expt_info.is_publish = True
-        expt_info.save()
-        return HttpResponseRedirect(reverse_lazy('experiment_manage', args=[expt_info.lab.id]))
-
-    context = {
-
-        'expt_info': expt_info,
-        'access_key': settings.AWS_ACCESS_KEY_ID,
-        'bucket_url': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/',
-        'expt_id': expt_id,
-    }
-
-    if extra_context:
-        context.update(extra_context)
-
-    return render(request, template, context)
-
-
-@login_required
-def upload_experiment_attachment_v2(request, expt_info):
+def upload_experiment_attachment(request, expt_info):
     u_file = request.FILES['file']
     content_type = u_file.content_type
     attachment_name = request.GET.get('attachment_name', u_file.name)
@@ -574,12 +540,32 @@ def sign_s3(request):
 
 
 @login_required
-def download_zip(request, expt_id, template='experiment/download_zip.html'):
-    bucket = getbucket()
+def download_zip(request, expt_id, type, template='experiment/download_zip.html'):
+    is_data_bucket = type == 'data'
+
+    bucket = getbucket(data_bucket=is_data_bucket)
     keys = bucket.objects.filter(Prefix=expt_id + '/')
+
+    s3 = boto3.client('s3')
+
+    extra = '-data' if is_data_bucket else ''
+    bucket_name = settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + extra
+
     files = []
     for key in keys:
-        files.append(key.key)
+        url = s3.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={
+                'Bucket': bucket_name,
+                'Key': key.key
+            }
+        )
+
+        if settings.ON_DEV_SERVER:
+            url = url.replace('https', 'http')
+
+
+        files.append({key.key: url})
 
     context = {'files': files,
                'dir': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/'}
@@ -619,7 +605,6 @@ def experiment_params(request, expt_id):
         if len(pretty_params) > 0:
             for line in pretty_params.split("\n"):
                 key_val = line.split('=')
-                print(key_val)
                 if len(key_val) != 2:
                     errs.append('cannot add this key+value as not formatted correctly (x=y): ' + line)
                 else:
@@ -655,14 +640,16 @@ def experiment_params(request, expt_id):
     return render(request, template, context)
 
 
-def getbucket():
+def getbucket(data_bucket=False):
     s3 = boto3.resource(
         's3',
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
     )
 
-    return s3.Bucket(settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME)
+    extra = '-data' if data_bucket else ''
+
+    return s3.Bucket(settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + extra)
 
 
 @login_required
@@ -671,7 +658,8 @@ def command(request, expt_id):
     action = request.POST.get('what')
 
     if action == "getfile":
-        bucket = getbucket()
+        is_data_bucket = request.POST.get('type', 'experiment') == 'data'
+        bucket = getbucket(data_bucket=is_data_bucket)
         filenam = request.POST.get('file')
         txt = None
         for key in bucket.objects.filter(Prefix=filenam):
@@ -681,11 +669,15 @@ def command(request, expt_id):
 
     elif action == "savefile":
         try:
-            bucket = getbucket()
+            is_data_bucket = request.POST.get('type', 'experiment') == 'data'
+            bucket = getbucket(data_bucket=is_data_bucket)
             filenam = request.POST.get('filename')
             text = request.POST.get('text')
+
             for key in bucket.objects.filter(Prefix=filenam):
                 key.put(Body=text, ContentType='text/html', ACL='public-read')
+            else:
+                bucket.put_object(Key=filenam, Body=text, ContentType='text/html')
 
             return HttpResponse(dumps({'status': 'success'}), content_type="application/json")
         except Exception as e:
@@ -693,7 +685,8 @@ def command(request, expt_id):
             return json_result(request, {'status': 'fail'})
 
     elif action == "delete":
-        bucket = getbucket()
+        is_data_bucket = request.POST.get('type', 'experiment') == 'data'
+        bucket = getbucket(data_bucket=is_data_bucket)
         files = request.POST.getlist('files[]')
         keys = []
         for filename in files:
@@ -714,29 +707,28 @@ def command(request, expt_id):
             print('ERROR delete_all: ' + e)
             return json_result(request, {'status': 'failure', 'xptFile': 'true'})
     elif action == "s3_mb":
-        _dir = []
-        size = 0
-        data = {
-            "size": size,
-            "max": settings.AWS_MAX_SIZE_MB,
-            "dir": _dir,
-            'status': 'success',
-        }
 
         try:
-            bucket = getbucket()
+            is_data_bucket = request.POST.get('type', 'experiment') == 'data'
+            bucket = getbucket(data_bucket=is_data_bucket)
 
             keys = bucket.objects.filter(Prefix=expt_id + '/')
             _dir = []
             size = 0
+
             for key in keys:
                 size += key.size
                 _dir.append(key.key)
 
+            data = {
+                "size": size,
+                "max": settings.AWS_MAX_SIZE_MB,
+                "dir": _dir,
+                'status': 'success',
+            }
             return HttpResponse(dumps(data), content_type="application/json")
 
         except Exception as e:
-            print(e, 22)
             create_bucket_url = reverse('create_bucket')
             message = f'you may need to set up your aws s3 bucket (it should be called "' \
                       f'{ settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME }). <a href="{ create_bucket_url }">Create it?</a>"'
@@ -746,7 +738,8 @@ def command(request, expt_id):
 
     elif action == "experimentDir":
         try:
-            bucket = getbucket()
+            is_data_bucket = request.POST.get('type', 'experiment') == 'data'
+            bucket = getbucket(data_bucket=is_data_bucket)
             bucket.put_object(Body='', Key=expt_info.expt_id + '/experiments/')
             return json_result(request, {'status': 'success', 'xptFile': 'true'})
         except Exception as e:
@@ -754,7 +747,8 @@ def command(request, expt_id):
             return json_result(request, {'status': 'failure', 'xptFile': 'true'})
     elif action == "new_dir":
         try:
-            bucket = getbucket()
+            is_data_bucket = request.POST.get('type', 'experiment') == 'data'
+            bucket = getbucket(data_bucket=is_data_bucket)
             bucket.put_object(Body='', Key=request.POST.get('new_dir'))
             return json_result(request, {'status': 'success', 'xptFile': 'true'})
         except Exception as e:
@@ -792,8 +786,13 @@ def create_bucket(request):
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
     )
 
-    s3.create_bucket(Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME,
-                     CreateBucketConfiguration={'LocationConstraint': 'eu-west-1'})
+    try:
+        s3.create_bucket(Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME,
+                         CreateBucketConfiguration={'LocationConstraint': 'eu-west-1'})
+    except Exception as e:
+        messages.error(request, mark_safe(
+            '<b>there was an error when attempting to create your experiment bucket:</b> ' + str(e)))
+        return redirect(request.META.get('HTTP_REFERER'))
 
     cors_configuration = {
         'CORSRules': [{
@@ -826,5 +825,54 @@ def create_bucket(request):
     bucket_policy = bucket.Policy()
     bucket_policy.put(Policy=bucket_configuration)
 
-    messages.success(request, 'successfully created your bucket')
+    # we also need to create a separate bucket for data. This bucket needs to be private and not internet accessible.
+    cors_configuration = {
+        'CORSRules': [{
+            'AllowedMethods': ['GET'],
+            'AllowedOrigins': ['*'],
+            'AllowedHeaders': ['Authorization'],
+        }]
+    }
+    try:
+        s3.create_bucket(Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '-data',
+                         CreateBucketConfiguration={'LocationConstraint': 'eu-west-1'})
+    except Exception as e:
+        messages.error(request, mark_safe(
+            '<b>there was an error when attempting to create your data bucket (your experiment bucket was successfully '
+            'created however):</b> ' + str(
+                e)))
+        return redirect(request.META.get('HTTP_REFERER'))
+
+    bucket = getbucket(data_bucket=True)
+    cors = bucket.Cors()
+    cors.put(CORSConfiguration=cors_configuration)
+
+    cors = bucket.Cors()
+
+    messages.success(request, 'successfully created your experiment and data buckets')
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+@csrf_exempt
+def data(request, expt_id=None, uuid=None):
+    if expt_id is None:
+        return JsonResponse({'error': 'expt_id not specified'}, status=400)
+    if uuid is None:
+        return JsonResponse({'error': 'participant uuid not specified'}, status=400)
+
+    text = request.POST.get('data', None)
+    if text is None:
+        return JsonResponse({'error': 'not given "data" parameter holding your data to save'}, status=400)
+
+    if len(text) is 0:
+        return JsonResponse({'error': '"data" parameter holds no data!'}, status=400)
+
+    try:
+        filenam = expt_id + '/' + uuid + '.txt'
+        bucket = getbucket(data_bucket=True)
+        bucket.put_object(Key=filenam, Body=text)
+        return JsonResponse({'success': True, 'expt_id': expt_id, 'uuid': uuid}, status=201)
+
+    except Exception as e:
+        print(e, 22)
+        return JsonResponse({'error': 'unknown'}, status=403)

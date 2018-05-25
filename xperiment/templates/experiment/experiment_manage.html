@@ -24,7 +24,7 @@
                 {% trans "Manage lab" %}
             </a>
 
-            <a href="{% url "experiment_create_v2" lab.id %}" class="btn btn-success btn-xs">
+            <a href="{% url "create" lab.id %}" class="btn btn-success btn-xs">
                 <i class="glyphicon glyphicon-plus"></i>
                 {% trans "Create experiment" %}
             </a>
@@ -51,7 +51,7 @@
                 <th><input id="select_all" type="checkbox"></th>
                 <th></th>
                 <th>{% trans "Experiments" %}</th>
-                <th>{% trans "Results (n)" %}</th>
+                <th>{% trans "Results" %}</th>
                 <th width="200">{% trans "Actions" %}</th>
                 <th>id</th>
             </tr>
@@ -104,11 +104,9 @@
                     <div class="btn-group text-left">
 
 
-                        <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
+                        <a href="{% url 'see_results' expt_info.expt_id %}" target="_self">
+                            data
+                        </a>
 
                     </div>
 
@@ -139,9 +137,9 @@
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="{% url "experiment_rename" expt_info.expt_id %}">{% trans "Rename" %}</a>
-                                <a href="{% url "experiment_urlparams" expt_info.expt_id %}">url params</a>
+                                <a href="{% url "experiment_urlparams" expt_info.expt_id %}">Url params</a>
                                 {% if expt_info.alias is  None %}
-                                <a href="{% url "download_zip" expt_info.expt_id %}">{% trans "Download zip" %}</a>
+                                <a href="{% url "download_zip" expt_info.expt_id 'experiment' %}">{% trans "Download study as zip" %}</a>
                                 {% endif %}
                             </li>
                         <li class="divider"></li>
@@ -196,30 +194,6 @@
         </tr>
     </script>
 
-    <script>
-
-        $('#delete_data').click( function(e) {
-            if (confirm("Are you sure you want to delete this study's data? This is irreversable!")) {
-
-                    $.ajax({
-                        url: "{% url 'experiment_delete_answers_overview' %}",
-                        type: "POST",
-                        dataType: "json",
-                        data: {expt_id: $(e.target).attr('data-expt_id')},
-                        async: true,
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
-                        },
-                        success: function (result) {
-                            window.location.reload(true)
-                        }
-                    });
-                }
-
-
-            e.preventDefault(); /*your_code_here;*/ return false;
-        } );
-    </script>
 
     <script type="text/javascript">
         function qrCode(ele){

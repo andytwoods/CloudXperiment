@@ -230,7 +230,6 @@ THIRD_PARTY_APPS = (
     'djrill',
     'el_pagination',
     'corsheaders',
-    'django_admin_row_actions',
     'storages',
     'zappa_django_utils',
 )
