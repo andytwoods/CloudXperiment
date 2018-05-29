@@ -1,13 +1,20 @@
 {
-    "dev": {
+    "production": {
         "aws_region": "eu-west-1",
         "django_settings": "xperiment.settings.production",
         "profile_name": "default",
         "s3_bucket": "my-zappa-xpt-bucket",
         "slim_handler": false,
-        "domain": "www.xpt.cloud",
-        "certificate_arn": "ADD YOUR OWN HERE",
         "exclude": ["my_staticfiles", "*.pyc"],
-        "cors": true
+        "cors": true,
+        "environment_variables": {
+        "SECRET_KEY": "---ADD---",
+        "DJANGO_SETTINGS_MODULE": "config.settings.production",
+        "DJANGO_SECRET_KEY": "---ADD---",
+        "AWS_ACCESS_KEY_ID": "---ADD---",
+        "AWS_SECRET_ACCESS_KEY": "---ADD---",
+        "AWS_BUCKET_LOCATION": "https://s3-eu-west-1.amazonaws.com/",
+        "EXPERIMENT_BUCKET_NAME": "cloudexperimentsbucket"
+      }
     }
 }
