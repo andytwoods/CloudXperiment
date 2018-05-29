@@ -38,16 +38,11 @@
                             </li>
                         {% endif %}
                     {% else %}
-                        <button type="button" class="btn btn-success navbar-btn" data-toggle="modal"
-                                data-target="#signin_modal">
+                        <a target="_self" class="btn btn-success navbar-btn" href="{% url 'account_login' %}">
                             <i class="glyphicon glyphicon-user"></i>
                             {% trans "Scientist Please Sign In" %}
-                        </button>
-
-                        <a type="button" class="btn btn-success navbar-btn" href="{% url "participant_login" %}">
-                            <i class="glyphicon glyphicon-user"></i>
-                            {% trans "Participant Sign In" %}
                         </a>
+
                     {% endif %}
                 </ul>
 
