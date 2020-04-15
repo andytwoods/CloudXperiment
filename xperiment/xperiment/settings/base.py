@@ -243,7 +243,6 @@ LOCAL_APPS = (
     'attachment',
     'experiment',
     'balancer',
-    'django_ses_boto3',
 
 )
 

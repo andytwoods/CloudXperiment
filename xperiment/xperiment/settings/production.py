@@ -23,10 +23,9 @@ def get_env_setting(setting):
 ALLOWED_HOSTS = ['127.0.0.1', 'www.xpt.cloud', 'xpt.cloud', 'rpnwi8jsw0.execute-api.eu-west-1.amazonaws.com', 's3-eu-west-1.amazonaws.com']
 
 
-MANDRILL_API_KEY = 'WsGrHDYxFF65hjS1m14tWQ'
-DEFAULT_FROM_EMAIL = 'support@xpt.mobi'
-#EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
-EMAIL_BACKEND = 'django_ses_boto3.ses_email_backend.SESEmailBackend'
+DEFAULT_FROM_EMAIL = 'sfpanel <noreply@sfpanel.com>'
+EMAIL_SUBJECT_PREFIX = '[CLOUDEXPT]'
+EMAIL_BACKEND = 'django_amazon_ses.EmailBackend'
 AWS_SES_REGION_NAME = 'eu-west-1'
 AWS_SES_REGION_ENDPOINT = 'email.eu-west-1.amazonaws.com'
 SERVER_EMAIL = 'andytwoods@gmail.com'
@@ -59,7 +58,56 @@ if ON_DEV_SERVER is False:
 AWS_S3_SECURE_URLS = True
 AWS_QUERYSTRING_AUTH = False
 
-LOGGING = {}
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'rollbar': {
+            'filters': ['require_debug_false'],
+            'access_token': 'a81e310641474325931db1b348aba935',
+            'environment': 'production',
+            'class': 'rollbar.logger.RollbarHandler'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['rollbar'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins', ],
+            'level': 'ERROR',
+            'propagate': True
+        },
+        'django.security.DisallowedHost': {
+            'level': 'ERROR',
+            'handlers': ['mail_admins', ],
+            'propagate': True
+        },
+    }
+}
 
 DEBUG = True
 
