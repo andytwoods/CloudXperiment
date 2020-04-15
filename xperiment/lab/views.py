@@ -2,10 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.messages import success
 from django.core import serializers
-from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from allauth.account.signals import user_signed_up
 from allauth.account.utils import send_email_confirmation

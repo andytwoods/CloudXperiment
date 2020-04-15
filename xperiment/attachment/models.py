@@ -10,7 +10,7 @@ from .managers import AttachmentRelationshipManager
 
 
 class Attachment(TimeStampedModel):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=255, null=True, blank=True)
     file = models.FileField(upload_to=get_attachment_filename)
 
@@ -32,12 +32,12 @@ class Attachment(TimeStampedModel):
 
 class AttachmentRelationship(TimeStampedModel):
     # Content-object field
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, null=True, on_delete=models.SET_NULL)
     object_id = models.IntegerField()
     content_object = GenericForeignKey(ct_field='content_type', fk_field='object_id')
 
     # Metadata about the attachment
-    attachment = models.ForeignKey(Attachment)
+    attachment = models.ForeignKey(Attachment, null=True, on_delete=models.SET_NULL)
 
     # Manager
     objects = AttachmentRelationshipManager()

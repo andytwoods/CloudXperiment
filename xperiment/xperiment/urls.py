@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 
 from django.contrib import admin
+from django.urls import path
 from django.views.static import serve
 
 from scientist.views import update_profile
@@ -11,14 +12,14 @@ admin.autodiscover()
 
 urlpatterns = [
 
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'', include('core.urls')),
-    url(r'^accounts/', include('allauth.urls')),
-    url(r'^profile/$', update_profile, name='update_profile'),
-    url(r'^scientist/', include('scientist.urls')),
-    url(r'', include('lab.urls')),
-    url(r'', include('experiment.urls')),
-    url(r'', include('balancer.urls')),
+    path('banana/', admin.site.urls),
+    url('', include('core.urls')),
+    url('accounts/', include('allauth.urls')),
+    url('profile/', update_profile, name='update_profile'),
+    url('scientist/', include('scientist.urls')),
+    url('', include('lab.urls')),
+    url('', include('experiment.urls')),
+    url('', include('balancer.urls')),
 
 ]
 

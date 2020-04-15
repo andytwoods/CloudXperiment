@@ -1,8 +1,8 @@
 from uuid import uuid4
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from model_utils.models import TimeStampedModel
@@ -13,7 +13,7 @@ from .utils import ROLE_CHOICES, ROLE_MEMBER
 
 
 class Lab(TimeStampedModel):
-    creator = models.ForeignKey(User)
+    creator = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     # TODO Address field
@@ -54,9 +54,9 @@ class Lab(TimeStampedModel):
 
 class LabScientist(TimeStampedModel):
     role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_MEMBER)
-    lab = models.ForeignKey(Lab)
+    lab = models.ForeignKey(Lab, null=True,  on_delete=models.SET_NULL)
     email = models.EmailField()
-    scientist = models.ForeignKey(User, blank=True, null=True)
+    scientist = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         unique_together = ('lab', 'email', 'scientist')
@@ -66,14 +66,14 @@ class LabScientist(TimeStampedModel):
 
 
 class StudyBalancer(TimeStampedModel):
-    lab = models.ForeignKey(Lab)
+    lab = models.ForeignKey(Lab, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, default=uuid4().hex)
     randomness = models.FloatField(default=.2)
 
 
 class PaymentRecord(TimeStampedModel):
-    lab = models.ForeignKey(Lab, verbose_name=_(u'Lab'))
-    scientist = models.ForeignKey(User, verbose_name=_(u'Scientist'))
+    lab = models.ForeignKey(Lab, verbose_name=_(u'Lab'), null=True, on_delete=models.SET_NULL)
+    scientist = models.ForeignKey(User, verbose_name=_(u'Scientist'), null=True, on_delete=models.SET_NULL)
     amount = models.FloatField(default=0, verbose_name=_(u'Amount'))
     description = models.TextField(verbose_name=_(u'Description'), max_length=1024, null=True, blank=True)

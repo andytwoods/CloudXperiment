@@ -2,8 +2,8 @@ from json import loads, JSONDecodeError
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _
 from model_utils.models import TimeStampedModel
@@ -22,11 +22,11 @@ def default_url_params():
 
 class ExptInfo(TimeStampedModel):
     expt_id = models.CharField(primary_key=True, max_length=50, default=get_expt_uuid, verbose_name=_(u'Experiment Id'))
-    creator = models.ForeignKey(User, blank=True, null=True)
+    creator = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
     name = models.CharField(max_length=50, verbose_name=_(u'Experiment Name'))
     participant_count = models.IntegerField(default=200, verbose_name=_(u'Participant count'))
-    lab = models.ForeignKey(Lab, verbose_name=_(u'Laboratory'))
+    lab = models.ForeignKey(Lab, verbose_name=_(u'Laboratory'), null=True, on_delete=models.SET_NULL)
     is_paid = models.BooleanField(default=False)
     is_password = models.BooleanField(default=False, verbose_name=_(u'Need password?'))
     is_encrypt = models.BooleanField(default=False, verbose_name=_(u'Encrypt Upload Files?'))
@@ -37,7 +37,7 @@ class ExptInfo(TimeStampedModel):
     archived = models.BooleanField(default=False)
     live = models.BooleanField(default=True)
 
-    alias = models.ForeignKey('self', default=None, null=True, blank=True)
+    alias = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL)
     url_params = models.TextField(default=default_url_params)
 
     def __unicode__(self):
@@ -109,6 +109,6 @@ class ExptInfo(TimeStampedModel):
 
 
 class QuestionOrder(TimeStampedModel):
-    expt_info = models.ForeignKey(ExptInfo)
+    expt_info = models.ForeignKey(ExptInfo, null=True, on_delete=models.SET_NULL)
     order = models.CharField(max_length=255, verbose_name=_(u'Order'))
     number = models.PositiveIntegerField(default=0, verbose_name=_(u'Number'))

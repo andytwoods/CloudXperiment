@@ -1,13 +1,13 @@
 from django.contrib.auth import user_logged_in
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 
 from model_utils.models import TimeStampedModel
 
 
 class Profile(TimeStampedModel):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=20, blank=True, null=True)
     fullname = models.CharField(max_length=255, blank=True, null=True)
     # TODO Address field

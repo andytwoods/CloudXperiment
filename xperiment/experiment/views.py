@@ -10,11 +10,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.template.defaultfilters import urlencode
+from django.urls import reverse_lazy, reverse
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
@@ -25,7 +25,7 @@ from .models import ExptInfo, QuestionOrder
 
 
 def experiment_list(request, template='experiment/experiment_list.html', extra_context=None):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         experiments = ExptInfo.objects.filter(creator=request.user, is_delete=False).order_by('-created')
     else:
         experiments = ExptInfo.objects.all().order_by('-created')
@@ -176,7 +176,7 @@ def experiment_detail(request, expt_id, slug, template='experiment/experiment_de
 
 
 def generate_context(request, expt_info, extra_context):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         user_id = request.user.id
     else:
         user_id = None
@@ -448,7 +448,7 @@ def get_experiment_file(request, expt_id, filename):
 
 
 @login_required
-def create(request, lab_id, template='experiment/create.html', extra_context=None):
+def create(request, lab_id, template='experiment/experiment_create.html', extra_context=None):
     expt_info = None
 
     if request.method == 'POST':
