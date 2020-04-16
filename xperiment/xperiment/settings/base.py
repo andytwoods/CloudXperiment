@@ -271,7 +271,13 @@ ENCRYPT_KEY = 'experiment'
 
 APPEND_SLASH = True
 
-AWS_STORAGE_EXPERIMENTS_BUCKET_NAME = os.environ.get('EXPERIMENT_BUCKET_NAME')
+AWS_STORAGE_EXPERIMENTS_BUCKET_NAME = 'cloudexperimentsbucket'
+AWS_BUCKET_LOCATION = 'https://cloudexperimentsbucket.s3.eu-west-2.amazonaws.com/'
+
+if ON_DEV_SERVER:
+    AWS_BUCKET_LOCATION = AWS_BUCKET_LOCATION.replace('https', 'http')
+
+
 
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -317,11 +323,5 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
-
-AWS_BUCKET_LOCATION = os.environ.get('AWS_BUCKET_LOCATION', 'https://s3-eu-west-1.amazonaws.com/')
-
-if ON_DEV_SERVER:
-    AWS_BUCKET_LOCATION = AWS_BUCKET_LOCATION.replace('https', 'http')
 
 

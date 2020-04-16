@@ -25,7 +25,6 @@
             </div><!-- /input-group -->
 
 
-
             <div id="directoryListing"></div>
             <div id="messenger" title="info panel"></div>
 
@@ -189,9 +188,7 @@
                     if (dirFile.length === 2) {
                         dir_nam = '';
                         parent = '#';
-                    }
-
-                    else {
+                    } else {
                         dirFile.pop();
                         dir_nam = dirFile.pop();
                         parent = dirFile.join("/") + '/';
@@ -318,8 +315,7 @@
                     });
 
 
-                }
-                else {
+                } else {
                     tree.jstree(true).settings.core.data = jsonFiles;
                     tree.jstree(true).refresh();
 
@@ -353,8 +349,7 @@
             function newDir(what) {
                 if (what === "") {
                     showNotificationBar('not developed yet');
-                }
-                else if (what === 'untitled') {
+                } else if (what === 'untitled') {
                     var all = tree.jstree(true).get_selected();
                     if (all.length === 0) return;
                     var cur_dir = all[0];
@@ -372,8 +367,7 @@
                             selectNode_fromId(new_dir);
                         }
                     });
-                }
-                else if (what === 'experiment') {
+                } else if (what === 'experiment') {
                     command('experimentDir', {}, function (success, data) {
                         if (success === "success") {
                             updateDirInfo();
@@ -496,8 +490,7 @@
                         selectMagic(m[i]);
                     }
                 }
-            }
-            else {
+            } else {
 
                 for (var i in m) {
                     if (m[i].li_attr != null && m[i].text.indexOf("index.html") !== -1) {
@@ -589,8 +582,7 @@
             if (e.ctrlKey && (e.which === 83)) {
                 e.preventDefault();
                 saveFile();
-            }
-            else if (editor.hasFocus()) return;
+            } else if (editor.hasFocus()) return;
 
             else if (e.which === 46) {
                 e.preventDefault();
@@ -616,8 +608,7 @@
                         type: "success",
                         timer: 1000
                     })
-                }
-                else {
+                } else {
                     showNotificationBar("failed to save " + fileNameInput + "!", 1500, "#f4e0e8")
                 }
             });
@@ -679,8 +670,7 @@
                 Error: function (up, err) {
                     if (err.hasOwnProperty("file")) {
                         showNotificationBar('problem uploading files: ' + err);
-                    }
-                    else {
+                    } else {
                         showNotificationBar("upload finished successfully.");
                     }
                 }
@@ -721,16 +711,15 @@
                         return selectedFile;
                     }()
 
-                    var keys = []
+                    var keys = [];
                     var types = []
-                    var tags = []
+                    var tags = [];
                     infoBar("adding security credentials");//reset info bar
                     plupload.each(files, function (file) {
 
                         if (dropFile_relPath.hasOwnProperty(file.name) === false) {
                             up.removeFile(file);
-                        }
-                        else {
+                        } else {
                             var relPath = folderSelected + dropFile_relPath[file.name].shift();
 
                             if (relPath.length > 0) relPath += '/';
@@ -850,16 +839,14 @@
 
                 if (counters.hasOwnProperty(message)) {
                     counter = counters[message] += 1;
-                }
-                else {
+                } else {
                     counter = counters[message] = 0;
                 }
 
                 if (counter == 0) {
                     $(header).text(message);
                     subheader.text("");
-                }
-                else {
+                } else {
                     $(header).text(message + " (" + String(counter) + ")");
                 }
             }

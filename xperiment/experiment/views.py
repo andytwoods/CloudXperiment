@@ -2,7 +2,7 @@ import hmac
 import json
 from base64 import b64encode
 from datetime import datetime, timedelta
-from hashlib import sha1
+from hashlib import sha256
 from json import dumps
 
 import boto3
@@ -125,7 +125,7 @@ def experiment_manage(request, lab_id, filtered=None, template='experiment/exper
 def see_results(request, expt_id):
     extra_context = {
         'save': False,
-        'bucket_url': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '-data/',
+        'bucket_url': settings.AWS_BUCKET_LOCATION,
         'type': 'data',
     }
 
@@ -149,7 +149,7 @@ def experiment_edit(request, expt_id, template='experiment/experiment_create_que
 
         'expt_info': expt_info,
         'access_key': settings.AWS_ACCESS_KEY_ID,
-        'bucket_url': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/',
+        'bucket_url': settings.AWS_BUCKET_LOCATION,
         'expt_id': expt_id,
         'type': 'experiment',
     }
@@ -436,14 +436,14 @@ def expt_run_v2(initial_context, expt_info, request):
         if len(_val) > 0 and _val != 'None':
             url_params.append(item + "=" + _val)
 
-    my_url = settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/' \
-             + expt_info.expt_id + '/index.html?' + "&".join(url_params)
-
+    my_url = settings.AWS_BUCKET_LOCATION + expt_info.expt_id + '/index.html?' + "&".join(
+        url_params)
+    print(my_url)
     return render(request, "experiment/experiment_run_new_v2.html", {'url': my_url})
 
 
 def get_experiment_file(request, expt_id, filename):
-    url = settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/' + expt_id + '/' + filename
+    url = settings.AWS_BUCKET_LOCATION + expt_id + '/' + filename
     return HttpResponseRedirect(url)
 
 
@@ -506,6 +506,20 @@ def upload_experiment_attachment(request, expt_info):
     return json_result(request, {'status': 'success', 'xptFile': 'true'})
 
 
+def get_presigned_url(key, _type):
+    s3 = boto3.client('s3')
+
+    return s3.generate_presigned_post(
+        Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME,
+        Key="media/screenshots/login.png",
+        Fields={"acl": "public-read", "Content-Type": "png"},
+        Conditions=[
+            {"acl": "public-read"},
+            {"Content-Type": _type}
+        ],
+        ExpiresIn=3600
+    )
+
 @login_required
 def sign_s3(request):
     keys = request.POST.getlist('keys[]')
@@ -526,7 +540,7 @@ def sign_s3(request):
         }
 
         encoded_policy = b64encode(dumps(policy).encode('utf-8'))
-        my_hmac = hmac.new(settings.AWS_SECRET_ACCESS_KEY.encode('utf-8'), encoded_policy, sha1).digest()
+        my_hmac = hmac.new(settings.AWS_SECRET_ACCESS_KEY.encode('utf-8'), encoded_policy, sha256).digest()
         signed_policy = b64encode(my_hmac)
 
         signed.append(
@@ -564,11 +578,10 @@ def download_zip(request, expt_id, type, template='experiment/download_zip.html'
         if settings.ON_DEV_SERVER:
             url = url.replace('https', 'http')
 
-
         files.append({key.key: url})
 
     context = {'files': files,
-               'dir': settings.AWS_BUCKET_LOCATION + settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME + '/'}
+               'dir': settings.AWS_BUCKET_LOCATION }
 
     return render(request, template, context)
 
@@ -731,7 +744,7 @@ def command(request, expt_id):
         except Exception as e:
             create_bucket_url = reverse('create_bucket')
             message = f'you may need to set up your aws s3 bucket (it should be called "' \
-                      f'{ settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME }). <a href="{ create_bucket_url }">Create it?</a>"'
+                      f'{settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME}). <a href="{create_bucket_url}">Create it?</a>"'
 
             messages.error(request, mark_safe(message))
             return JsonResponse({}, status=400)
