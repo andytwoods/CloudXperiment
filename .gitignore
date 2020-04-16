@@ -17,6 +17,8 @@ build
 # Logs:
 *.log
 
+*.zipzappa
+
 # Virtualenv
 env/*
 VE/

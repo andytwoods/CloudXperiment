@@ -20,7 +20,7 @@ def get_env_setting(setting):
         raise ImproperlyConfigured(error_msg)
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'www.xpt.cloud', 'xpt.cloud', 'rpnwi8jsw0.execute-api.eu-west-1.amazonaws.com', 's3-eu-west-1.amazonaws.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'www.xpt.cloud', 'xpt.cloud', '4yelrhsiwi.execute-api.eu-west-2.amazonaws.com', 's3-eu-west-1.amazonaws.com']
 
 
 DEFAULT_FROM_EMAIL = 'sfpanel <noreply@sfpanel.com>'
@@ -36,11 +36,13 @@ SERVER_EMAIL = 'andytwoods@gmail.com'
 DATABASES = {
     # identifier: xpt-zappa-db-id
     'default': {
-        'ENGINE': 'zappa_django_utils.db.backends.s3sqlite',
+        'ENGINE': 'django_s3_sqlite',
         'NAME': 'sqlite.db',
-        'BUCKET': 'your-db-bucket',
+        'BUCKET': 'xptclouddb',
     }
 }
+
+INSTALLED_APPS += ("django_s3_sqlite",)
 
 ########## SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key

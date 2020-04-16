@@ -232,7 +232,6 @@ THIRD_PARTY_APPS = (
     'el_pagination',
     'corsheaders',
     'storages',
-    'zappa_django_utils',
 )
 
 # Apps specific for this project go here.
@@ -243,7 +242,6 @@ LOCAL_APPS = (
     'attachment',
     'experiment',
     'balancer',
-
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

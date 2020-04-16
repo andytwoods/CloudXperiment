@@ -864,7 +864,7 @@ def data(request, expt_id=None, uuid=None):
     if text is None:
         return JsonResponse({'error': 'not given "data" parameter holding your data to save'}, status=400)
 
-    if len(text) is 0:
+    if len(text) == 0:
         return JsonResponse({'error': '"data" parameter holds no data!'}, status=400)
 
     try:

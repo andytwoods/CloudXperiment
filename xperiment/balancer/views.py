@@ -171,7 +171,7 @@ def rand_from_balancer(group_id, variation=.2):
         })
         total += item.count
 
-    if len(counts) is 0:
+    if len(counts) == 0:
         return None
 
     least = 100

@@ -59,30 +59,6 @@
                     </div>
                     <!-- End of lab bio -->
 
-                    <!-- Payment -->
-                    <div class="profile-payment">
-                        <div class="page-header">
-                            <h4>
-                                <i class="glyphicon glyphicon-usd"></i>
-                                {% trans "Payment" %}
-                            </h4>
-                        </div>
-                        <div class="well">
-                            Current balance: ${{ lab.balance }}
-                        </div>
-
-                        {% if user == lab.creator %}
-                            <div class="lab-actions">
-                                <a href="{% url "payment" lab.id %}" class="btn btn-default btn-block">
-                                    <i class="glyphicon glyphicon-ok-circle"></i>
-                                    {% trans "Update the balance" %}
-                                </a>
-                            </div>
-                        {% endif %}
-
-                    </div>
-                    <!-- End of payment -->
-
                     <!-- Members -->
                     <div class="lab-labs">
                         <div class="page-header">
