@@ -6,6 +6,7 @@ from hashlib import sha256
 from json import dumps
 
 import boto3
+from botocore.config import Config
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -506,51 +507,35 @@ def upload_experiment_attachment(request, expt_info):
     return json_result(request, {'status': 'success', 'xptFile': 'true'})
 
 
-def get_presigned_url(key, _type):
-    s3 = boto3.client('s3')
-
-    return s3.generate_presigned_post(
-        Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME,
-        Key="media/screenshots/login.png",
-        Fields={"acl": "public-read", "Content-Type": "png"},
-        Conditions=[
-            {"acl": "public-read"},
-            {"Content-Type": _type}
-        ],
-        ExpiresIn=3600
-    )
-
 @login_required
 def sign_s3(request):
     keys = request.POST.getlist('keys[]')
     types = request.POST.getlist('types[]')
     tags = request.POST.getlist('tags[]')
 
-    signed = []
+    signed_list = []
+
+    s3 = boto3.client('s3', region_name='eu-west-2', config=Config(signature_version='s3v4'),)
 
     for key, _type, tag in zip(keys, types, tags):
-        policy = {
-            "expiration": (datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%S.000Z'),
-            "conditions": [
-                {"bucket": settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME},
+        signed = s3.generate_presigned_post(
+            Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME,
+            Key=key,
+            Fields={"acl": "public-read", "Content-Type": _type},
+            Conditions=[
                 {"acl": "public-read"},
-                ["eq", "$key", key],
-                ["starts-with", "$Content-Type", _type],
-            ]
-        }
+                {"Content-Type": _type}
+            ],
+            ExpiresIn=3600,
+        )
 
-        encoded_policy = b64encode(dumps(policy).encode('utf-8'))
-        my_hmac = hmac.new(settings.AWS_SECRET_ACCESS_KEY.encode('utf-8'), encoded_policy, sha256).digest()
-        signed_policy = b64encode(my_hmac)
-
-        signed.append(
+        signed_list.append(
             {
                 "tag": tag,
-                "policy": encoded_policy.decode("ASCII").replace("\n", ""),
-                "signature": signed_policy.decode("ASCII").replace("\n", ""),
+                "signature": signed,
             })
 
-    return HttpResponse(dumps(signed), content_type="application/json")
+    return HttpResponse(dumps(signed_list), content_type="application/json")
 
 
 @login_required
@@ -581,7 +566,7 @@ def download_zip(request, expt_id, type, template='experiment/download_zip.html'
         files.append({key.key: url})
 
     context = {'files': files,
-               'dir': settings.AWS_BUCKET_LOCATION }
+               'dir': settings.AWS_BUCKET_LOCATION}
 
     return render(request, template, context)
 

@@ -274,6 +274,8 @@ APPEND_SLASH = True
 AWS_STORAGE_EXPERIMENTS_BUCKET_NAME = 'cloudexperimentsbucket'
 AWS_BUCKET_LOCATION = 'https://cloudexperimentsbucket.s3.eu-west-2.amazonaws.com/'
 
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+
 if ON_DEV_SERVER:
     AWS_BUCKET_LOCATION = AWS_BUCKET_LOCATION.replace('https', 'http')
 
