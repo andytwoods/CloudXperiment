@@ -507,6 +507,7 @@ def upload_experiment_attachment(request, expt_info):
     return json_result(request, {'status': 'success', 'xptFile': 'true'})
 
 
+
 @login_required
 def sign_s3(request):
     keys = request.POST.getlist('keys[]')
@@ -521,14 +522,8 @@ def sign_s3(request):
         signed = s3.generate_presigned_post(
             Bucket=settings.AWS_STORAGE_EXPERIMENTS_BUCKET_NAME,
             Key=key,
-            Fields={"acl": "public-read", "Content-Type": _type},
-            Conditions=[
-                {"acl": "public-read"},
-                {"Content-Type": _type}
-            ],
             ExpiresIn=3600,
         )
-
         signed_list.append(
             {
                 "tag": tag,
