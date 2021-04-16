@@ -21,6 +21,6 @@ django-admin-row-actions==0.0.5
 psycopg2==2.8.5
 django-storages==1.9.1
 brotlipy==0.7.0
-django-debug-toolbar==2.2
+django-debug-toolbar==2.2.1
 django_s3_sqlite==0.0.3
 awscli==1.18.37
