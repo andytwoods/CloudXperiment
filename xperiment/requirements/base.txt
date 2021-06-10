@@ -1,5 +1,5 @@
 boto3==1.12.41
-Django==2.2.13
+Django==2.2.24
 django-allauth==0.41.0
 django-bootstrap3==12.0.3
 django-cors-middleware==1.5.0
